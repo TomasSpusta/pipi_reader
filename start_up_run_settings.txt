@@ -1,0 +1,10 @@
+command line:
+crontab -e
+editor nano
+
+@reboot python3 /home/pi/RFID/RFID_main.py
+
+CTRL + X
+
+press y
+
