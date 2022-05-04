@@ -22,7 +22,7 @@ def LCD_disp(ip, mac):
 try:
     ip = get('https://api.ipify.org').content.decode('utf8')    
 except Exception as e:
-    print (e)
+    print (e) 
     
 mac = gma()
 print('My public IP address is: {}'.format(ip))
