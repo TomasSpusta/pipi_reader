@@ -12,9 +12,10 @@ from getmac import get_mac_address as gma
 def LCD_disp(ip, mac):
     lcd = LCD() #create LCD dispaly instance
     lcd.clear() #clear the display
-    lcd.text("Hi! Welcome" , 1)  #print/show string on line 2
-    lcd.text("Please log in", 2) #print/show string on line 3
-    lcd.text("with your user card",3)
+    lcd.text("IP adress:" , 1)  #print/show string on line 2
+    lcd.text(ip, 2) #print/show string on line 3
+    lcd.text("MAC adress",3)
+    lcd.text(mac,4)
 
 
 
@@ -23,3 +24,5 @@ ip = get('https://api.ipify.org').content.decode('utf8')
 mac = gma()
 print('My public IP address is: {}'.format(ip))
 print("My MAC adress is: {}".format(mac))
+
+LCD_disp (ip, mac)
