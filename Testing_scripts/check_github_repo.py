@@ -2,11 +2,24 @@
 
 #import gitpython
 import git
+import os
+import sys
+import shutil
+
+
+
 
 #location of the local folder where the github repository will be downloaded (pulled)
 local_repo = "/home/pi/PiPi_Reader_github"
 #location/address of the remote github repository
 github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
+
+try:
+    shutil.rmtree(local_repo)
+except OSError as e:
+    print ("Error: %s - %s." % (e.filename, e.strerror))
+
+
 
 #try to clone remote repository from github
 try:
