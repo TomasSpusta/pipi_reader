@@ -9,7 +9,7 @@ from rpi_lcd import LCD # module for LCD dispaly
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
-from PiPi_reader import main_script
+from test_file import test_function
 
 
 def LCD_disp(ip, mac):
@@ -36,7 +36,7 @@ print("My MAC adress is: {}".format(mac))
 
 LCD_disp (ip, mac)
 
-time.sleep (10) #Sleep 10 seconds before it will run main script 
+time.sleep (5) #Sleep 10 seconds before it will run main script 
 
-main_script.PiPi_reader()
+test_function()
 
