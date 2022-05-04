@@ -4,6 +4,14 @@ import config
 
 lcd = LCD()
 
+def backlight (status):
+    lcd.backlight (status)
+
+def lcd_clear ():
+    lcd.clear()
+    
+    
+
 def LCD_init (ip, mac):
     lcd.clear() #clear the display
     lcd.text("IP adress:" , 1)  #show IP adress
