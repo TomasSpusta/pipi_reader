@@ -9,11 +9,13 @@ from rpi_lcd import LCD # module for LCD dispaly
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
-from test_file import test_function
+import test_file
 
+#create LCD dispaly instance
+#lcd = LCD()
 
 def LCD_disp(ip, mac):
-    lcd = LCD() #create LCD dispaly instance
+     
     lcd.clear() #clear the display
     lcd.text("IP adress:" , 1)  #show IP adress
     if ip == 0: #if there is not internet connection, therefore IP is 0
@@ -36,7 +38,8 @@ print("My MAC adress is: {}".format(mac))
 
 LCD_disp (ip, mac)
 
+
 time.sleep (5) #Sleep 10 seconds before it will run main script 
 
-test_function()
+
 
