@@ -10,20 +10,10 @@ from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
 import test_file
+import LCD_things
 
 #create LCD dispaly instance
-#lcd = LCD()
-
-def LCD_disp(ip, mac):
-     
-    lcd.clear() #clear the display
-    lcd.text("IP adress:" , 1)  #show IP adress
-    if ip == 0: #if there is not internet connection, therefore IP is 0
-        lcd.text("Not Connected", 2)     #show not connected
-    else:
-        lcd.text(ip, 2) # otherwise display IP adress
-    lcd.text("MAC adress",3) # display MAC adress
-    lcd.text(mac,4)
+#lcd = LCD() 
 
 # try to acquire IP adress, therefore check connection to the internet
 try:
@@ -33,10 +23,11 @@ except Exception as e: # if there is an error = no connection to net, ip = 0
     print (e) 
     
 mac = gma() # get MAC address
+
 print('My public IP address is: {}'.format(ip))
 print("My MAC adress is: {}".format(mac))
 
-LCD_disp (ip, mac)
+LCD_things.LCD_init (ip, mac)
 
 
 time.sleep (5) #Sleep 10 seconds before it will run main script 
