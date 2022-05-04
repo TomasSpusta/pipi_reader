@@ -21,3 +21,34 @@ def LCD_init (ip, mac):
     lcd.text("MAC adress",3) # display MAC adress
     lcd.text(mac,4)
     
+def LCD_logged_in (server_response, instrument_name): # function dealing with displaying to the LCD display
+    global logged_in
+    logged_in = True
+    #print ("LCD_section")
+    
+    if server_response == False:
+        #print ("Card is not in database")
+        lcd.clear() #clear the display
+        lcd.text("Card is not in a database" , 1)  #print/show string on line 1
+        lcd.text("Please contact User office" , 3)
+        logged_in = False
+        time.sleep(5)
+        #print (logged_in)
+        LCD_waiting(instrument_name)
+        
+    elif server_response == "Server Error":
+        #print ("Server error")
+        lcd.clear() #clear the display
+        lcd.text("Server Error" , 1)
+        logged_in = False
+        time.sleep(5)
+        LCD_waiting(instrument_name)
+        
+        
+    else:
+        lcd.clear() #clear the display
+        lcd.text("You are logged as:" , 1)  #print/show string on line 1
+        lcd.text(str(server_response), 2) 
+        lcd.text ("Happy hunting", 3)
+        #lcd.text("Your session ends at:" , 3)  
+        #lcd.text ("-end time-", 4)

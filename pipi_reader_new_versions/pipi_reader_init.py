@@ -32,5 +32,5 @@ LCD_things.LCD_init (ip, mac)
 
 time.sleep (5) #Sleep 10 seconds before it will run main script 
 
-
+import PiPi_reader
 
