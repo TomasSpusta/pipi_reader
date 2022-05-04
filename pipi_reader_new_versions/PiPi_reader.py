@@ -6,14 +6,15 @@ import time
 import RPi.GPIO as GPIO
 import LCD_things
 import reader_requests_things
+import config
 
 instrument_name = "Lyra"
-logged_in = False
+config.logged_in = False
 
 
 
 def main_script():
-    global logged_in
+    
            
     rfid_number = reader_requests_things.RFID_reader()
     #print ('RFID number from reader: ' + str(rfid_number))
@@ -22,10 +23,10 @@ def main_script():
     
     #print (server_response)
     
-    if logged_in == False:
+    if config.logged_in == False:
         LCD_things.LCD_waiting(instrument_name)
     else:
-       LCD_things.LCD_logged_in (server_response, instrument_name)
+        LCD_things.LCD_logged_in (server_response, instrument_name)
     
     time.sleep(1)
     
