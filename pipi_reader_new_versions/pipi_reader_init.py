@@ -3,34 +3,42 @@
     #Display IP adress, 
     #if not connected, display "Not connected"
 #2: Check and display the Mac adress of the RPi
-#3: Run "pipi_reader_main.py"
+#3: download new firmware
+#4: Run "pipi_reader_main.py"
 
-from rpi_lcd import LCD # module for LCD dispaly 
+
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
-
 import LCD_things
 
-#create LCD dispaly instance
-#lcd = LCD() 
-
+online = False
 # try to acquire IP adress, therefore check connection to the internet
-try:
-    ip = get('https://api.ipify.org').content.decode('utf8')    
-except Exception as e: # if there is an error = no connection to net, ip = 0
-    ip = 0
-    print (e) 
-    
-mac = gma() # get MAC address
+while online == False:
+    try:
+        ip = get('https://api.ipify.org').content.decode('utf8')
+        print('My public IP address is: {}'.format(ip))    
+        online = True
+    except Exception as e: # if there is an error = no connection to net, ip = 0
+        ip = 0
+        #print (e) 
+     
+    try:    
+        mac = gma() # get MAC address
+        print("My MAC adress is: {}".format(mac))
+    except Exception as e2:
+        mac = 0
+        print (e2)
+        
+     
+    time.sleep (1)
+    LCD_things.LCD_init (ip, mac)
 
-print('My public IP address is: {}'.format(ip))
-print("My MAC adress is: {}".format(mac))
-
-LCD_things.LCD_init (ip, mac)
 
 
-time.sleep (5) #Sleep 10 seconds before it will run main script 
-
-import PiPi_reader
+if ip != 0:
+    time.sleep (5)
+    import check_github_repo
+    time.sleep (5) #Sleep 10 seconds before it will run main script 
+    import PiPi_reader
 

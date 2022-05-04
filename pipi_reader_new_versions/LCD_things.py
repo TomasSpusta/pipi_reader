@@ -1,3 +1,4 @@
+from enum import Flag
 import time
 from rpi_lcd import LCD
 import config
@@ -7,10 +8,19 @@ lcd = LCD()
 def backlight (status):
     lcd.backlight (status)
 
-def lcd_clear ():
+def clear ():
     lcd.clear()
     
+def flashing (interval, number):
+    for _ in range (number):
+        time.sleep (interval)
+        lcd.backlight (True)
+        time.sleep(interval)
+        lcd.backlight (False)
     
+def about_to_end_w (): ### Dodelat, aby ukazoval session is about to end a blikalo
+    lcd.clear() #clear the display
+    lcd.text("IP adress:" , 1)    
 
 def LCD_init (ip, mac):
     lcd.clear() #clear the display
@@ -23,7 +33,6 @@ def LCD_init (ip, mac):
     lcd.text(mac,4)
 
 def LCD_waiting (instrument_name):
-    
     config.logged_in = False
     lcd.clear() #clear the display
     lcd.text("Welcome on " + instrument_name, 1)  #print/show string on line 2

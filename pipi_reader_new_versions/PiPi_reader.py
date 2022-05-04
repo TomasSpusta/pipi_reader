@@ -40,5 +40,6 @@ try:
 
 finally:
     time.sleep(0.5)
-    
+    LCD_things.backlight (False)
+    LCD_things.clear ()        
     GPIO.cleanup()
