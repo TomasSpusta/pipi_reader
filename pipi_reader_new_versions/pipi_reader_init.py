@@ -9,7 +9,7 @@ from rpi_lcd import LCD # module for LCD dispaly
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
-import test_file
+
 import LCD_things
 
 #create LCD dispaly instance

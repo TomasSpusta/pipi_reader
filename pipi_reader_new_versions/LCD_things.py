@@ -3,14 +3,6 @@ from rpi_lcd import LCD
 
 lcd = LCD()
 
-def LCD_waiting (instrument_name):
-    #global logged_in
-    #logged_in = False
-    lcd.clear() #clear the display
-    lcd.text("Welcome on " + instrument_name, 1)  #print/show string on line 2
-    #lcd.text(instrument_name, 2) #print/show string on line 3
-    lcd.text("Please log in with your user card",3)
-    
 def LCD_init (ip, mac):
     lcd.clear() #clear the display
     lcd.text("IP adress:" , 1)  #show IP adress
@@ -20,6 +12,14 @@ def LCD_init (ip, mac):
         lcd.text(ip, 2) # otherwise display IP adress
     lcd.text("MAC adress",3) # display MAC adress
     lcd.text(mac,4)
+
+def LCD_waiting (instrument_name):
+    #global logged_in
+    #logged_in = False
+    lcd.clear() #clear the display
+    lcd.text("Welcome on " + instrument_name, 1)  #print/show string on line 2
+    #lcd.text(instrument_name, 2) #print/show string on line 3
+    lcd.text("Please log in with your user card",3)
     
 def LCD_logged_in (server_response, instrument_name): # function dealing with displaying to the LCD display
     global logged_in
