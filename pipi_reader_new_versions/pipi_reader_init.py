@@ -13,7 +13,10 @@ def LCD_disp(ip, mac):
     lcd = LCD() #create LCD dispaly instance
     lcd.clear() #clear the display
     lcd.text("IP adress:" , 1)  #print/show string on line 2
-    lcd.text(ip, 2) #print/show string on line 3
+    if ip == 0:
+        lcd.text("Not Connected", 2)     
+    else:
+        lcd.text(ip, 2) #print/show string on line 3
     lcd.text("MAC adress",3)
     lcd.text(mac,4)
 
@@ -22,6 +25,7 @@ def LCD_disp(ip, mac):
 try:
     ip = get('https://api.ipify.org').content.decode('utf8')    
 except Exception as e:
+    ip = 0
     print (e) 
     
 mac = gma()
