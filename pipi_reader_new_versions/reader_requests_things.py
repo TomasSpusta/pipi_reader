@@ -3,21 +3,26 @@ import requests
 import time
 import config
 
-reader = SimpleMFRC522() #create RFID reader instance
+#create RFID reader instance
+reader = SimpleMFRC522() 
+
 
 def RFID_reader():
-    rfid, text = reader.read()
+    scanned_rfid, text = reader.read()
     #print ('Readed card: ' + str(rfid))
-    return rfid 
+    return scanned_rfid 
 
 #Function dealing with sending and recieving the data.
 #Parameter rfid is card number from MFRC522 reader
 
 def send_receive_data(scanned_rfid):
-    
     #print (scanned_rfid)
-    rfid = str(scanned_rfid)       
+    rfid = str(scanned_rfid)   
+    
+    #data to be sent to the booking system web api in json format
     payload = {"rfid":rfid}
+    
+    # try to send the payload to web api, when error it will show on LCD
     try:
         response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
         #print ('Response from post request: ' + str(response))

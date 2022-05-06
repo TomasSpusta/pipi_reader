@@ -39,6 +39,6 @@ while online == False:
 if ip != 0:
     time.sleep (5)
     import check_github_repo
-    time.sleep (5) #Sleep 10 seconds before it will run main script 
+    time.sleep (5) #Sleep x seconds before it will run main script 
     import PiPi_reader
 
