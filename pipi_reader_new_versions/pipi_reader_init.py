@@ -6,7 +6,7 @@
 #3: download new firmware
 #4: Run "pipi_reader_main.py"
 
-
+import config
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
@@ -23,9 +23,11 @@ while online == False:
         ip = 0
         #print (e) 
      
-    try:    
+    try:   
         mac = gma() # get MAC address
         print("My MAC adress is: {}".format(mac))
+        config.mac = mac
+        #print ("config mac2", config.mac)
     except Exception as e2:
         mac = 0
         print (e2)
