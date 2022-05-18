@@ -35,7 +35,7 @@ def main_script():
 try:
     LCD_things.LCD_waiting(instrument_name)
     while 1:
-        LCD_things.flashing(2,2)
+        
         main_script()
 
 finally:
