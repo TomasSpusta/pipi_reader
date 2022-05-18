@@ -12,13 +12,13 @@ from getmac import get_mac_address as gma #module for mac adress
 import time
 import LCD_things
 
-online = False
+online_status = False
 # try to acquire IP adress, therefore check connection to the internet
-while online == False:
+while online_status == False:
     try:
         ip = get('https://api.ipify.org').content.decode('utf8')
         print('My public IP address is: {}'.format(ip))    
-        online = True
+        online_status = True
     except Exception as e: # if there is an error = no connection to net, ip = 0
         ip = 0
         #print (e) 
@@ -40,7 +40,7 @@ while online == False:
 
 if ip != 0:
     time.sleep (5)
-    import check_github_repo
+    import github_repo
     time.sleep (5) #Sleep x seconds before it will run main script 
-    import PiPi_reader
+    import pipi_reader
 

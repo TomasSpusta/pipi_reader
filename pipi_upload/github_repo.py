@@ -12,7 +12,7 @@ import shutil
 #location of the local folder where the github repository will be downloaded (pulled)
 local_repo = "/home/pi/pipi_reader"
 #location/address of the remote github repository
-github_repo = "https://github.com/TomasSpusta/pipi_reader/pipi_upload.git"
+github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
 
 try:
     shutil.rmtree(local_repo)
