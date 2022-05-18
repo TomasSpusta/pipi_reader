@@ -1,7 +1,4 @@
-from enum import Flag
 import time
-
-from sqlalchemy import true
 from rpi_lcd import LCD
 import config
 
@@ -20,15 +17,15 @@ def flashing (interval, number):
         time.sleep(interval)
         lcd.backlight (False)
     
-def about_to_end_w (minutes): ### Dodelat, aby ukazoval session is about to end a blikalo
+def about_to_end_w (remaining_time): ### Dodelat, aby ukazoval session is about to end a blikalo
     lcd.clear() #clear the display
-    lcd.text("Dear user, your session is about to end", 1)   
+    lcd.text("Dear user, your session is about to end in" + str(remaining_time), 1)   
     flashing(3, 3) 
     #backlight(True)
 
 def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
     lcd.clear()
-    lcd.text ("Dear user, your session expired", 1)
+    lcd.text ("Dear user, your session has expired", 1)
     #lcd.text ("Dear user, your session expired, you will be automaticly logged off in 5 minutes", 1)
     backlight(True)
 

@@ -5,7 +5,7 @@
 import time
 import RPi.GPIO as GPIO
 import LCD_things
-import reader_requests_things
+import web_requests
 import config
 
 instrument_name = "Lyra" 
@@ -17,10 +17,10 @@ config.logged_in = False
 
 def main_script():
     #get id card from rfid reader           
-    rfid_number = reader_requests_things.RFID_reader()
+    rfid_number = web_requests.RFID_reader()
     #print ('RFID number from reader: ' + str(rfid_number))
     #get response from server => user name, or not in database
-    server_response = reader_requests_things.send_receive_data(rfid_number)
+    server_response = web_requests.send_receive_data(rfid_number)
     #print (server_response)
     
     if config.logged_in == False:
