@@ -1,4 +1,4 @@
-from aiohttp import payload_type
+
 from mfrc522 import SimpleMFRC522
 import requests
 import time
