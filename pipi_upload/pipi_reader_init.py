@@ -39,10 +39,12 @@ while online_status == False:
 
 
 if ip != 0:
-    time.sleep (5)
+    time.sleep (3)    
+    print ("Checking github")
     import github_repo
-    print ("Github checked")
-    time.sleep (5) #Sleep x seconds before it will run main script 
+    
+    time.sleep (3) #Sleep x seconds before it will run main script 
+    print ("Main script start")
     import pipi_reader
-    print ("Main script started")
+    
 

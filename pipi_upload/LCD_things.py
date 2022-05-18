@@ -37,7 +37,7 @@ def LCD_init (ip, mac):
         lcd.text("Not Connected", 2)     #show not connected
     else:
         lcd.text(ip, 2) # otherwise display IP adress
-    lcd.text("MAC adress",3) # display MAC adress
+    lcd.text("MAC adress:",3) # display MAC adress
     lcd.text(mac,4)
 
 def LCD_waiting (instrument_name):
