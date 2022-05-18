@@ -13,12 +13,12 @@ import shutil
 local_repo = "/home/pi/pipi_reader"
 #location/address of the remote github repository
 github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
-
+'''
 try:
     shutil.rmtree(local_repo)
 except OSError as e:
     print ("Error: %s - %s." % (e.filename, e.strerror))
-
+'''
 
 
 #try to clone remote repository from github
@@ -31,6 +31,7 @@ except Exception as error:
     try:
         #initialize local repository
         repo = git.Repo(local_repo)
+        repo.git.reset('--hard')
         repo.remotes.origin.pull()
     except Exception as e:
         print ("Neco sa podelalo, neexistuje repository na disku")
