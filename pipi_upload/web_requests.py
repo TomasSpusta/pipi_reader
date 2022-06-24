@@ -8,13 +8,52 @@ import config
 reader = SimpleMFRC522() 
 
 
-def RFID_reader():
-    scanned_rfid, text = reader.read()
+def rfid_reader():
+    card_id, text = reader.read()
     #print ('Readed card: ' + str(rfid))
-    return scanned_rfid 
+    return card_id 
 
 #Function dealing with sending and recieving the data.
 #Parameter rfid is card number from MFRC522 reader
+
+def crm_request (scanned_rfid, mac_address):
+    #API request from CRM - inputs are card_ID, MAC_address, outputs are user_ID, instrument_ID
+    scanned_rfid = str (scanned_rfid)
+    mac_address = str (mac_address)
+    
+    payload = {"rfid":scanned_rfid, "mac?":mac_address}
+    
+    try:
+            crm_response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
+            crm_data = crm_response.json()
+            
+            if len (crm_data) == 0:
+                x=5
+    
+    except Exception as e:
+        print (e)
+        
+    return user_id, instrument_id, instrument_name
+
+def booking_request (user_id, instrument_id):
+    #API request from Booking system - inputs are user_ID, instrument_ID, outputs are has_reservation, remaining_time, number_of_files
+    user_id = str(user_id)
+    instrument_id = str (instrument_id)
+    
+    payload = {"contact":user_id, "equipment": instrument_id}
+    
+    try: 
+        
+        
+        booking_respose = requests.post ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment", json = payload)
+        booking_data = booking_respose.json()
+        
+    except Exception as e:
+        print (e)
+    
+    return has_reservation, remaining_time, n_files      
+        
+
 
 def send_receive_data(scanned_rfid):
     #print (scanned_rfid)

@@ -4,13 +4,13 @@
     #if not connected, display "Not connected"
 #2: Check and display the Mac adress of the RPi
 #3: download new firmware
-#4: Run "pipi_reader_main.py"
+#4: Run "pipi_reader.py"
 
 import config
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
-import LCD_things
+import LCD_display
 
 online_status = False
 # try to acquire IP adress, therefore check connection to the internet
@@ -34,8 +34,9 @@ while online_status == False:
         
      
     time.sleep (1)
-    LCD_things.LCD_init (ip, mac)
+    LCD_display.LCD_init (ip, mac)
 
+# !!! Get instument name from CRM API !!!
 
 
 if ip != 0:
