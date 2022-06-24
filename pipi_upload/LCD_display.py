@@ -1,11 +1,13 @@
 import time
 from RPLCD.i2c import CharLCD
+from regex import F
 import config
 
 #initialize the LCD display, (expander chip, port)
 lcd = CharLCD('PCF8574', 0x27)
 
 #write to display:
+    #lcd.write_string('Hello\r\n  World!')
     #lcd.write_string('Raspberry Pi HD44780')
     #lcd.cursor_pos = (2, 0) => (row, column)
     #lcd.write_string('https://github.com/\n\rdbrgn/RPLCD')
@@ -35,13 +37,15 @@ def write (text, row):
     
 def about_to_end_w (remaining_time): ### Dodelat, aby ukazoval session is about to end a blikalo
     lcd.clear() #clear the display
-    write ("Dear user, your session is about to end in" + str(remaining_time), 1)
-    flashing(3, 3) 
-    #backlight(True)
+    write ("Dear user,\n\ryour session\n\ris about to end\n\rin " + str(remaining_time) + (" minutes"), 1)
+    flashing(0.3, 5) 
+    backlight(True)
+    time.sleep (3)
+    backlight (False)
 
 def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
     lcd.clear()
-    write ("Dear user, your session has expired", 1)
+    write ("Dear user,\n\ryour session\n\rhas expired", 1)
     
     #lcd.text ("Dear user, your session expired, you will be automaticly logged off in 5 minutes", 1)
     backlight(True)
@@ -64,7 +68,7 @@ def LCD_waiting (instrument_name):
     lcd.clear() #clear the display
     write ("Welcome on " + instrument_name, 1)  #print/show string on line 2
     #lcd.text(instrument_name, 2) #print/show string on line 3
-    write ("Please log in with your user card",3)
+    write ("Please log in\n\rwith your user card",3)
     
 def LCD_logged_in (server_response, instrument_name): # function dealing with displaying to the LCD display
     #config.logged_in = True

@@ -1,0 +1,8 @@
+GitPython
+RPLCD
+mfrc522
+getmac
+spidev
+
+
+#https://rplcd.readthedocs.io/en/stable/usage.html#writing-to-display
