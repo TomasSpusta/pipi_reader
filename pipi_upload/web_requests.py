@@ -1,137 +1,122 @@
 
-from mfrc522 import SimpleMFRC522
+#from mfrc522 import SimpleMFRC522
 import requests
 import time
 import config
 
 #create RFID reader instance
-reader = SimpleMFRC522() 
+#reader = SimpleMFRC522() 
 
-
+"""
 def rfid_reader():
     card_id, text = reader.read()
     #print ('Readed card: ' + str(rfid))
     return card_id 
-
+"""
 #Function dealing with sending and recieving the data.
 #Parameter rfid is card number from MFRC522 reader
 
-def crm_request (scanned_rfid, mac_address):
-    #API request from CRM - inputs are card_ID, MAC_address, outputs are user_ID, instrument_ID
-    scanned_rfid = str (scanned_rfid)
+def crm_request_mac (mac_address):
     mac_address = str (mac_address)
-    
-    payload = {"rfid":scanned_rfid, "mac?":mac_address}
-    
+    payload = {"mac_address":mac_address}
     try:
-            crm_response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
-            crm_data = crm_response.json()
+        crm_response = requests.post ("https://betacrm.api.ceitec.cz/get-equipment-by-mac-address", json = payload)
+        crm_data = crm_response.json()
+        #print (crm_data)
+        
+        if len (crm_data) == 0:
+            print ("Problem with mac address")
+            #if len(data) == 0 that means that something is wrong with mac address or equipment
             
-            if len (crm_data) == 0:
-                x=5
-    
-    except Exception as e:
-        print (e)
-        
-    return user_id, instrument_id, instrument_name
-
-def booking_request (user_id, instrument_id):
-    #API request from Booking system - inputs are user_ID, instrument_ID, outputs are has_reservation, remaining_time, number_of_files
-    user_id = str(user_id)
-    instrument_id = str (instrument_id)
-    
-    payload = {"contact":user_id, "equipment": instrument_id}
-    
-    try: 
-        
-        
-        booking_respose = requests.post ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment", json = payload)
-        booking_data = booking_respose.json()
-        
-    except Exception as e:
-        print (e)
-    
-    return has_reservation, remaining_time, n_files      
-        
-
-
-def send_receive_data(scanned_rfid):
-    #print (scanned_rfid)
-    rfid = str(scanned_rfid)   
-    
-    #data to be sent to the booking system web api in json format
-    payload = {"rfid":rfid}
-    
-    # try to send the payload to web api, when error it will show on LCD
-    try:
-        response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
-        #print ('Response from post request: ' + str(response))
-        data = response.json()
-        #print (data[0]["full_name"]) #Here can be changed what data is pulled out of the API
-        #print ('Data from post request: ' + str(data))
-        
-        #print (len(data))
-        if len (data) == 0:
-            config.logged_in = True
-            #if len(data) == 0 that means that rfid number is not in database
-            in_database = False
-            #print ('Card is not in the database')
-            return in_database
         else:          
-            user_full_name = data [0]["full_name"]
-            config.logged_in = not config.logged_in
-            #print ('User name: ' + str(user_full_name))
-            return user_full_name
-        
-    except:
-        server_error = "Server Error"  
-        return server_error
+            config.equipment_name = crm_data[0]["alias"]
+            config.equipment_id = crm_data[0]["equipmentid"]
+            print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
+            
+    except Exception as e:
+        print (e)
     
+        
+def crm_request_rfid (scanned_rfid):
+    scanned_rfid = str (scanned_rfid)
+    payload = {"rfid":scanned_rfid}
+    
+    try:
+        crm_response = requests.post ("https://betacrm.api.ceitec.cz/get-contact-by-rfid", json = payload)
+        crm_data = crm_response.json()
+        #print (crm_data)
+        
+        if len (crm_data) == 0:
+            print ("Problem with ID card, not in database")
+            config.in_database = False
+            pass
+            #if len(data) == 0 that means that rfid number is not in database
+            #print ('Card is not in the database')       
+        else:          
+            config.user_name = crm_data[0]["firstname"]
+            config.user_id = crm_data[0]["contactid"]
+            #print (config.user_name)
+            config.in_database = True
+            print ("User ID is {} a User's first name is {}" .format(config.user_id, config.user_name))
+             
+    except Exception as e:
+        print (e)
+   
+    
+def booking_request_start_measurement (user_id, equipment_id):
+#API request from Booking system - inputs are user_ID, instrument_ID, outputs are remaining_time, number_of_files
+    payload = {"contact":user_id, "equipment":equipment_id}
 
-def get_instrument_name (MAC_address): ### !!! Nutné upraviť až bude hotová API !!!
-    payload = {"MAC Address":MAC_address}
-    response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
-    data = response.json()
     try:
-        instrument_name = data [0]["instrument_name"] 
-        print (instrument_name)
-        return instrument_name
-    
-    except Exception as e:
-        print (e)
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
         
-def has_reservation (CardID, MAC_address): ### !!! Nutné upraviť až bude hotová API !!!
-    payload = {"CardID": CardID, "MAC Address":MAC_address}
-    response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
-    data = response.json()
-    try:
-        has_reservation = data [0]["has_reservation"] 
-        print (has_reservation)
-        return has_reservation
-    
-    except Exception as e:
-        print (e)
+        #print ("Booking response:")
+        #print (booking_response)
+        #print(booking_response.status_code)
         
-def logged_in (CardID, MAC_address, has_reservation): ### !!! Nutné upraviť až bude hotová API !!!
-    payload = {"CardID": CardID, "MAC Address":MAC_address, "has_reservation": has_reservation}
-    response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
-    data = response.json()
-    try:
-        logged_in = data [0]["logged_in"] 
-        print (logged_in)
-        return logged_in
-    
+        if booking_response.status_code == 200:
+            print ("200 - Recording started") 
+            booking_data = booking_response.json()
+            #print ("Booking data:")
+            #print (booking_data)
+            #print (booking_data["duration"])
+            config.remaining_time = booking_data["duration"]
+            config.recording_id = booking_data["recording"]
+            print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+            
+        elif booking_response.status_code == 400:
+            print ("400 - Invalid input parameters")     
+        elif booking_response.status_code == 404:
+            print ("404 - Reservation not found for given parameters, or missing reservation session")    
+        elif booking_response.status_code == 409:
+            print ("409 - Recording is running")
+            booking_data = booking_response.json()
+            #print ("Booking data:")
+            #print (booking_data)
+            #print (booking_data["duration"])
+            config.remaining_time = booking_data["duration"]
+            config.recording_id = booking_data["recording"]
+            print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+        elif booking_response.status_code == 500:
+            print ("500 - Internal error")  
     except Exception as e:
-        print (e)
-
-def remaining_time (CardID, MAC_address): ### !!! Nutné upraviť až bude hotová API !!!
-    payload = {"CardID": CardID, "MAC Address":MAC_address}
-    response = requests.post ("https://betacrm.api.ceitec.cz/GetContactByFRID", json = payload)
-    data = response.json()
-    try:
-        remaining_time = data [0]["remaining_time"] 
-        print (remaining_time)
-        return remaining_time
+        print(e)
     
+    
+def booking_request_files (recording_id):
+    #payload = {"recording":recording_id}
+    
+    try:
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(recording_id) + "/raw-data-info")
+        
+        print (booking_response.status_code)
+        if booking_response.status_code == 200:
+            booking_data = booking_response.json()
+            print (booking_data)
+          # print (booking_data["filesCount"])
+            config.files = booking_data["filesCount"]            
+        else:
+            print ("nejaky problemek s datama")
     except Exception as e:
-        print (e)
+        print(e)
+    

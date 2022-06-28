@@ -1,6 +1,5 @@
 import time
 from RPLCD.i2c import CharLCD
-from regex import F
 import config
 
 #initialize the LCD display, (expander chip, port)
@@ -16,13 +15,6 @@ lcd = CharLCD('PCF8574', 0x27)
 #Clear display:
     #lcd.clear()
 #
-
-
-
-
-def backlight (status=True):
-    lcd.backlight_enabled = status
-  
 def flashing (interval, number):
     for _ in range (number):
         time.sleep (interval)
@@ -34,21 +26,8 @@ def write (text, row):
     lcd.cursor_pos = (row-1, 0)
     lcd.write_string (text)
 
-    
-def about_to_end_w (remaining_time): ### Dodelat, aby ukazoval session is about to end a blikalo
-    lcd.clear() #clear the display
-    write ("Dear user,\n\ryour session\n\ris about to end\n\rin " + str(remaining_time) + (" minutes"), 1)
-    flashing(0.3, 5) 
-    backlight(True)
-    time.sleep (3)
-    backlight (False)
-
-def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
-    lcd.clear()
-    write ("Dear user,\n\ryour session\n\rhas expired", 1)
-    
-    #lcd.text ("Dear user, your session expired, you will be automaticly logged off in 5 minutes", 1)
-    backlight(True)
+def backlight (status=True):
+    lcd.backlight_enabled = status
 
 def LCD_init (ip, mac):
     backlight (True)
@@ -61,7 +40,7 @@ def LCD_init (ip, mac):
         write (ip, 2) # otherwise display IP adress
     write ("MAC adress:",3) # display MAC adress
     write (mac,4)
-
+    
 def LCD_waiting (instrument_name):
     backlight (True)
     config.logged_in = False
@@ -69,7 +48,7 @@ def LCD_waiting (instrument_name):
     write ("Welcome on " + instrument_name, 1)  #print/show string on line 2
     #lcd.text(instrument_name, 2) #print/show string on line 3
     write ("Please log in\n\rwith your user card",3)
-    
+
 def LCD_logged_in (server_response, instrument_name): # function dealing with displaying to the LCD display
     #config.logged_in = True
     #print ("LCD_section")
@@ -77,8 +56,8 @@ def LCD_logged_in (server_response, instrument_name): # function dealing with di
     if server_response == False:
         #print ("Card is not in database")
         lcd.clear() #clear the display
-        lcd.text("Card is not in a database" , 1)  #print/show string on line 1
-        lcd.text("Please contact User office" , 3)
+        write("Card is not in a database" , 1)  #print/show string on line 1
+        write("Please contact User office" , 3)
         config.logged_in = False
         time.sleep(5)
         #print (logged_in)
@@ -87,7 +66,7 @@ def LCD_logged_in (server_response, instrument_name): # function dealing with di
     elif server_response == "Server Error":
         #print ("Server error")
         lcd.clear() #clear the display
-        lcd.text("Server Error" , 1)
+        write("Server Error" , 1)
         config.logged_in = False
         time.sleep(5)
         LCD_waiting(instrument_name)
@@ -96,10 +75,31 @@ def LCD_logged_in (server_response, instrument_name): # function dealing with di
     else:
         config.logged_in = True
         lcd.clear() #clear the display
-        lcd.text("You are logged as:" , 1)  #print/show string on line 1
-        lcd.text(str(server_response), 2) 
-        lcd.text ("Happy hunting", 3)
+        write ("You are logged as:" , 1)  #print/show string on line 1
+        write (str(server_response), 2) 
+        write ("Happy hunting", 3)
         #lcd.text("Your session ends at:" , 3)  
         #lcd.text ("-end time-", 4)
         #time.sleep(5)
-        lcd.backlight (False)
+        backlight (False)
+
+
+
+def about_to_end_w (remaining_time): ### Dodelat, aby ukazoval session is about to end a blikalo
+    lcd.clear() #clear the display
+    write ("Dear user,\n\ryour session\n\ris about to end\n\rin " + str(remaining_time) + (" minutes"), 1)
+    flashing(0.3, 5) 
+    backlight(True)
+    time.sleep (3)
+    backlight (False)
+
+def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
+    lcd.clear()
+    write ("Dear user,\n\ryour session\n\rhas expired", 1)
+    #lcd.text ("Dear user, your session expired, you will be automaticly logged off in 5 minutes", 1)
+    backlight(True)
+
+
+
+
+    

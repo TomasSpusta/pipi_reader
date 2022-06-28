@@ -11,32 +11,40 @@ from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
 import LCD_display
+from pipi_upload.web_requests import crm_request_mac
+import web_requests
 
-online_status = False
+pi_online_status = False
 # try to acquire IP adress, therefore check connection to the internet
-while online_status == False:
+while pi_online_status == False:
     try:
         ip = get('https://api.ipify.org').content.decode('utf8')
         print('My public IP address is: {}'.format(ip))    
-        online_status = True
+        pi_online_status = True
+        
     except Exception as e: # if there is an error = no connection to net, ip = 0
         ip = 0
-        #print (e) 
+        print (e) 
      
     try:   
         mac = gma() # get MAC address
         print("My MAC adress is: {}".format(mac))
         config.mac = mac
         #print ("config mac2", config.mac)
-    except Exception as e2:
+        try:
+            config.equipment_name, config.equipment_id = crm_request_mac(config.mac)
+        except Exception as  e2:
+            print (e2)
+            print ("problemek s CRM")
+    except Exception as e3:
         mac = 0
-        print (e2)
-        
-     
-    time.sleep (1)
-    LCD_display.LCD_init (ip, mac)
+        print (e3)
 
-# !!! Get instument name from CRM API !!!
+print ( config.equipment_name, config.equipment_id)        
+time.sleep (1)
+LCD_display.LCD_init (ip, mac)
+
+
 
 
 if ip != 0:
@@ -48,4 +56,3 @@ if ip != 0:
     print ("Main script start")
     import pipi_reader
     
-

@@ -1,14 +1,18 @@
-card_id = 0
 mac_address = 0
 
-user_id = 0
-instrument_id = 0
-instrument_name = ""
+card_id = 0
 
+user_id = ""
+user_name = ""
+
+equipment_id = ""
+equipment_name = ""
+
+recording_id = ""
 remaining_time = 0
-number_of_files = 0
+files = 0
 
-
+in_database = False
 logged_in = False
 
 
