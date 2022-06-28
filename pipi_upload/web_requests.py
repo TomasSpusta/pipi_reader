@@ -47,15 +47,15 @@ def crm_request_rfid (scanned_rfid):
         #print (crm_data)
         
         if len (crm_data) == 0:
-            print ("Problem with ID card, not in database")
             config.in_database = False
+            print ("Problem with ID card, not in database")
             #if len(data) == 0 that means that rfid number is not in database
             #print ('Card is not in the database')       
         else:          
+            config.in_database = True
             config.user_name = crm_data[0]["firstname"]
             config.user_id = crm_data[0]["contactid"]
             #print (config.user_name)
-            config.in_database = True
             print ("User ID is {} a User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:

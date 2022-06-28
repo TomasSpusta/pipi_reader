@@ -52,7 +52,7 @@ def LCD_waiting ():
     write (config.equipment_name, 2) #lcd.text(instrument_name, 2) #print/show string on line 3
     write ("Please log in\n\rwith your user card", 3)
 
-def LCD_logged_in (instrument_name): # function dealing with displaying to the LCD display
+def LCD_logged_in (): # function dealing with displaying to the LCD display
     #config.logged_in = True
     #print ("LCD_section")
     
@@ -64,7 +64,7 @@ def LCD_logged_in (instrument_name): # function dealing with displaying to the L
         
         time.sleep(5)
         #print (logged_in)
-        LCD_waiting(instrument_name)
+        LCD_waiting()
         """    
     elif server_response == "Server Error":
         #print ("Server error")
