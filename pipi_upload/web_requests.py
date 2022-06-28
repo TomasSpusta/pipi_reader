@@ -1,5 +1,5 @@
 
-#from mfrc522 import SimpleMFRC522
+from mfrc522 import SimpleMFRC522
 import requests
 import time
 import config
@@ -7,12 +7,12 @@ import config
 #create RFID reader instance
 #reader = SimpleMFRC522() 
 
-"""
+
 def rfid_reader():
     card_id, text = reader.read()
     #print ('Readed card: ' + str(rfid))
     return card_id 
-"""
+
 #Function dealing with sending and recieving the data.
 #Parameter rfid is card number from MFRC522 reader
 

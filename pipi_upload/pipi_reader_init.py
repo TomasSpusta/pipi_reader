@@ -40,10 +40,10 @@ while pi_online_status == False:
 
 print (config.equipment_name, config.equipment_id)        
 time.sleep (1)
-LCD_display.LCD_init (ip, mac)
+LCD_display.LCD_init (ip, config.mac_address)
 
 
-"""
+
 
 if ip != 0:
     time.sleep (3)    
@@ -53,4 +53,4 @@ if ip != 0:
     time.sleep (3) #Sleep x seconds before it will run main script 
     print ("Main script start")
     import pipi_reader
-""" 
+

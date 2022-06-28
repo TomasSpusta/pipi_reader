@@ -21,6 +21,9 @@ def flashing (interval, number):
         lcd.backlight (True)
         time.sleep(interval)
         lcd.backlight (False)
+        
+def clear():
+    lcd.clear()
 
 def write (text, row):
     lcd.cursor_pos = (row-1, 0)
