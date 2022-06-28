@@ -44,13 +44,13 @@ def LCD_init (ip, mac):
     write ("MAC adress:",3) # display MAC adress
     write (mac,4)
     
-def LCD_waiting (instrument_name):
+def LCD_waiting ():
     backlight (True)
     config.logged_in = False
     lcd.clear() #clear the display
-    write ("Welcome on " + instrument_name, 1)  #print/show string on line 2
-    #lcd.text(instrument_name, 2) #print/show string on line 3
-    write ("Please log in\n\rwith your user card",3)
+    write ("Welcome on ", 1)  #print/show string on line 2
+    write (config.equipment_name, 2) #lcd.text(instrument_name, 2) #print/show string on line 3
+    write ("Please log in\n\rwith your user card", 3)
 
 def LCD_logged_in (instrument_name): # function dealing with displaying to the LCD display
     #config.logged_in = True
@@ -74,7 +74,7 @@ def LCD_logged_in (instrument_name): # function dealing with displaying to the L
         time.sleep(5)
         LCD_waiting(instrument_name)
         """    
-    else:
+    if config.in_database == True:
         config.logged_in = True
         lcd.clear() #clear the display
         write ("You are logged as:" , 1)  #print/show string on line 1

@@ -49,7 +49,6 @@ def crm_request_rfid (scanned_rfid):
         if len (crm_data) == 0:
             print ("Problem with ID card, not in database")
             config.in_database = False
-            pass
             #if len(data) == 0 that means that rfid number is not in database
             #print ('Card is not in the database')       
         else:          
