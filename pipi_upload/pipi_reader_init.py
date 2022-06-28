@@ -11,7 +11,6 @@ from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import time
 import LCD_display
-from pipi_upload.web_requests import crm_request_mac
 import web_requests
 
 pi_online_status = False
@@ -27,25 +26,24 @@ while pi_online_status == False:
         print (e) 
      
     try:   
-        mac = gma() # get MAC address
-        print("My MAC adress is: {}".format(mac))
-        config.mac = mac
-        #print ("config mac2", config.mac)
+        config.mac_address = gma() # get MAC address
+        print("My MAC adress is: {}".format(config.mac_address))
+        
         try:
-            config.equipment_name, config.equipment_id = crm_request_mac(config.mac)
+            web_requests.crm_request_mac(config.mac_address)
         except Exception as  e2:
             print (e2)
             print ("problemek s CRM")
     except Exception as e3:
-        mac = 0
+        config.mac_address = 0
         print (e3)
 
-print ( config.equipment_name, config.equipment_id)        
+print (config.equipment_name, config.equipment_id)        
 time.sleep (1)
 LCD_display.LCD_init (ip, mac)
 
 
-
+"""
 
 if ip != 0:
     time.sleep (3)    
@@ -55,4 +53,4 @@ if ip != 0:
     time.sleep (3) #Sleep x seconds before it will run main script 
     print ("Main script start")
     import pipi_reader
-    
+""" 
