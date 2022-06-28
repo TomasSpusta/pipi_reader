@@ -53,7 +53,7 @@ def LCD_waiting ():
     write ("Please log in\n\rwith your user card", 3)
 
 def LCD_logged_in (): # function dealing with displaying to the LCD display
-    #config.logged_in = True
+    config.logged_in = True
     #print ("LCD_section")
     
     if config.in_database == False:
