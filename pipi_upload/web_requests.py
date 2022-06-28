@@ -5,7 +5,7 @@ import time
 import config
 
 #create RFID reader instance
-#reader = SimpleMFRC522() 
+reader = SimpleMFRC522() 
 
 
 def rfid_reader():

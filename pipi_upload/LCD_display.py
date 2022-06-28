@@ -52,20 +52,20 @@ def LCD_waiting (instrument_name):
     #lcd.text(instrument_name, 2) #print/show string on line 3
     write ("Please log in\n\rwith your user card",3)
 
-def LCD_logged_in (server_response, instrument_name): # function dealing with displaying to the LCD display
+def LCD_logged_in (instrument_name): # function dealing with displaying to the LCD display
     #config.logged_in = True
     #print ("LCD_section")
     
-    if server_response == False:
+    if config.in_database == False:
         #print ("Card is not in database")
         lcd.clear() #clear the display
         write("Card is not in a database" , 1)  #print/show string on line 1
         write("Please contact User office" , 3)
-        config.logged_in = False
+        
         time.sleep(5)
         #print (logged_in)
         LCD_waiting(instrument_name)
-        
+        """    
     elif server_response == "Server Error":
         #print ("Server error")
         lcd.clear() #clear the display
@@ -73,17 +73,16 @@ def LCD_logged_in (server_response, instrument_name): # function dealing with di
         config.logged_in = False
         time.sleep(5)
         LCD_waiting(instrument_name)
-        
-        
+        """    
     else:
         config.logged_in = True
         lcd.clear() #clear the display
         write ("You are logged as:" , 1)  #print/show string on line 1
-        write (str(server_response), 2) 
+        write (str(config.user_name), 2) 
         write ("Happy hunting", 3)
         #lcd.text("Your session ends at:" , 3)  
         #lcd.text ("-end time-", 4)
-        #time.sleep(5)
+        time.sleep(5)
         backlight (False)
 
 
