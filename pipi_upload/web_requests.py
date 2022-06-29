@@ -64,6 +64,8 @@ def crm_request_rfid ():
     
 def booking_request_start_measurement ():
 #API request from Booking system - inputs are user_ID, instrument_ID, outputs are remaining_time, number_of_files
+    
+    config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"     
     payload = {"contact":config.user_id, "equipment":config.equipment_id}
 
     try:

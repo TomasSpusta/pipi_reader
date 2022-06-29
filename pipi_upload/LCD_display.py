@@ -59,7 +59,8 @@ def LCD_logged_in (): # function dealing with displaying to the LCD display
     if config.in_database == False:
         #print ("Card is not in database")
         lcd.clear() #clear the display
-        write("Card is not in a database" , 1)  #print/show string on line 1
+        write("Dear user, your card", 1)
+        write ("is not in a database" , 2)  #print/show string on line 1
         write("Please contact User office" , 3)
         
         time.sleep(5)
@@ -89,7 +90,8 @@ def not_in_database ():
     #user card is not in internal database, need to contact user office
     backlight (True)
     lcd.clear() #clear the display
-    write ("Card not in database" , 1)  #print/show string on line 1
+    write ("Dear user, your card" , 1)  #print/show string on line 1
+    write ("is not in a database" , 2)
     write ("Please contact", 3) 
     write ("User Office in C1.04", 4)
     time.sleep (5)

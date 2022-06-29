@@ -21,8 +21,10 @@ def main_script():
         LCD_display.not_in_database()
     else:
         status_code = web_requests.booking_request_start_measurement()
-        
+        print ("Status code from booking:" + str(status_code))
+           
     #print ('RFID number from reader: ' + str(rfid_number))
+        
         if config.logged_in == False:
             if status_code == 400:
                 LCD_display.booking_400
