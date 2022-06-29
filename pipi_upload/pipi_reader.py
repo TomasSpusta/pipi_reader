@@ -50,8 +50,8 @@ def main_script():
     
 def measuring ():
     if config.status_code == 409:
-        
-        print (i+1)
+        i= i +1
+        print (i)
         LCD_display.booking_409 ()
         time.sleep (5)
         web_requests.booking_request_start_measurement()
