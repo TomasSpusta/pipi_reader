@@ -52,45 +52,11 @@ def LCD_waiting ():
     write (config.equipment_name, 2) #lcd.text(instrument_name, 2) #print/show string on line 3
     write ("Please log in\n\rwith your user card", 3)
 
-def LCD_logged_in (): # function dealing with displaying to the LCD display
-    config.logged_in = True
-    #print ("LCD_section")
-    
-    if config.in_database == False:
-        #print ("Card is not in database")
-        lcd.clear() #clear the display
-        write("Dear user, your card", 1)
-        write ("is not in a database" , 2)  #print/show string on line 1
-        write("Please contact User office" , 3)
-        
-        time.sleep(5)
-        #print (logged_in)
-        LCD_waiting()
-        """    
-    elif server_response == "Server Error":
-        #print ("Server error")
-        lcd.clear() #clear the display
-        write("Server Error" , 1)
-        config.logged_in = False
-        time.sleep(5)
-        LCD_waiting(instrument_name)
-        """    
-    if config.in_database == True:
-        config.logged_in = True
-        lcd.clear() #clear the display
-        write ("You are logged as:" , 1)  #print/show string on line 1
-        write (str(config.user_name), 2) 
-        write ("Happy hunting", 3)
-        #lcd.text("Your session ends at:" , 3)  
-        #lcd.text ("-end time-", 4)
-        time.sleep(5)
-        backlight (False)
-
 def not_in_database ():
     #user card is not in internal database, need to contact user office
     backlight (True)
     lcd.clear() #clear the display
-    write ("Dear user, your card" , 1)  #print/show string on line 1
+    write ("Your card" , 1)  #print/show string on line 1
     write ("is not in a database" , 2)
     write ("Please contact", 3) 
     write ("User Office in C1.04", 4)
@@ -124,7 +90,7 @@ def booking_404 ():
     write ("No future booking", 3)
     write ("Please make one", 4)
     time.sleep (5)
-    LCD_waiting()
+    #LCD_waiting()
     
 def booking_400 ():
     backlight (True)
