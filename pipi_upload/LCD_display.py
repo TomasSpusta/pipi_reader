@@ -81,16 +81,6 @@ def booking_409 ():
     write ("Number of files:", 3)
     write (str(config.files) + " files", 4)  
 
-def booking_404 ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Hi", 1)  #print/show string on line 1
-    write (str(config.user_name), 2)
-    write ("No future booking", 3)
-    write ("Please make one", 4)
-    time.sleep (5)
-    LCD_waiting()
-    
 def booking_400 ():
     backlight (True)
     lcd.clear() #clear the display
@@ -100,6 +90,16 @@ def booking_400 ():
     write ("parameters", 4)
     time.sleep (5)
     LCD_waiting()
+
+def booking_404 ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Hi", 1)  #print/show string on line 1
+    write (str(config.user_name), 2)
+    write ("No future booking", 3)
+    write ("Please make one", 4)
+    time.sleep (5)
+    LCD_waiting() 
     
 def booking_500 ():
     backlight (True)
