@@ -85,11 +85,88 @@ def LCD_logged_in (): # function dealing with displaying to the LCD display
         time.sleep(5)
         backlight (False)
 
-
-
-def about_to_end_w (remaining_time): ### Dodelat, aby ukazoval session is about to end a blikalo
+def not_in_database ():
+    #user card is not in internal database, need to contact user office
+    backlight (True)
     lcd.clear() #clear the display
-    write ("Dear user,\n\ryour session\n\ris about to end\n\rin " + str(remaining_time) + (" minutes"), 1)
+    write ("Card is not in database." , 1)  #print/show string on line 1
+    write ("Please contact", 3) 
+    write ("User Office in C1.04", 4)
+    time.sleep (5)
+    LCD_waiting()
+    
+def booking_200 ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Hi", 1)  #print/show string on line 1
+    write (str(config.user_name), 2)
+    write ("Recording started", 3)
+    write ("Happy hunting!", 4)
+    time.sleep(5)
+    backlight (False)
+
+def booking_409 ():
+    backlight (False)
+    lcd.clear() #clear the display
+    write ("Remaining time:", 1)  #print/show string on line 1
+    write (str(config.remaining_time) + " min", 2)
+    write ("Number of files:", 3)
+    write (str(config.files) + " files", 4)
+    
+
+def booking_404 ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Hi", 1)  #print/show string on line 1
+    write (str(config.user_name), 2)
+    write ("No future booking", 3)
+    write ("Please make one", 4)
+    time.sleep (5)
+    LCD_waiting()
+    
+def booking_400 ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Hi", 1)  #print/show string on line 1
+    write (str(config.user_name), 2)
+    write ("Invalid booking", 3)
+    write ("parameters", 4)
+    time.sleep (5)
+    LCD_waiting()
+    
+def booking_500 ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Hi", 1)  #print/show string on line 1
+    write (str(config.user_name), 2)
+    write ("Internal ERROR", 3)
+    write ("Try log in again", 4)
+    time.sleep (5)
+    LCD_waiting()
+
+def session_ended ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Hi", 1)  #print/show string on line 1
+    write (str(config.user_name), 2)
+    write ("Your session ended", 3)
+    write ("See you next time", 4)
+    time.sleep (5)
+    LCD_waiting()        
+    
+def in_database ():
+    #user card is in internal database
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Hello", 1)  #print/show string on line 1
+    write (str(config.user_name), 2)
+    write ("Recording started", 3)
+    write ("Happy hunting!", 4)
+    
+
+def about_to_end_w (): ### Dodelat, aby ukazoval session is about to end a blikalo
+    lcd.clear() #clear the display
+    write ("Dear user,\n\ryour session\n\ris about to end\n\rin " + str(config.remaining_time) + (" minutes"), 1)
     flashing(0.3, 5) 
     backlight(True)
     time.sleep (3)

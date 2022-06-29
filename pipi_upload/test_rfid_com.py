@@ -18,6 +18,4 @@ web_requests.booking_request_start_measurement (config.user_id, config.equipment
 #print(config.equipment_id)
 #config.recording_id = "1298650f-14f6-ec11-80cd-005056914121"
 web_requests.booking_request_files ("a90e2dbc-2ef6-ec11-80cd-005056914121")
-"""
 print(("https://booking.ceitec.cz/api-public/recording/" + str(recording_id) + "/raw-data-info"))
-"""

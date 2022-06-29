@@ -9,16 +9,16 @@ reader = SimpleMFRC522()
 
 
 def rfid_reader():
-    card_id, text = reader.read()
+    config.card_id, text = reader.read()
     #print ('Readed card: ' + str(rfid))
-    return card_id 
+    
 
 #Function dealing with sending and recieving the data.
 #Parameter rfid is card number from MFRC522 reader
 
-def crm_request_mac (mac_address):
-    mac_address = str (mac_address)
-    payload = {"mac_address":mac_address}
+def crm_request_mac ():
+    #mac_address = str (mac_address)
+    payload = {"mac_address":config.mac_address}
     try:
         crm_response = requests.post ("https://betacrm.api.ceitec.cz/get-equipment-by-mac-address", json = payload)
         crm_data = crm_response.json()
@@ -37,9 +37,9 @@ def crm_request_mac (mac_address):
         print (e)
     
         
-def crm_request_rfid (scanned_rfid):
-    scanned_rfid = str (scanned_rfid)
-    payload = {"rfid":scanned_rfid}
+def crm_request_rfid ():
+    #scanned_rfid = str (scanned_rfid)
+    payload = {"rfid":config.card_id}
     
     try:
         crm_response = requests.post ("https://betacrm.api.ceitec.cz/get-contact-by-rfid", json = payload)
@@ -56,15 +56,15 @@ def crm_request_rfid (scanned_rfid):
             config.user_name = crm_data[0]["firstname"]
             config.user_id = crm_data[0]["contactid"]
             #print (config.user_name)
-            print ("User ID is {} a User's first name is {}" .format(config.user_id, config.user_name))
+            print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:
         print (e)
    
     
-def booking_request_start_measurement (user_id, equipment_id):
+def booking_request_start_measurement ():
 #API request from Booking system - inputs are user_ID, instrument_ID, outputs are remaining_time, number_of_files
-    payload = {"contact":user_id, "equipment":equipment_id}
+    payload = {"contact":config.user_id, "equipment":config.equipment_id}
 
     try:
         booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
@@ -74,30 +74,33 @@ def booking_request_start_measurement (user_id, equipment_id):
         #print(booking_response.status_code)
         
         if booking_response.status_code == 200:
-            print ("200 - Recording started") 
+            config.logged_in = True
+            #print ("200 - Recording started") 
             booking_data = booking_response.json()
-            #print ("Booking data:")
-            #print (booking_data)
-            #print (booking_data["duration"])
             config.remaining_time = booking_data["duration"]
             config.recording_id = booking_data["recording"]
             print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
         elif booking_response.status_code == 400:
+            config.logged_in = False
             print ("400 - Invalid input parameters")     
+        
         elif booking_response.status_code == 404:
+            config.logged_in = False
             print ("404 - Reservation not found for given parameters, or missing reservation session")    
+        
         elif booking_response.status_code == 409:
+            config.logged_in = True
             print ("409 - Recording is running")
             booking_data = booking_response.json()
-            #print ("Booking data:")
-            #print (booking_data)
-            #print (booking_data["duration"])
             config.remaining_time = booking_data["duration"]
             config.recording_id = booking_data["recording"]
             print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         elif booking_response.status_code == 500:
+            config.logged_in = False
             print ("500 - Internal error")  
+            
+        return booking_response.status_code
     except Exception as e:
         print(e)
     

@@ -8,20 +8,44 @@ import LCD_display
 import web_requests
 import config
 
+
+    
+
 def main_script():
     #get id card from rfid reader           
-    config.card_id = web_requests.rfid_reader()
-    #print ('RFID number from reader: ' + str(rfid_number))
-    #get response from server => user name, or not in database
-    web_requests.crm_request_rfid(config.card_id)
+    web_requests.rfid_reader()
+    #get response from CRM server => user name, user ID or not in database
+    web_requests.crm_request_rfid()
     
-    if config.logged_in == False:
-        #initial screen si waiting screen ("Welcome on _instrument name_, please log in with ID card")
-        LCD_display.LCD_waiting()
+    if config.in_database == False:
+        LCD_display.not_in_database()
     else:
+        status_code = web_requests.booking_request_start_measurement()
+        
+    #print ('RFID number from reader: ' + str(rfid_number))
+        if config.logged_in == False:
+            if status_code == 400:
+                LCD_display.booking_400
+            elif status_code == 404:
+                LCD_display.booking_404
+            elif status_code == 500:
+                LCD_display.booking_500
+             
+                
+        #initial screen si waiting screen ("Welcome on _instrument name_, please log in with ID card")
+        
+        else:
         #after succesfull login display will show ("you are logged in as _user name_")
-        LCD_display.LCD_logged_in ()
+            if status_code == 200:
+                LCD_display.booking_200
+            elif status_code == 409:
+                LCD_display.booking_409
+                       
+            #LCD_display.LCD_logged_in ()
     time.sleep(1)
+    
+    
+    
     
     
     
