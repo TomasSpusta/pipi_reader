@@ -79,8 +79,7 @@ def booking_409 ():
     write ("Remaining time:", 1)  #print/show string on line 1
     write (str(config.remaining_time) + " min", 2)
     write ("Number of files:", 3)
-    write (str(config.files) + " files", 4)
-    
+    write (str(config.files) + " files", 4)  
 
 def booking_404 ():
     backlight (True)
@@ -90,7 +89,7 @@ def booking_404 ():
     write ("No future booking", 3)
     write ("Please make one", 4)
     time.sleep (5)
-    #LCD_waiting()
+    LCD_waiting()
     
 def booking_400 ():
     backlight (True)

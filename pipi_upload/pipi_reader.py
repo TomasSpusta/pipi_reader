@@ -26,21 +26,21 @@ def main_script():
          
         if config.logged_in == False:
             if status_code == 400:
-                LCD_display.booking_400
+                LCD_display.booking_400 ()
             elif status_code == 404:
                 print (status_code)
-                LCD_display.booking_404
+                LCD_display.booking_404 ()
             elif status_code == 500:
-                LCD_display.booking_500
+                LCD_display.booking_500 ()
             
         #initial screen si waiting screen ("Welcome on _instrument name_, please log in with ID card")
         
         else:
         #after succesfull login display will show ("you are logged in as _user name_")
             if status_code == 200:
-                LCD_display.booking_200
+                LCD_display.booking_200 ()
             elif status_code == 409:
-                LCD_display.booking_409
+                LCD_display.booking_409 ()
                        
             #LCD_display.LCD_logged_in ()
     time.sleep(1)
