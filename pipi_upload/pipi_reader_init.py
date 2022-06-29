@@ -30,7 +30,7 @@ while pi_online_status == False:
         print("My MAC adress is: {}".format(config.mac_address))
         
         try:
-            web_requests.crm_request_mac(config.mac_address)
+            web_requests.crm_request_mac()
         except Exception as  e2:
             print (e2)
             print ("problemek s CRM")

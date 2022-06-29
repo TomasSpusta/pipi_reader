@@ -89,7 +89,7 @@ def not_in_database ():
     #user card is not in internal database, need to contact user office
     backlight (True)
     lcd.clear() #clear the display
-    write ("Card is not in database." , 1)  #print/show string on line 1
+    write ("Card not in database" , 1)  #print/show string on line 1
     write ("Please contact", 3) 
     write ("User Office in C1.04", 4)
     time.sleep (5)
