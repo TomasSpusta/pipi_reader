@@ -18,9 +18,9 @@ lcd = CharLCD('PCF8574', 0x27)
 def flashing (interval, number):
     for _ in range (number):
         time.sleep (interval)
-        lcd.backlight (True)
+        backlight (True)
         time.sleep(interval)
-        lcd.backlight (False)
+        backlight (False)
         
 def clear():
     lcd.clear()
