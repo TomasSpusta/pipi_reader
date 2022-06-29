@@ -41,16 +41,17 @@ def main_script():
                 LCD_display.booking_200 ()
             elif status_code == 409:
                 LCD_display.booking_409 ()
-                for _ in range (10):
+                while i < 10 :
                     print ("measuring module started")
                     i = i + 1
                     print (i)
                     LCD_display.booking_409 ()
-                    time.sleep (5)
+                    time.sleep (2)
                     web_requests.booking_request_start_measurement()
                     web_requests.booking_request_files ()
-                LCD_display.about_to_end_w()
-                LCD_display.booking_409 ()       
+                    if i == 8:
+                        LCD_display.about_to_end_w()
+                LCD_display.session_ended ()       
             #LCD_display.LCD_logged_in ()
     time.sleep(1)
 
