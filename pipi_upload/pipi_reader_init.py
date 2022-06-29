@@ -46,11 +46,11 @@ LCD_display.LCD_init (ip, config.mac_address)
 
 
 if ip != 0:
-    time.sleep (3)    
+    time.sleep (1)    
     print ("Checking github")
     import github_repo
     
-    time.sleep (3) #Sleep x seconds before it will run main script 
+    time.sleep (1) #Sleep x seconds before it will run main script 
     print ("Main script start")
     import pipi_reader
 

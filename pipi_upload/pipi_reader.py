@@ -28,6 +28,7 @@ def main_script():
             if status_code == 400:
                 LCD_display.booking_400
             elif status_code == 404:
+                print (status_code)
                 LCD_display.booking_404
             elif status_code == 500:
                 LCD_display.booking_500
