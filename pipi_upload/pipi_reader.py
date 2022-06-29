@@ -8,10 +8,10 @@ import LCD_display
 import web_requests
 import config
 
-i=0
     
 
 def main_script():
+    i=0
     #get id card from rfid reader           
     web_requests.rfid_reader()
     #get response from CRM server => user name, user ID or not in database
@@ -42,7 +42,7 @@ def main_script():
             elif status_code == 409:
                 LCD_display.booking_409 ()
                 print ("measuring module started")
-                i= i +1
+                i = i + 1
                 print (i)
                 LCD_display.booking_409 ()
                 time.sleep (5)
@@ -54,7 +54,7 @@ def main_script():
 
     
     
-    
+"""   
 def measuring ():
     print ("measuring module started")
     if config.status_code == 409:
@@ -66,7 +66,7 @@ def measuring ():
         web_requests.booking_request_files ()
     else:
         pass     
-        
+"""        
     
     
     
