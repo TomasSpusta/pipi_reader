@@ -15,4 +15,4 @@ files = 0
 in_database = False
 logged_in = False
 
-
+status_code = 0

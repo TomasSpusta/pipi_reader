@@ -107,14 +107,14 @@ def booking_request_start_measurement ():
         print(e)
     
     
-def booking_request_files (recording_id):
+def booking_request_files ():
     #payload = {"recording":recording_id}
     
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(recording_id) + "/raw-data-info")
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
         
         print (booking_response.status_code)
-        if booking_response.status_code == 200:
+        if booking_response.status_code == 200 or 409:
             booking_data = booking_response.json()
             print (booking_data)
           # print (booking_data["filesCount"])

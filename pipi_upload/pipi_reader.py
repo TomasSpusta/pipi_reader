@@ -8,7 +8,7 @@ import LCD_display
 import web_requests
 import config
 
-
+i=0
     
 
 def main_script():
@@ -44,7 +44,21 @@ def main_script():
                        
             #LCD_display.LCD_logged_in ()
     time.sleep(1)
+
     
+    
+    
+def measuring ():
+    if config.status_code == 409:
+        
+        print (i+1)
+        LCD_display.booking_409 ()
+        time.sleep (5)
+        web_requests.booking_request_start_measurement()
+        web_requests.booking_request_files ()
+    else:
+        pass     
+        
     
     
     
@@ -56,6 +70,7 @@ try:
     LCD_display.LCD_waiting()
     while 1:
         main_script()
+        measuring()
 
 finally:
     time.sleep(0.5)
