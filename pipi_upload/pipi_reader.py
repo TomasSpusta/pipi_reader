@@ -11,7 +11,7 @@ import config
     
 
 def main_script():
-    i=0
+   
     #get id card from rfid reader           
     web_requests.rfid_reader()
     #get response from CRM server => user name, user ID or not in database
@@ -21,7 +21,7 @@ def main_script():
         LCD_display.not_in_database()
     else:
         status_code = web_requests.booking_request_start_measurement()
-        print (type (status_code))
+        #print (type (status_code))
         print ("Status code from booking: " + str(status_code))  
          
         if config.logged_in == False:
@@ -40,15 +40,17 @@ def main_script():
            
             if status_code == 200:
                 LCD_display.booking_200 ()
+                print ("measuring started")
             elif status_code == 409:
                 LCD_display.booking_409 ()
             while config.remaining_time > 1 :
-                print ("measuring module started")
+                print ("measuring is running")
                 LCD_display.booking_409 ()
-                time.sleep (60)
+                time.sleep (10)
                 web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
-                if config.remaining_time == 5:
+                if config.remaining_time < 5 and config.warning_sent == False:
+                    config.warning_sent = True
                     LCD_display.about_to_end_w()
             LCD_display.session_ended ()       
             #LCD_display.LCD_logged_in ()
