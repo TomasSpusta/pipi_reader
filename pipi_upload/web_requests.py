@@ -74,8 +74,8 @@ def booking_request_start_measurement ():
         booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
         
         #print ("Booking response:")
-        #print (booking_response)
-        #print(booking_response.status_code)
+        print ("Booking status code:")
+        print(booking_response.status_code)
         
         if booking_response.status_code == 200:
             config.logged_in = True
