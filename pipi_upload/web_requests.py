@@ -79,7 +79,7 @@ def booking_request_start_measurement ():
             config.logged_in = True
             #print ("200 - Recording started") 
             booking_data = booking_response.json()
-            config.remaining_time = booking_data["timetoend"]
+            config.remaining_time = int(booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
             print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
