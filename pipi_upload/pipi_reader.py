@@ -46,13 +46,21 @@ def main_script():
             while config.remaining_time > 1 :
                 print ("measuring is running")
                 LCD_display.booking_409 ()
-                time.sleep (10)
+                time.sleep (15)
                 web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
                 if config.remaining_time < 5 and config.warning_sent == False:
                     config.warning_sent = True
                     LCD_display.about_to_end_w()
-            LCD_display.session_ended ()       
+                if config.in_session == True and status_code == 404:
+                    LCD_display.session_ended () 
+                    config.in_session = False       
+                    
+            LCD_display.session_ended ()  
+            config.in_session = False
+            config.warning_sent = False
+            config.logged_in = False
+                 
             #LCD_display.LCD_logged_in ()
     time.sleep(1)
 

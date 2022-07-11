@@ -18,5 +18,6 @@ warning_sent = False
 
 in_database = False
 logged_in = False
+in_session = False
 
 status_code = 0
