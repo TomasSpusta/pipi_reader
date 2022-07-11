@@ -37,12 +37,12 @@ def main_script():
         
         else:
         #after succesfull login display will show ("you are logged in as _user name_")
-            print ("reamining time data type" + str(type(config.remaining_time)))
+           
             if status_code == 200:
                 LCD_display.booking_200 ()
             elif status_code == 409:
                 LCD_display.booking_409 ()
-            while config.remaining_time < 1 :
+            while config.remaining_time > 1 :
                 print ("measuring module started")
                 LCD_display.booking_409 ()
                 time.sleep (60)
