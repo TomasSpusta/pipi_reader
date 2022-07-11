@@ -28,7 +28,6 @@ def main_script():
             if status_code == 400:
                 LCD_display.booking_400 ()
             elif status_code == 404:
-                print (status_code)
                 LCD_display.booking_404 ()
             elif status_code == 500:
                 LCD_display.booking_500 ()
@@ -49,7 +48,7 @@ def main_script():
                 time.sleep (15)
                 web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
-                if config.remaining_time < 5 and config.warning_sent == False:
+                if config.remaining_time < 6 and config.warning_sent == False:
                     config.warning_sent = True
                     LCD_display.about_to_end_w()
                 if config.in_session == True and status_code == 404:

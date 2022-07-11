@@ -1,6 +1,3 @@
-from logging import warning
-
-
 mac_address = 0
 
 card_id = 0
