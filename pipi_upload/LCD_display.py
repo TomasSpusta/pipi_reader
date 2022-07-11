@@ -110,7 +110,7 @@ def booking_500 ():
     write ("Hi", 1)  #print/show string on line 1
     write (str(config.user_name), 2)
     write ("Internal ERROR", 3)
-    write ("Try log in again", 4)
+    write ("Try to log in again", 4)
     time.sleep (5)
     LCD_waiting()
 
@@ -121,7 +121,7 @@ def session_ended ():
     write (str(config.user_name), 2)
     write ("Your session ended", 3)
     write ("See you next time", 4)
-    time.sleep (5)
+    time.sleep (10)
     LCD_waiting()        
     
 def in_database ():
