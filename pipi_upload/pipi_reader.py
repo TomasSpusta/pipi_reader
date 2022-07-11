@@ -20,7 +20,7 @@ def main_script():
     if config.in_database == False:
         LCD_display.not_in_database()
     else:
-        web_requests.booking_request_start_measurement()
+        config.status_code = web_requests.booking_request_start_measurement()
         #print (type (status_code))
         print ("Status code from booking: " + str(config.status_code))  
          
@@ -43,22 +43,20 @@ def main_script():
             elif config.status_code == 409:
                 LCD_display.booking_409 ()
             while config.remaining_time > 1 :
-                #config.status_code = web_requests.booking_request_start_measurement()
-                
-                LCD_display.booking_409 ()
-                time.sleep (15)
-                web_requests.booking_request_start_measurement()
+                time.sleep (5)
+                config.status_code = web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
+                LCD_display.booking_409 ()
+                
+                #web_requests.booking_request_start_measurement()
+                
                 print ("Recording is running")
                 print ("Status code from booking during session: " + str(config.status_code))  
                 if (0 < config.remaining_time < 6) and config.warning_sent == False:
                     config.warning_sent = True
                     LCD_display.about_to_end_w ()
                 if config.in_session == True and config.status_code == 404:
-                    LCD_display.session_ended () 
-                    config.in_session = False
-                    config.logged_in = False
-                    config.warning_sent = False
+                    #LCD_display.session_ended () 
                     config.remaining_time = 0       
                     
             LCD_display.session_ended ()  
