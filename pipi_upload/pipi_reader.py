@@ -55,7 +55,7 @@ def main_script():
                 if (0 < config.remaining_time < 6) and config.warning_sent == False:
                     config.warning_sent = True
                     LCD_display.about_to_end_w ()
-                if config.in_session == True and config.status_code == 404:
+                elif config.in_session == True and config.status_code == 404:
                     #LCD_display.session_ended () 
                     config.remaining_time = 0       
                     
