@@ -34,6 +34,7 @@ def crm_request_mac ():
             print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             
     except Exception as e:
+        print("Error in crm_request_mac")
         print (e)
     
         
@@ -59,6 +60,7 @@ def crm_request_rfid ():
             print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:
+        print("Error in crm_request_rfid")
         print (e)
    
     
@@ -82,30 +84,31 @@ def booking_request_start_measurement ():
             booking_data = booking_response.json()
             config.remaining_time = int(booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
-            print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+            #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
         elif booking_response.status_code == 400:
             config.logged_in = False
-            print ("400 - Invalid input parameters")     
+            #print ("400 - Invalid input parameters")     
         
         elif booking_response.status_code == 404:
             config.logged_in = False
-            print ("404 - Reservation not found for given parameters, or missing reservation session")    
+            #print ("404 - Reservation not found for given parameters, or missing reservation session")    
         
         elif booking_response.status_code == 409:
             config.logged_in = True
             config.in_session = True
-            print ("409 - Recording is running")
+            #print ("409 - Recording is running")
             booking_data = booking_response.json()
             config.remaining_time = int (booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
-            print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+            #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         elif booking_response.status_code == 500:
             config.logged_in = False
-            print ("500 - Internal error")  
+            #print ("500 - Internal error")  
             
         return booking_response.status_code
     except Exception as e:
+        print("Error in booking_request_start_measurement")
         print(e)
     
     
@@ -124,5 +127,6 @@ def booking_request_files ():
         else:
             print ("nejaky problemek s datama")
     except Exception as e:
+        print("Error in booking_request_files")
         print(e)
     
