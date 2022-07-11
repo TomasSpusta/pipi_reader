@@ -20,16 +20,16 @@ def main_script():
     if config.in_database == False:
         LCD_display.not_in_database()
     else:
-        status_code = web_requests.booking_request_start_measurement()
+        config.status_code = web_requests.booking_request_start_measurement()
         #print (type (status_code))
-        print ("Status code from booking: " + str(status_code))  
+        print ("Status code from booking: " + str(config.status_code))  
          
         if config.logged_in == False:
-            if status_code == 400:
+            if config.status_code == 400:
                 LCD_display.booking_400 ()
-            elif status_code == 404:
+            elif config.status_code == 404:
                 LCD_display.booking_404 ()
-            elif status_code == 500:
+            elif config.status_code == 500:
                 LCD_display.booking_500 ()
             
         #initial screen si waiting screen ("Welcome on _instrument name_, please log in with ID card")
@@ -37,14 +37,14 @@ def main_script():
         else:
         #after succesfull login display will show ("you are logged in as _user name_")
            
-            if status_code == 200:
+            if config.status_code == 200:
                 LCD_display.booking_200 ()
                 print ("measuring started")
-            elif status_code == 409:
+            elif config.status_code == 409:
                 LCD_display.booking_409 ()
             while config.remaining_time > 1 :
                 print ("measuring is running")
-                print (status_code)
+                print (config.status_code)
                 LCD_display.booking_409 ()
                 time.sleep (15)
                 web_requests.booking_request_start_measurement()
@@ -52,7 +52,7 @@ def main_script():
                 if config.remaining_time < 6 and config.warning_sent == False:
                     config.warning_sent = True
                     LCD_display.about_to_end_w()
-                if config.in_session == True and status_code == 404:
+                if config.in_session == True and config.status_code == 404:
                     LCD_display.session_ended () 
                     config.in_session = False       
                     
