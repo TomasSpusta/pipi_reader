@@ -106,7 +106,7 @@ def booking_request_start_measurement ():
             config.logged_in = False
             #print ("500 - Internal error")  
             
-        config.status_code = booking_response.status_code
+        booking_response.status_code = config.status_code
     except Exception as e:
         print("Error in booking_request_start_measurement")
         print(e)
