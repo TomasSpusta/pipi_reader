@@ -115,7 +115,7 @@ def booking_request_files ():
     try:
         booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
         
-        print (booking_response.status_code)
+        #print (booking_response.status_code)
         if booking_response.status_code == 200 or 409:
             booking_data = booking_response.json()
             #print (booking_data)
