@@ -72,7 +72,7 @@ def booking_request_start_measurement ():
 
     try:
         booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
-        config.status_code = booking_response.status_code
+        booking_response.status_code = config.status_code
         #print ("Booking response:")
         #print (booking_response)
         #print(booking_response.status_code)
