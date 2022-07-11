@@ -72,7 +72,7 @@ def booking_request_start_measurement ():
 
     try:
         booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
-        booking_response.status_code = config.status_code
+        
         #print ("Booking response:")
         #print (booking_response)
         #print(booking_response.status_code)
@@ -105,7 +105,8 @@ def booking_request_start_measurement ():
         elif booking_response.status_code == 500:
             config.logged_in = False
             #print ("500 - Internal error")  
-            
+        
+        return booking_response.status_code    
         
     except Exception as e:
         print("Error in booking_request_start_measurement")
