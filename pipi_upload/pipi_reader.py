@@ -57,6 +57,8 @@ def main_script():
                 if config.in_session == True and config.status_code == 404:
                     LCD_display.session_ended () 
                     config.in_session = False
+                    config.logged_in = False
+                    config.warning_sent = False
                     config.remaining_time = 0       
                     
             LCD_display.session_ended ()  
