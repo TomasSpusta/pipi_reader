@@ -43,6 +43,7 @@ def main_script():
             elif config.status_code == 409:
                 LCD_display.booking_409 ()
             while config.remaining_time > 1 :
+                config.status_code = web_requests.booking_request_start_measurement()
                 print ("measuring is running")
                 print ("Status code from booking during session: " + str(config.status_code))  
                 LCD_display.booking_409 ()
