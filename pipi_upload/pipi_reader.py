@@ -44,7 +44,7 @@ def main_script():
                 LCD_display.booking_409 ()
             while config.remaining_time > 1 :
                 print ("measuring is running")
-                print (config.status_code)
+                print ("Status code from booking during session: " + str(config.status_code))  
                 LCD_display.booking_409 ()
                 time.sleep (15)
                 web_requests.booking_request_start_measurement()
