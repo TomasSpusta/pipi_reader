@@ -95,7 +95,7 @@ def booking_request_start_measurement ():
             config.logged_in = True
             print ("409 - Recording is running")
             booking_data = booking_response.json()
-            config.remaining_time = int (booking_data["timeto end"])
+            config.remaining_time = int (booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
             print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         elif booking_response.status_code == 500:
