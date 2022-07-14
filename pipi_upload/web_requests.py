@@ -1,6 +1,8 @@
 import requests
 import time
 import config
+from unidecode import unidecode
+
 
 def crm_request_mac ():
     #mac_address = str (mac_address)
@@ -40,7 +42,9 @@ def crm_request_rfid ():
             #print ('Card is not in the database')       
         else:          
             config.in_database = True
-            config.user_name = crm_data[0]["firstname"]
+            user_name = crm_data[0]["firstname"]
+            bezdia = unidecode(user_name, "utf-8")
+            config.user_name = unidecode(bezdia)
             config.user_id = crm_data[0]["contactid"]
             #print (config.user_name)
             print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
