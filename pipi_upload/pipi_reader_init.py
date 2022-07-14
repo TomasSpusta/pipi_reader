@@ -39,8 +39,9 @@ while pi_online_status == False:
         print (e3)
 
 print (config.equipment_name, config.equipment_id)        
-time.sleep (1)
+
 LCD_display.LCD_init (ip, config.mac_address)
+time.sleep (5)
 
 
 
