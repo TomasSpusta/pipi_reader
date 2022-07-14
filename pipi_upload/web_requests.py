@@ -60,14 +60,18 @@ def crm_request_rfid ():
             print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:
-        print("Error in crm_request_rfid")
+        print("Error in crm_request_rfid:")
         print (e)
    
     
 def booking_request_start_measurement ():
 #API request from Booking system - inputs are user_ID, instrument_ID, outputs are remaining_time, number_of_files
-    
+   
+   #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION 
     config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"     
+   #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION
+    
+    
     payload = {"contact":config.user_id, "equipment":config.equipment_id}
 
     try:

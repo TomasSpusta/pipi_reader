@@ -12,50 +12,52 @@ import config
 
 def main_script():
    
-    #get id card from rfid reader           
+    #get card id from rfid reader           
     web_requests.rfid_reader()
     #get response from CRM server => user name, user ID or not in database
     web_requests.crm_request_rfid()
-    
+
+
     if config.in_database == False:
-        LCD_display.not_in_database()
+        # If card ID is not it the internal database, LCD displays the error 
+        LCD_display.not_in_database() 
     else:
+        # Load the status code of reservation
         config.status_code = web_requests.booking_request_start_measurement()
         #print (type (status_code))
         print ("Status code from booking: " + str(config.status_code))  
          
         if config.logged_in == False:
+            # Display error notifications, when booking error occures
             if config.status_code == 400:
                 LCD_display.booking_400 ()
             elif config.status_code == 404:
                 LCD_display.booking_404 ()
             elif config.status_code == 500:
-                LCD_display.booking_500 ()
-            
-        #initial screen si waiting screen ("Welcome on _instrument name_, please log in with ID card")
-        
+                LCD_display.booking_500 ()  
+              
         else:
         #after succesfull login display will show ("you are logged in as _user name_")
-           
             if config.status_code == 200:
                 LCD_display.booking_200 ()
                 print ("Recording started")
             elif config.status_code == 409:
                 LCD_display.booking_409 ()
-            while config.remaining_time > 1 :
-                time.sleep (5)
+                
+            while config.remaining_time > 0 :
+                #Loop checking and updating session information - remaining time, number of files
+                time.sleep (5) # refresh rate in seconds
                 config.status_code = web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
                 LCD_display.booking_409 ()
-                
-                #web_requests.booking_request_start_measurement()
-                
                 print ("Recording is running")
                 print ("Status code from booking during session: " + str(config.status_code))  
                 if (0 < config.remaining_time < 6) and config.warning_sent == False:
+                    # Session about to end warning at 5-minute mark 
                     config.warning_sent = True
                     LCD_display.about_to_end_w ()
                 elif config.in_session == True and (config.status_code == 404 or config.status_code == 500) :
+                    # This should check when the session is terminated manualy in the booking system
                     #LCD_display.session_ended () 
                     config.remaining_time = 0       
                     
@@ -64,29 +66,9 @@ def main_script():
             config.warning_sent = False
             config.logged_in = False
             print ("Recording ended")     
-            #LCD_display.LCD_logged_in ()
+           
     time.sleep(1)
 
-    
-    
-"""   
-def measuring ():
-    print ("measuring module started")
-    if config.status_code == 409:
-        i= i +1
-        print (i)
-        LCD_display.booking_409 ()
-        time.sleep (5)
-        web_requests.booking_request_start_measurement()
-        web_requests.booking_request_files ()
-    else:
-        pass     
-"""        
-    
-    
-    
-    
-    
 
 # running script
 try:
