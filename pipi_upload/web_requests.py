@@ -68,7 +68,11 @@ def booking_request_start_measurement ():
 #API request from Booking system - inputs are user_ID, instrument_ID, outputs are remaining_time, number_of_files
    
    #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION 
-    config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"     
+    # RFID-TEST:
+    # config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"     
+    
+    # KERR-MICROSCOPE:
+    config.equipment_id = "907ebc62-37f1-e711-8b1a-005056991551"
    #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION
     
     
