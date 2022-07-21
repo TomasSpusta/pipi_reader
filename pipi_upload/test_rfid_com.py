@@ -3,7 +3,8 @@ import config
 import web_requests
 
 config.card_id = 912853855591
-config.mac_address = "e4:5f:01:8d:6d:3f"
+#config.mac_address = "e4:5f:01:8d:6d:3f"
+config.mac_address = "b8:27:eb:ef:e5:bf"
 config.user_id =  "2c5c963c-68ba-e311-85a1-005056991551"
 config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"
 recording_id = "a90e2dbc-2ef6-ec11-80cd-005056914121"

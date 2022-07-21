@@ -14,8 +14,9 @@ import LCD_display
 import web_requests
 
 pi_online_status = False
+mac_connected = False
 # try to acquire IP adress, therefore check connection to the internet
-while pi_online_status == False:
+while pi_online_status == False or mac_connected == False:
     try:
         ip = get('https://api.ipify.org').content.decode('utf8')
         print('My public IP address is: {}'.format(ip))    

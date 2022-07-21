@@ -14,6 +14,7 @@ def crm_request_mac ():
         
         if len (crm_data) == 0:
             print ("Problem with mac address")
+            print ("No equipment connected to the reader")
             #if len(data) == 0 that means that something is wrong with mac address or equipment
             
         else:          
