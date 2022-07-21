@@ -69,7 +69,7 @@ def booking_request_start_measurement ():
    
    #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION 
     # RFID-TEST:
-    # config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"     
+    config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"     
     
     # KERR-MICROSCOPE:
     #config.equipment_id = "907ebc62-37f1-e711-8b1a-005056991551"
