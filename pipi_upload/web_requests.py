@@ -4,6 +4,7 @@ import requests
 import time
 import config
 import sys
+import unidecode
 
 sys.path.append('/home/pi/RFID')
 import equipment_id
@@ -46,7 +47,8 @@ def crm_request_rfid ():
             #print ('Card is not in the database')       
         else:          
             config.in_database = True
-            config.user_name = crm_data[0]["firstname"]
+            user_name = crm_data[0]["firstname"]
+            config.user_name = unidecode.unidecode (user_name)
             config.user_id = crm_data[0]["contactid"]
             #print (config.user_name)
             print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))

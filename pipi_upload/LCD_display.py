@@ -78,7 +78,7 @@ def booking_200 ():
 
 def booking_409 ():
     backlight (False)
-    #lcd.clear() #clear the display
+    lcd.clear() #clear the display
     write ("Remaining time:", 1)  #print/show string on line 1
     write ("   ", 2)
     write (str(config.remaining_time) + " min", 2)
