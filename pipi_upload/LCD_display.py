@@ -142,7 +142,7 @@ def about_to_end_w (): ### Dodelat, aby ukazoval session is about to end a blika
     write ("Dear user,\n\ryour session\n\ris about to end\n\rin " + str(config.remaining_time) + (" minutes"), 1)
     flashing(0.3, 5) 
     backlight(True)
-    time.sleep (8)
+    time.sleep (5)
     backlight (False)
 
 def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
