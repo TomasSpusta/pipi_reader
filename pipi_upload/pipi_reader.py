@@ -48,7 +48,6 @@ def main_script():
                 
             while config.remaining_time > 0 :
                 #Loop checking and updating session information - remaining time, number of files
-                time.sleep (5) # refresh rate in seconds
                 config.status_code = web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
                 LCD_display.booking_409 ()
@@ -58,11 +57,12 @@ def main_script():
                     # Session about to end warning at 5-minute mark 
                     config.warning_sent = True
                     LCD_display.about_to_end_w ()
+                    LCD_display.clear ()
                 elif config.in_session == True and (config.status_code == 404 or config.status_code == 500) :
                     # This should check when the session is terminated manualy in the booking system
                     #LCD_display.session_ended () 
                     config.remaining_time = 0       
-                    
+                time.sleep (5) # refresh rate in seconds   
             LCD_display.session_ended ()  
             config.in_session = False
             config.warning_sent = False
