@@ -62,7 +62,7 @@ def not_in_database ():
     write ("Your card" , 1)  #print/show string on line 1
     write ("is not in a database" , 2)
     write ("Please contact", 3) 
-    write ("User Office in C1.04", 4)
+    write ("User Office in C1.04", 4) 
     time.sleep (5)
     LCD_waiting()
     
