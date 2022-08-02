@@ -1,25 +1,12 @@
 
-from mfrc522 import SimpleMFRC522
+
 import requests
 import time
 import config
 import sys
+
 sys.path.append('/home/pi/RFID')
-
 import equipment_id
-
-
-#create RFID reader instance
-reader = SimpleMFRC522() 
-
-
-def rfid_reader():
-    config.card_id, text = reader.read()
-    #print ('Readed card: ' + str(rfid))
-    
-
-#Function dealing with sending and recieving the data.
-#Parameter rfid is card number from MFRC522 reader
 
 def crm_request_mac ():
     #mac_address = str (mac_address)

@@ -7,13 +7,13 @@ import RPi.GPIO as GPIO
 import LCD_display
 import web_requests
 import config
-
+import reader
     
 
 def main_script():
    
     #get card id from rfid reader           
-    web_requests.rfid_reader()
+    reader.rfid_reader()
     #get response from CRM server => user name, user ID or not in database
     web_requests.crm_request_rfid()
 
