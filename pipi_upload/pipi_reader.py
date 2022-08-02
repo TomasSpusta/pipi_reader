@@ -43,6 +43,8 @@ def main_script():
                 print ("Recording started")
             elif config.status_code == 409:
                 LCD_display.booking_409 ()
+            
+            LCD_display.clear()
                 
             while config.remaining_time > 0 :
                 #Loop checking and updating session information - remaining time, number of files
