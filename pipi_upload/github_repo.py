@@ -1,4 +1,5 @@
 #https://www.devdungeon.com/content/working-git-repositories-python
+#https://linuxconfig.org/how-to-manage-git-repositories-with-python
 
 #import gitpython
 import git
@@ -13,6 +14,9 @@ import shutil
 local_repo = "/home/pi/pipi_reader"
 #location/address of the remote github repository
 github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
+
+branch = "v2"
+
 '''
 try:
     shutil.rmtree(local_repo)
