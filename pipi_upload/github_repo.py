@@ -15,7 +15,7 @@ local_repo = "/home/pi/pipi_reader"
 #location/address of the remote github repository
 github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
 
-branch = "v2"
+
 
 '''
 try:

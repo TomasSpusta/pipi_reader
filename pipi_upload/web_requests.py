@@ -6,8 +6,8 @@ import config
 import sys
 import unidecode
 
-sys.path.append('/home/pi/RFID')
-import equipment_id
+#sys.path.append('/home/pi/RFID')
+#import equipment_id
 
 def crm_request_mac ():
     #mac_address = str (mac_address)
