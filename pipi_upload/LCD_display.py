@@ -33,7 +33,11 @@ def write (text, row):
     lcd.cursor_pos = (row-1, 0)
     lcd.write_string (text)
 
-
+def version ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Version:",1)
+    write ("X.X.X",2)
 
 def LCD_init (ip, mac):
     backlight (True)
