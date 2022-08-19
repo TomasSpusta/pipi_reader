@@ -3,7 +3,7 @@ import time
 import LCD_display
 import config
 
-i = 0
+#i = 0
 session_running = True
 button_pin = 40
 #GPIO.setmode(GPIO.BCM)
@@ -12,13 +12,14 @@ GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 def button_callback (button_pin):    
-    global i
+    i=0
     #global session_running
     if GPIO.input (button_pin) == GPIO.HIGH:
         #print ('button released now')
         #session_running = True
         i = 0
         LCD_display.clear()
+        LCD_display.booking_409 ()
         
     else:
         symbol = "|"

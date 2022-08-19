@@ -84,9 +84,11 @@ try:
     while 1:
         main_script()
       
-finally:
+except KeyboardInterrupt:
     time.sleep(0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        
     GPIO.cleanup()
+
+    
 # 

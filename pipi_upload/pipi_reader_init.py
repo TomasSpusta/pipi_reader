@@ -58,7 +58,7 @@ try:
         print ("Main script start")
         import pipi_reader
 
-finally:
+except KeyboardInterrupt:
     time.sleep(0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        
