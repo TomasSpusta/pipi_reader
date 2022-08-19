@@ -66,6 +66,7 @@ def main_script():
                     #LCD_display.session_ended () 
                     config.remaining_time = 0       
                 time.sleep (refresh_rate) # refresh rate in seconds   
+            stop_reservation.button_deactivated()
             LCD_display.session_ended ()  
             config.in_session = False
             config.warning_sent = False

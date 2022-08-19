@@ -34,7 +34,7 @@ def button_callback (button_pin):
             time.sleep (0.25)
             if i > 16:
                 #GPIO.cleanup(button_pin)
-                GPIO.remove_event_detect(button_pin)
+                #GPIO.remove_event_detect(button_pin)
                 #print ('session ended')
                 LCD_display.clear()
                 LCD_display.write ('Session Ended',1)
@@ -46,6 +46,9 @@ def button_callback (button_pin):
                 
 def ending_reservation ():    
     GPIO.add_event_detect(button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
+
+def button_deactivated ():
+    GPIO.remove_event_detect(button_pin)
 
 """"
 t=0
