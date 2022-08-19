@@ -48,7 +48,7 @@ def main_script():
                 LCD_display.booking_409 ()
             
            
-            refresh_rate = 5 #refresh rate of remaining time and files in seconds    
+            refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
                 #Loop checking and updating session information - remaining time, number of files
                 config.status_code = web_requests.booking_request_start_measurement()
