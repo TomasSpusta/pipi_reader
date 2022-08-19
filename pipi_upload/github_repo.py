@@ -31,7 +31,7 @@ try:
 except Exception as error:
     #if the repository is already cloned, the folder is present on RPi,
     #error will happen, then we will try to use pull command
-    print(error)
+    #print(error)
     try:
         #initialize local repository
         repo = git.Repo(local_repo)

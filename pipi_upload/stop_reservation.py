@@ -38,7 +38,8 @@ def button_callback (button_pin):
                 GPIO.remove_event_detect(button_pin)
                 #print ('session ended')
                 LCD_display.clear()
-                #LCD_display.write ('Session Ended',1)
+                LCD_display.write ('Session ended',1)
+                LCD_display.write ('by user',2)
                 
                 config.remaining_time = 0
                
