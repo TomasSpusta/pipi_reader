@@ -44,17 +44,18 @@ def main_script():
             if config.status_code == 200:
                 LCD_display.booking_200 ()
                 print ("Recording started")
+                LCD_display.booking_409_init ()
             elif config.status_code == 409:
-                LCD_display.booking_409 ()
+                LCD_display.booking_409_init ()
             
            
-            refresh_rate = 30 #refresh rate of remaining time and files in seconds    
+            refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
                 #Loop checking and updating session information - remaining time, number of files
                 config.status_code = web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
                 time.sleep (refresh_rate) # refresh rate in seconds   
-                LCD_display.booking_409 ()
+                LCD_display.booking_409_time ()
                 print ("Recording is running")
                 print ("Status code from booking during session: " + str(config.status_code))  
                 if (0 < config.remaining_time < 6) and config.warning_sent == False:
@@ -67,7 +68,7 @@ def main_script():
                     #LCD_display.session_ended () 
                     config.remaining_time = 0       
                 
-            stop_reservation.button_deactivated()
+            
             LCD_display.session_ended ()  
             config.in_session = False
             config.warning_sent = False

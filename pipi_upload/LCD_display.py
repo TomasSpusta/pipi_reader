@@ -74,24 +74,17 @@ def booking_200 ():
     write ("Recording started", 3)
     write ("Happy hunting!", 4)
     time.sleep(5)
-    backlight (False)
+    
 
-def booking_409 ():
-    backlight (False)
+def booking_409_init ():
+    backlight (True)
     lcd.clear() #clear the display
     write (config.user_name, 1)  #print/show string on line 1
     write ("Recording is running", 2)
     write ("To stop recording", 3)
     write ("hold the red button", 4)  
-    time.sleep (6)
+    time.sleep (5)
     
-    lcd.clear() #clear the display
-    write ("Remaining time:", 1)  #print/show string on line 1
-    #write ("   ", 2)
-    write (str(config.remaining_time) + " min", 2)
-    write ("Number of files:", 3)
-    #write ("   ", 4)  
-    write (str(config.files) + " files", 4)  
 
 def booking_409_time (): 
     backlight (False)
