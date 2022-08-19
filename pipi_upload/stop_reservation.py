@@ -4,7 +4,6 @@ import LCD_display
 
 i = 0
 session_running = True
-
 button_pin = 40
 #GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -15,15 +14,15 @@ def button_callback (button_pin):
     global i
     global session_running
     if GPIO.input (button_pin) == GPIO.HIGH:
-        print ('button released now')
+        #print ('button released now')
         session_running = True
         i = 0
         LCD_display.clear()
         
     else:
         symbol = "|"
-        print ('button Pressed now')
-        
+        #print ('button Pressed now')
+        LCD_display.clear()
         LCD_display.write ('Ending session',1)
         while GPIO.input (button_pin) == GPIO.LOW:
             i += 4
@@ -33,7 +32,7 @@ def button_callback (button_pin):
             if i > 16:
                 #GPIO.cleanup(button_pin)
                 GPIO.remove_event_detect(button_pin)
-                print ('session ended')
+                #print ('session ended')
                 LCD_display.clear()
                 LCD_display.write ('Session Ended',1)
                 session_running = False

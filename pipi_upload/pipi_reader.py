@@ -38,6 +38,7 @@ def main_script():
                 LCD_display.booking_500 ()  
               
         else:
+            stop_reservation.ending_reservation()
         #after succesfull login display will show ("you are logged in as _user name_")
             if config.status_code == 200:
                 LCD_display.booking_200 ()
@@ -78,7 +79,7 @@ def main_script():
 # running script
 try:
     LCD_display.LCD_waiting()
-    stop_reservation.ending_reservation ()
+    
     while 1:
         main_script()
       
