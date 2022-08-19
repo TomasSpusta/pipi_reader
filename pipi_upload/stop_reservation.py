@@ -31,6 +31,7 @@ def loading_bar():
             LCD_display.lcd.clear()
             LCD_display.write ('Session Ended',1)
             session_running = False # tady bude vlastne sctript, ktery odesle nekam neco, aby sa session ukoncila
+            button.close()
             time.sleep (2)
 
 
