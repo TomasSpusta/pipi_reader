@@ -11,7 +11,7 @@ import shutil
 
 
 #location of the local folder where the github repository will be downloaded (pulled)
-local_repo = "/home/pi/pipi_reader"
+local_repo = "/home/pi/pipi_reader_develop"
 #location/address of the remote github repository
 github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
 branch = "develop"
@@ -31,7 +31,7 @@ try:
 except Exception as error:
     #if the repository is already cloned, the folder is present on RPi,
     #error will happen, then we will try to use pull command
-    #print(error)
+    print(error)
     try:
         #initialize local repository
         repo = git.Repo(local_repo)
