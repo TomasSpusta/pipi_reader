@@ -5,8 +5,8 @@ import LCD_display
 i = 0
 session_running = True
 
-button_pin = 21
-GPIO.setmode(GPIO.BCM)
+button_pin = 40
+#GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
