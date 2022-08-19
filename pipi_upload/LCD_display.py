@@ -152,6 +152,7 @@ def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
     backlight(True)
 
 
-
+#def ending_session ():
+    
 
     

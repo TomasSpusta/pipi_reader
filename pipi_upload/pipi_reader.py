@@ -8,6 +8,7 @@ import LCD_display
 import web_requests
 import config
 import card_reader
+import stop_reservation
     
 
 def main_script():
@@ -72,9 +73,12 @@ def main_script():
     time.sleep(1)
 
 
+    
+
 # running script
 try:
     LCD_display.LCD_waiting()
+    stop_reservation.ending_session ()
     while 1:
         main_script()
       
