@@ -79,11 +79,18 @@ def booking_200 ():
 def booking_409 ():
     backlight (False)
     lcd.clear() #clear the display
+    write (config.user_name, 1)  #print/show string on line 1
+    write ("Recording is running", 2)
+    write ("To stop a recording", 3)
+    write ("hold the button", 4)  
+    time.sleep (2)
+    
+    lcd.clear() #clear the display
     write ("Remaining time:", 1)  #print/show string on line 1
-    write ("   ", 2)
+    #write ("   ", 2)
     write (str(config.remaining_time) + " min", 2)
     write ("Number of files:", 3)
-    write ("   ", 4)  
+    #write ("   ", 4)  
     write (str(config.files) + " files", 4)  
     
 
