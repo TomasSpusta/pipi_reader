@@ -31,7 +31,7 @@ def button_callback (button_pin):
             i += 1
             LCD_display.write (i*symbol,2)
             #print (i*symbol)
-            time.sleep (0.2)
+            time.sleep (0.1)
             if i > 19:
                 #GPIO.cleanup(button_pin)
                 GPIO.remove_event_detect(button_pin)
