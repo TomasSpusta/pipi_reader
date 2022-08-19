@@ -8,6 +8,7 @@ user_name = ""
 equipment_id = ""
 equipment_name = ""
 
+reservation_id = ""
 recording_id = ""
 remaining_time = 0
 files = 0

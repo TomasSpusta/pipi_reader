@@ -6,8 +6,8 @@ import config
 import sys
 import unidecode
 
-sys.path.append('/home/pi/RFID')
-import equipment_id
+#sys.path.append('/home/pi/RFID')
+#import equipment_id
 
 def crm_request_mac ():
     #mac_address = str (mac_address)
@@ -86,6 +86,7 @@ def booking_request_start_measurement ():
             booking_data = booking_response.json()
             config.remaining_time = int(booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
+            config.reservation_id = booking_data ["reservation"]
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
         elif booking_response.status_code == 400:
@@ -103,6 +104,7 @@ def booking_request_start_measurement ():
             booking_data = booking_response.json()
             config.remaining_time = int (booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
+            config.reservation_id = booking_data ["reservation"]
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         elif booking_response.status_code == 500:
             config.logged_in = False
@@ -135,11 +137,20 @@ def booking_request_files ():
     
 def booking_reservation_info ():
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.recording_id))
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id))
         
         print (booking_response.status_code)
+        booking_data = booking_response
+        print (booking_data)
+        '''
         
-        """
+            #print ("409 - Recording is running")
+            booking_data = booking_response.json()
+            config.remaining_time = int (booking_data["timetoend"])
+            config.recording_id = booking_data["recording"]
+            #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+        
+        
         if booking_response.status_code == 200 or 409:
             booking_data = booking_response.json()
             #print (booking_data)
@@ -147,7 +158,8 @@ def booking_reservation_info ():
             config.files = booking_data["filesCount"]            
         else:
             print ("nejaky problemek s datama")
-        """
+        '''
     except Exception as e:
         print("Error in booking_request_files")
-        print(e)
+        print(e)         
+            
