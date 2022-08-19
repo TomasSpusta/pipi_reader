@@ -14,7 +14,7 @@ import shutil
 local_repo = "/home/pi/pipi_reader"
 #location/address of the remote github repository
 github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
-
+branch = "develop"
 
 
 '''
@@ -27,7 +27,7 @@ except OSError as e:
 
 #try to clone remote repository from github
 try:
-    cloned_repo = git.Repo.clone_from (github_repo, local_repo)
+    cloned_repo = git.Repo.clone_from (github_repo, local_repo, branch=branch)
 except Exception as error:
     #if the repository is already cloned, the folder is present on RPi,
     #error will happen, then we will try to use pull command
