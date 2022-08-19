@@ -4,10 +4,10 @@ import LCD_display
 
 button = gpiozero.Button (21)
 
-def ending_session ():
-    i = 0
-    
-    session_running = True
+i = 0
+session_running = True
+
+def ending_session ():    
     button.when_pressed = loading_bar
     button.when_released = loading_bar_erase 
 
@@ -22,7 +22,7 @@ def loading_bar():
         #print ('Button is pressed')
         #time.sleep (0.5)
         
-        i += 2
+        i += 4
         LCD_display.write (i*symbol,2)
         print (i*symbol)
         time.sleep (1)
@@ -39,13 +39,13 @@ def loading_bar_erase():
     i = 0
     LCD_display.lcd.clear()
 
+'''
+ending_session ()
 
-
-"""
 t=0
 while session_running == True:
     #global session_running
     t+=1
     print (t)
     time.sleep (2)
-"""
+'''
