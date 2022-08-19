@@ -48,6 +48,7 @@ def main_script():
             elif config.status_code == 409:
                 LCD_display.booking_409_init ()
             print("Recording ID: " + str(config.recording_id))
+            print("Reservation ID: " + str(config.reservation_id))
            
             refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
