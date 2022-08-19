@@ -53,6 +53,7 @@ def main_script():
                 #Loop checking and updating session information - remaining time, number of files
                 config.status_code = web_requests.booking_request_start_measurement()
                 web_requests.booking_request_files ()
+                time.sleep (refresh_rate) # refresh rate in seconds   
                 LCD_display.booking_409 ()
                 print ("Recording is running")
                 print ("Status code from booking during session: " + str(config.status_code))  
@@ -65,7 +66,7 @@ def main_script():
                     #This should check when the session is terminated manualy in the booking system
                     #LCD_display.session_ended () 
                     config.remaining_time = 0       
-                time.sleep (refresh_rate) # refresh rate in seconds   
+                
             stop_reservation.button_deactivated()
             LCD_display.session_ended ()  
             config.in_session = False
