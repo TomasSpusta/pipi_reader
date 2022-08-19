@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 import LCD_display
+import config
 
 i = 0
 session_running = True
@@ -12,10 +13,10 @@ GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def button_callback (button_pin):    
     global i
-    global session_running
+    #global session_running
     if GPIO.input (button_pin) == GPIO.HIGH:
         #print ('button released now')
-        session_running = True
+        #session_running = True
         i = 0
         LCD_display.clear()
         
@@ -26,17 +27,20 @@ def button_callback (button_pin):
         LCD_display.clear()
         LCD_display.write ('Ending session',1)
         while GPIO.input (button_pin) == GPIO.LOW:
-            i += 8
+            i += 1
             LCD_display.write (i*symbol,2)
             #print (i*symbol)
-            time.sleep (1)
+            time.sleep (0.25)
             if i > 16:
                 #GPIO.cleanup(button_pin)
                 GPIO.remove_event_detect(button_pin)
                 #print ('session ended')
                 LCD_display.clear()
                 LCD_display.write ('Session Ended',1)
-                session_running = False
+                
+                config.remaining_time = 0 
+                #TADY JE MISTO NA TO CO SA BUDE DIT, KED USER PODRZI TLACITKO ABY SKONCILA SESSION
+                
                 time.sleep (2)
                 
 def ending_reservation ():    
