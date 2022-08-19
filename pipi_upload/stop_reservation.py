@@ -1,52 +1,57 @@
-import gpiozero
+import RPi.GPIO as GPIO
 import time
 import LCD_display
-
-button = gpiozero.Button (21)
 
 i = 0
 session_running = True
 
-def ending_session ():    
-    button.when_pressed = loading_bar
-    button.when_released = loading_bar_erase 
+button_pin = 21
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
-def loading_bar():
-    symbol = "#"
+
+def button_callback (button_pin):    
     global i
     global session_running
-    LCD_display.write ('Ending session',1)
-    while button.is_pressed == True:
+    if GPIO.input (button_pin) == GPIO.HIGH:
+        print ('button released now')
+        session_running = True
+        i = 0
+        LCD_display.clear()
         
-        #print ('Button is pressed')
-        #time.sleep (0.5)
+    else:
+        symbol = "|"
+        print ('button Pressed now')
         
-        i += 4
-        LCD_display.write (i*symbol,2)
-        print (i*symbol)
-        time.sleep (1)
-        if i > 16:
-            print ('session ended')
-            LCD_display.lcd.clear()
-            LCD_display.write ('Session Ended',1)
-            session_running = False # tady bude vlastne sctript, ktery odesle nekam neco, aby sa session ukoncila
-            button.close()
-            time.sleep (2)
+        LCD_display.write ('Ending session',1)
+        while GPIO.input (button_pin) == GPIO.LOW:
+            i += 4
+            LCD_display.write (i*symbol,2)
+            #print (i*symbol)
+            time.sleep (1)
+            if i > 16:
+                #GPIO.cleanup(button_pin)
+                GPIO.remove_event_detect(button_pin)
+                print ('session ended')
+                LCD_display.clear()
+                LCD_display.write ('Session Ended',1)
+                session_running = False
+                time.sleep (2)
+                
+    
+GPIO.add_event_detect(button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
 
-
-def loading_bar_erase():
-    global i
-    i = 0
-    LCD_display.lcd.clear()
-
-'''
-ending_session ()
-
+""""
 t=0
-while session_running == True:
-    #global session_running
-    t+=1
-    print (t)
-    time.sleep (2)
-'''
+try:
+    while session_running == True:
+        #global session_running
+        t+=1
+        print (t)
+        time.sleep (1)
+        
+except KeyboardInterrupt:
+    GPIO.cleanup()
+
+"""
