@@ -92,6 +92,15 @@ def booking_409 ():
     write ("Number of files:", 3)
     #write ("   ", 4)  
     write (str(config.files) + " files", 4)  
+
+def booking_409_time (): 
+    lcd.clear() #clear the display
+    write ("Remaining time:", 1)  #print/show string on line 1
+    #write ("   ", 2)
+    write (str(config.remaining_time) + " min", 2)
+    write ("Number of files:", 3)
+    #write ("   ", 4)  
+    write (str(config.files) + " files", 4)
     
 
 def booking_400 ():

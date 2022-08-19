@@ -19,7 +19,7 @@ def button_callback (button_pin):
         #session_running = True
         i = 0
         LCD_display.clear()
-        LCD_display.booking_409 ()
+        LCD_display.booking_409_time ()
         
     else:
         symbol = "|"
