@@ -17,6 +17,7 @@ import RPi.GPIO as GPIO
 pi_online_status = False
 # try to acquire IP adress, therefore check connection to the internet
 try:
+    LCD_display.version()
         
     while pi_online_status == False:
         try:
