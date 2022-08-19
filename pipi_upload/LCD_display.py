@@ -83,7 +83,7 @@ def booking_409 ():
     write ("Recording is running", 2)
     write ("To stop recording", 3)
     write ("hold the red button", 4)  
-    time.sleep (3)
+    time.sleep (6)
     
     lcd.clear() #clear the display
     write ("Remaining time:", 1)  #print/show string on line 1

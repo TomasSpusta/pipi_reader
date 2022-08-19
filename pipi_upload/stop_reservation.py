@@ -39,7 +39,7 @@ def button_callback (button_pin):
                 LCD_display.clear()
                 LCD_display.write ('Session Ended',1)
                 
-                config.remaining_time = 0 
+                #config.remaining_time = 0 
                 #TADY JE MISTO NA TO CO SA BUDE DIT, KED USER PODRZI TLACITKO ABY SKONCILA SESSION
                 
                 time.sleep (2)
