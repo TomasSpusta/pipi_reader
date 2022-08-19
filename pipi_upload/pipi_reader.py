@@ -3,7 +3,7 @@
 
 
 import time
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import LCD_display
 import web_requests
 import config
@@ -78,7 +78,7 @@ def main_script():
 # running script
 try:
     LCD_display.LCD_waiting()
-    stop_reservation.ending_session ()
+    stop_reservation.ending_reservation ()
     while 1:
         main_script()
       
@@ -86,5 +86,5 @@ finally:
     time.sleep(0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        
-    #GPIO.cleanup()
+    GPIO.cleanup()
 # 

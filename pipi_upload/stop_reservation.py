@@ -39,8 +39,8 @@ def button_callback (button_pin):
                 session_running = False
                 time.sleep (2)
                 
-    
-GPIO.add_event_detect(button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
+def ending_reservation ():    
+    GPIO.add_event_detect(button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
 
 """"
 t=0

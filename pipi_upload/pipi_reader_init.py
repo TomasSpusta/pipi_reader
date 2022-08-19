@@ -12,7 +12,7 @@ from getmac import get_mac_address as gma #module for mac adress
 import time
 import LCD_display
 import web_requests
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 pi_online_status = False
 # try to acquire IP adress, therefore check connection to the internet
@@ -62,4 +62,4 @@ finally:
     time.sleep(0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        
-    #GPIO.cleanup()
+    GPIO.cleanup()
