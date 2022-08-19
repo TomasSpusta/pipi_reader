@@ -94,6 +94,7 @@ def booking_409 ():
     write (str(config.files) + " files", 4)  
 
 def booking_409_time (): 
+    backlight (False)
     lcd.clear() #clear the display
     write ("Remaining time:", 1)  #print/show string on line 1
     #write ("   ", 2)
