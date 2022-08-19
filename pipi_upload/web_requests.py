@@ -133,3 +133,21 @@ def booking_request_files ():
         print("Error in booking_request_files")
         print(e)
     
+def booking_reservation_info ():
+    try:
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.recording_id))
+        
+        print (booking_response.status_code)
+        
+        """
+        if booking_response.status_code == 200 or 409:
+            booking_data = booking_response.json()
+            #print (booking_data)
+          # print (booking_data["filesCount"])
+            config.files = booking_data["filesCount"]            
+        else:
+            print ("nejaky problemek s datama")
+        """
+    except Exception as e:
+        print("Error in booking_request_files")
+        print(e)

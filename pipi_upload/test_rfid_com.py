@@ -9,8 +9,8 @@ config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"
 config.recording_id = "a90e2dbc-2ef6-ec11-80cd-005056914121"
 
 
-web_requests.crm_request_mac ()
-web_requests.crm_request_rfid ()
+#web_requests.crm_request_mac ()
+#web_requests.crm_request_rfid ()
 
 #config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"
 #web_requests.booking_request_start_measurement (config.user_id, config.equipment_id)

@@ -27,7 +27,7 @@ def button_callback (button_pin):
         LCD_display.backlight(True)
         LCD_display.clear()
         LCD_display.write ('Ending session',1)
-        time.sleep (3)
+        
         while GPIO.input (button_pin) == GPIO.LOW:
             i += 1
             LCD_display.write (i*symbol,2)
