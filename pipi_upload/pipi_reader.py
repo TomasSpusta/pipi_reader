@@ -88,9 +88,7 @@ def main_script():
 # running script
 
 try:
-    
     LCD_display.LCD_waiting()
-    
     while 1:
         main_script()
     
