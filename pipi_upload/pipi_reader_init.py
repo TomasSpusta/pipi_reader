@@ -18,7 +18,7 @@ pi_online_status = False
 # try to acquire IP adress, therefore check connection to the internet
 try:
     LCD_display.version()
-        
+    time.sleep (3)    
     while pi_online_status == False:
         try:
             ip = get('https://api.ipify.org').content.decode('utf8')
@@ -60,7 +60,7 @@ try:
         import pipi_reader
 
 except KeyboardInterrupt:
-    print("CTRL + V pressed")
+    print("CTRL + V pressed, script ended")
     time.sleep(0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        

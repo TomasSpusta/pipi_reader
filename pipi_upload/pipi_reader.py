@@ -90,7 +90,7 @@ try:
         main_script()
       
 except KeyboardInterrupt:
-    print("CTRL + V pressed")
+    print("CTRL + V pressed, script ended")
     
     time.sleep(0.5)
     LCD_display.backlight (False)
