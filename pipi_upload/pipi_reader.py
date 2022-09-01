@@ -50,7 +50,7 @@ def main_script():
             print("Recording ID: " + str(config.recording_id))
             print("Reservation ID: " + str(config.reservation_id))
            
-            logs.start()
+            #logs.start()
             
             refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
