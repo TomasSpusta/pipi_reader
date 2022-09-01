@@ -9,7 +9,7 @@ import web_requests
 import config
 import card_reader
 import stop_reservation
-    
+import logs    
 
 def main_script():
     
@@ -50,6 +50,7 @@ def main_script():
             print("Recording ID: " + str(config.recording_id))
             print("Reservation ID: " + str(config.reservation_id))
            
+            logs.start()
             refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
                 #Loop checking and updating session information - remaining time, number of files
@@ -83,12 +84,15 @@ def main_script():
     
 
 # running script
+
 try:
+    
     LCD_display.LCD_waiting()
     
     while 1:
         main_script()
-      
+    
+    
 except KeyboardInterrupt:
     print("CTRL + V pressed, script ended")
     
