@@ -50,7 +50,7 @@ def main_script():
             print("Recording ID: " + str(config.recording_id))
             print("Reservation ID: " + str(config.reservation_id))
            
-            logs.start()
+            
             refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
                 #Loop checking and updating session information - remaining time, number of files
@@ -72,7 +72,8 @@ def main_script():
                 #    config.remaining_time = 0       
                 
             
-            LCD_display.session_ended ()  
+            LCD_display.session_ended ()
+            logs.start()  
             config.in_session = False
             config.warning_sent = False
             config.logged_in = False
