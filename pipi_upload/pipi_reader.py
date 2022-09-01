@@ -73,7 +73,7 @@ def main_script():
                 
             
             LCD_display.session_ended ()
-            logs.start()  
+            #logs.start()  
             config.in_session = False
             config.warning_sent = False
             config.logged_in = False
