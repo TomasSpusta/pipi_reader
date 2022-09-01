@@ -19,3 +19,5 @@ logged_in = False
 in_session = False
 
 status_code = 0
+
+reservation_start_time = "" 

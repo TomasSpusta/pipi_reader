@@ -39,7 +39,7 @@ def main_script():
                 LCD_display.booking_500 ()  
               
         else:
-            stop_reservation.ending_reservation()
+            stop_reservation.ending_reservation() #start the script which will monitor "STOP SESSION" button
         #after succesfull login display will show ("you are logged in as _user name_")
             if config.status_code == 200:
                 LCD_display.booking_200 ()
@@ -53,8 +53,9 @@ def main_script():
             refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
                 #Loop checking and updating session information - remaining time, number of files
-                config.status_code = web_requests.booking_request_start_measurement()
-                web_requests.booking_request_files ()
+                #config.status_code = web_requests.booking_request_start_measurement()
+                web_requests.booking_request_files()
+                web_requests.booking_reservation_info ()
                 time.sleep (refresh_rate) # refresh rate in seconds   
                 LCD_display.booking_409_time ()
                 print ("Recording is running")
@@ -64,10 +65,10 @@ def main_script():
                     config.warning_sent = True
                     LCD_display.about_to_end_w ()
                    
-                elif config.in_session == True and (config.status_code == 404 or config.status_code == 500) :
+                #elif config.in_session == True and #(config.status_code == 404 or config.status_code == 500) :
                     #This should check when the session is terminated manualy in the booking system
                     #LCD_display.session_ended () 
-                    config.remaining_time = 0       
+                #    config.remaining_time = 0       
                 
             
             LCD_display.session_ended ()  
