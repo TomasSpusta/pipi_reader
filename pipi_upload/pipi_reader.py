@@ -61,7 +61,7 @@ def main_script():
                 time.sleep (refresh_rate) # refresh rate in seconds   
                 LCD_display.booking_409_time ()
                 print ("Recording is running")
-                print ("Status code from booking during session: " + str(config.status_code))  
+                #print ("Status code from booking during session: " + str(config.status_code))  
                 if (0 < config.remaining_time < 6) and config.warning_sent == False:
                     # Session about to end warning at 5-minute mark 
                     config.warning_sent = True
@@ -94,7 +94,7 @@ try:
     
     
 except KeyboardInterrupt:
-    print("CTRL + V pressed, script ended")
+    print("CTRL + V pressed, script ended in pipi_reader script")
     
     time.sleep(0.5)
     LCD_display.backlight (False)

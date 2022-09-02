@@ -60,7 +60,7 @@ try:
         import pipi_reader
 
 except KeyboardInterrupt:
-    print("CTRL + V pressed, script ended")
+    print("CTRL + V pressed, script ended in pipi_reader_init")
     time.sleep(0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        

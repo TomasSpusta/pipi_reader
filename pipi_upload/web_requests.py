@@ -148,7 +148,7 @@ def booking_reservation_info ():
         
         #print (booking_response.status_code)
         booking_data = booking_response.json()
-        print (booking_data)
+        #print (booking_data)
         #print ("409 - Recording is running")
         config.remaining_time = int (booking_data["timetoend"])
         #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
