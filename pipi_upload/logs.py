@@ -52,4 +52,4 @@ def end():
         config.mac_address, config.card_id
     )
     
-start()    
+ 
