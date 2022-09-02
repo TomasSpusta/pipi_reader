@@ -22,3 +22,5 @@ in_session = False
 status_code = 0
 
 reservation_start_time = "" 
+
+button_pin = 40
