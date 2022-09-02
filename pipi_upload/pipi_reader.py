@@ -11,6 +11,30 @@ import card_reader
 import stop_reservation
 import logs    
 
+
+def session_check():
+    refresh_rate = 10 #refresh rate of remaining time and files in seconds    
+    while config.remaining_time > 0 :
+        #Loop checking and updating session information - remaining time, number of files
+        #config.status_code = web_requests.booking_request_start_measurement()
+        web_requests.booking_request_files()
+        web_requests.booking_reservation_info ()
+        time.sleep (refresh_rate) # refresh rate in seconds   
+        LCD_display.booking_409_time ()
+        print ("Recording is running")
+        #print ("Status code from booking during session: " + str(config.status_code))  
+        if (0 < config.remaining_time < 6) and config.warning_sent == False:
+            # Session about to end warning at 5-minute mark 
+            config.warning_sent = True
+            LCD_display.about_to_end_w ()
+            
+        #elif config.in_session == True and #(config.status_code == 404 or config.status_code == 500) :
+            #This should check when the session is terminated manualy in the booking system
+            #LCD_display.session_ended () 
+        #    config.remaining_time = 0       
+
+
+
 def main_script():
     
    
@@ -49,27 +73,7 @@ def main_script():
             #print("Recording ID: " + str(config.recording_id))
             #print("Reservation ID: " + str(config.reservation_id))
            
-            
-            
-            refresh_rate = 10 #refresh rate of remaining time and files in seconds    
-            while config.remaining_time > 0 :
-                #Loop checking and updating session information - remaining time, number of files
-                #config.status_code = web_requests.booking_request_start_measurement()
-                web_requests.booking_request_files()
-                web_requests.booking_reservation_info ()
-                time.sleep (refresh_rate) # refresh rate in seconds   
-                LCD_display.booking_409_time ()
-                print ("Recording is running")
-                #print ("Status code from booking during session: " + str(config.status_code))  
-                if (0 < config.remaining_time < 6) and config.warning_sent == False:
-                    # Session about to end warning at 5-minute mark 
-                    config.warning_sent = True
-                    LCD_display.about_to_end_w ()
-                   
-                #elif config.in_session == True and #(config.status_code == 404 or config.status_code == 500) :
-                    #This should check when the session is terminated manualy in the booking system
-                    #LCD_display.session_ended () 
-                #    config.remaining_time = 0       
+            session_check()
                 
             
             LCD_display.session_ended ()
