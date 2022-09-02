@@ -25,7 +25,12 @@ def session_check():
         #config.status_code = web_requests.booking_request_start_measurement()
         web_requests.booking_request_files()
         web_requests.booking_reservation_info ()
-        time.sleep (refresh_rate) # refresh rate in seconds   
+        #time.sleep (refresh_rate) # refresh rate in seconds   
+        t=0
+        while t > 1: 
+            t-=1
+            print (t)
+            time.sleep (1)
         LCD_display.booking_409_time ()
         print ("Recording is running")
         #print ("Status code from booking during session: " + str(config.status_code))  
