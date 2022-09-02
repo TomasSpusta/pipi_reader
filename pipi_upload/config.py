@@ -4,7 +4,7 @@ card_id = 0
 
 user_id = ""
 user_name = ""
-full_user_name = ""
+user_full_name = ""
 
 equipment_id = ""
 equipment_name = ""
