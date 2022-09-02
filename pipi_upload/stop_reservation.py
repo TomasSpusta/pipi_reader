@@ -6,9 +6,9 @@ import pipi_reader
 
 #i = 0
 session_running = True
-button_pin = 40
+#config.button_pin = 40
 #GPIO.setmode(GPIO.BCM)
-GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 
@@ -50,10 +50,10 @@ def button_callback (button_pin):
                 
                 
 def ending_reservation ():    
-    GPIO.add_event_detect(button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
+    GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
 
 def button_deactivated ():
-    GPIO.remove_event_detect(button_pin)
+    GPIO.remove_event_detect(config.button_pin)
 
 """"
 t=0

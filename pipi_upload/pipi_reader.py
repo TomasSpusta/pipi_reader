@@ -9,12 +9,18 @@ import web_requests
 import config
 import card_reader
 import stop_reservation
-import logs    
+import logs 
+from threading import Event   
 
 
 def session_check():
     refresh_rate = 10 #refresh rate of remaining time and files in seconds    
     while config.remaining_time > 0 :
+        
+        #chcek if buton is pushed => try to pause the script
+        if GPIO.input (config.button_pin) == GPIO.LOW:
+            Event().wait(3)
+        
         #Loop checking and updating session information - remaining time, number of files
         #config.status_code = web_requests.booking_request_start_measurement()
         web_requests.booking_request_files()
