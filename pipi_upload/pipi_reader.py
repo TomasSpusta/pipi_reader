@@ -26,7 +26,7 @@ def session_check():
         web_requests.booking_request_files()
         web_requests.booking_reservation_info ()
         #time.sleep (refresh_rate) # refresh rate in seconds   
-        t=0
+        t=refresh_rate
         while t > 1: 
             t-=1
             print (t)
