@@ -79,7 +79,7 @@ def main_script():
             config.warning_sent = False
             config.logged_in = False
             print ("Recording ended")     
-           
+            logs.end()
     time.sleep(1)
 
 
@@ -100,6 +100,7 @@ except KeyboardInterrupt:
     LCD_display.backlight (False)
     LCD_display.clear ()        
     GPIO.cleanup()
+    logs.end()
 
     
 # 
