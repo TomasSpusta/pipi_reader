@@ -138,7 +138,7 @@ def session_ended ():
     write (str(config.user_name), 2)
     write ("Your session ended", 3)
     write ("See you next time", 4)
-    time.sleep (10)
+    time.sleep (5)
     LCD_waiting()        
     
 def in_database ():

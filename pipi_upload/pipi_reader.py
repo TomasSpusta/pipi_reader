@@ -74,7 +74,6 @@ def main_script():
             #print("Reservation ID: " + str(config.reservation_id))
            
             session_check()
-                
             
             LCD_display.session_ended ()
               
