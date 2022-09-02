@@ -7,7 +7,8 @@ logging.basicConfig (filename="_pipi_log.log", level=logging.INFO, format=
 def start():
     
   
-    logging.info ((("\n Instrument info:     \
+    logging.info ((("\n--LOG on session START-- \
+                    \n Instrument info:     \
                     \n MAC Address: {}     \
                     \n Equipment ID: {}     \
                     \n Equipment alias: {}  \
@@ -19,7 +20,8 @@ def start():
                     \n                      \
                     \n Reservation info:     \
                     \n Reservation ID: {}   \
-                    \n Recording ID: {}") 
+                    \n Recording ID: {}     \
+                    \n") 
                    .format( 
                     config.mac_address, config.equipment_id, config.equipment_name,
                     config.user_id, config.card_id, config.user_full_name,
@@ -30,7 +32,8 @@ def start():
     
    
 def end():
-    logging.info ((("\n Instrument info:     \
+    logging.info ((("\n--LOG on session END-- \
+                    \n Instrument info:     \
                     \n MAC Address: {}     \
                     \n Equipment ID: {}     \
                     \n Equipment alias: {}  \
@@ -42,7 +45,9 @@ def end():
                     \n                      \
                     \n Reservation info:     \
                     \n Reservation ID: {}   \
-                    \n Recording ID: {}") 
+                    \n Recording ID: {}     \
+                    \n"
+                    ) 
                    .format( 
                     config.mac_address, config.equipment_id, config.equipment_name,
                     config.user_id, config.card_id, config.user_full_name,

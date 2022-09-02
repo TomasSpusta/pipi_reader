@@ -19,15 +19,15 @@ def main_script():
     #get response from CRM server => user name, user ID or not in database
     web_requests.crm_request_rfid()
 
-
     if config.in_database == False:
         # If card ID is not it the internal database, LCD displays the error 
         LCD_display.not_in_database() 
     else:
+        logs.start()      
         # Load the status code of reservation
         config.status_code = web_requests.booking_request_start_measurement()
         #print (type (status_code))
-        #print ("Status code from booking: " + str(config.status_code))  
+        print ("Status code from booking: " + str(config.status_code))  
          
         if config.logged_in == False:
             # Display error notifications, when booking error occures
@@ -37,7 +37,6 @@ def main_script():
                 LCD_display.booking_404 ()
             elif config.status_code == 500:
                 LCD_display.booking_500 ()  
-              
         else:
             stop_reservation.ending_reservation() #start the script which will monitor "STOP SESSION" button
         #after succesfull login display will show ("you are logged in as _user name_")
@@ -47,10 +46,10 @@ def main_script():
                 LCD_display.booking_409_init ()
             elif config.status_code == 409:
                 LCD_display.booking_409_init ()
-            print("Recording ID: " + str(config.recording_id))
-            print("Reservation ID: " + str(config.reservation_id))
+            #print("Recording ID: " + str(config.recording_id))
+            #print("Reservation ID: " + str(config.reservation_id))
            
-            logs.start()
+            
             
             refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
