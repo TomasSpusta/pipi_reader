@@ -88,7 +88,7 @@ def booking_request_start_measurement ():
             config.remaining_time = int(booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
             config.reservation_id = booking_data ["reservation"]
-            config.reservation_start_time = int(booking_data["start"])
+            config.reservation_start_time = booking_data["start"]
             #print ("Reservation_ID: " +str (config.reservation_id))
             
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
@@ -109,7 +109,7 @@ def booking_request_start_measurement ():
             config.remaining_time = int (booking_data["timetoend"])
             config.recording_id = booking_data["recording"]
             config.reservation_id = booking_data ["reservation"]
-            config.reservation_start_time = int(booking_data["start"])
+            config.reservation_start_time = booking_data["start"]
             #print ("Reservation_ID: " +str (config.reservation_id))
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         elif booking_response.status_code == 500:

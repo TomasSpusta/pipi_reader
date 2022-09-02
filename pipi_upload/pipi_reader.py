@@ -27,7 +27,7 @@ def main_script():
         # Load the status code of reservation
         config.status_code = web_requests.booking_request_start_measurement()
         #print (type (status_code))
-        print ("Status code from booking: " + str(config.status_code))  
+        #print ("Status code from booking: " + str(config.status_code))  
          
         if config.logged_in == False:
             # Display error notifications, when booking error occures
@@ -50,7 +50,7 @@ def main_script():
             print("Recording ID: " + str(config.recording_id))
             print("Reservation ID: " + str(config.reservation_id))
            
-            
+            logs.start()
             
             refresh_rate = 10 #refresh rate of remaining time and files in seconds    
             while config.remaining_time > 0 :
@@ -79,7 +79,7 @@ def main_script():
             config.warning_sent = False
             config.logged_in = False
             print ("Recording ended")     
-        logs.start()   
+           
     time.sleep(1)
 
 
