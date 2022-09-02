@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import LCD_display
 import config
-from pipi_reader import session_check
+import pipi_reader
 
 #i = 0
 session_running = True
@@ -43,7 +43,7 @@ def button_callback (button_pin):
                 #LCD_display.write ('by user',2)
                 
                 config.remaining_time = 0
-                session_check()
+                pipi_reader.session_check()
                 #TADY JE MISTO NA TO CO SA BUDE DIT, KED USER PODRZI TLACITKO ABY SKONCILA SESSION
                 
                 time.sleep (1)
