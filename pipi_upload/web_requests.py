@@ -24,7 +24,7 @@ def crm_request_mac ():
         else:          
             config.equipment_name = crm_data[0]["alias"]
             config.equipment_id = crm_data[0]["equipmentid"]
-            print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
+            #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             
     except Exception as e:
         print("Error in crm_request_mac")
@@ -48,10 +48,11 @@ def crm_request_rfid ():
         else:          
             config.in_database = True
             user_name = crm_data[0]["firstname"]
+            config.full_user_name = crm_data[0]["full_name"]
             config.user_name = unidecode.unidecode (user_name)
             config.user_id = crm_data[0]["contactid"]
             #print (config.user_name)
-            print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
+            #print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:
         print("Error in crm_request_rfid:")
@@ -76,7 +77,7 @@ def booking_request_start_measurement ():
         booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
         
         #print ("Booking response:")
-        print ("Booking status code: " + str(booking_response.status_code))
+        #print ("Booking status code: " + str(booking_response.status_code))
         #print(booking_response.status_code)
         
         if booking_response.status_code == 200:
@@ -88,7 +89,7 @@ def booking_request_start_measurement ():
             config.recording_id = booking_data["recording"]
             config.reservation_id = booking_data ["reservation"]
             config.reservation_start_time = int(booking_data["start"])
-            print ("Reservation_ID: " +str (config.reservation_id))
+            #print ("Reservation_ID: " +str (config.reservation_id))
             
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
@@ -109,7 +110,7 @@ def booking_request_start_measurement ():
             config.recording_id = booking_data["recording"]
             config.reservation_id = booking_data ["reservation"]
             config.reservation_start_time = int(booking_data["start"])
-            print ("Reservation_ID: " +str (config.reservation_id))
+            #print ("Reservation_ID: " +str (config.reservation_id))
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         elif booking_response.status_code == 500:
             config.logged_in = False
