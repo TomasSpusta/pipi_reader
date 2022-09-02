@@ -17,18 +17,16 @@ def session_check():
     refresh_rate = 10 #refresh rate of remaining time and files in seconds    
     while config.remaining_time > 0 :
         
-        
-        
         #Loop checking and updating session information - remaining time, number of files
         #config.status_code = web_requests.booking_request_start_measurement()
         web_requests.booking_request_files()
         web_requests.booking_reservation_info ()
         #time.sleep (refresh_rate) # refresh rate in seconds   
         
-        t=refresh_rate
+        t = refresh_rate + 1
         while t > 1: 
-            t-=1
-            print (t)
+            t -= 1
+            #print (t)
             time.sleep (1)
             #chcek if buton is pushed => try to pause the script
             if GPIO.input (config.button_pin) == GPIO.LOW:

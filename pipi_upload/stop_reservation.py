@@ -43,7 +43,7 @@ def button_callback (button_pin):
                 #LCD_display.write ('by user',2)
                 
                 config.remaining_time = 0
-                pipi_reader.session_check()
+                pipi_reader.session_check() #asi to tady byt nemusi
                 #TADY JE MISTO NA TO CO SA BUDE DIT, KED USER PODRZI TLACITKO ABY SKONCILA SESSION
                 
                 time.sleep (1)
