@@ -22,7 +22,7 @@ def session_check():
         web_requests.booking_request_files()
         web_requests.booking_reservation_info ()
         #time.sleep (refresh_rate) # refresh rate in seconds   
-        
+        LCD_display.booking_409_time ()
         t = refresh_rate + 1
         while t > 1: 
             t -= 1
@@ -33,7 +33,7 @@ def session_check():
                 print ("Button is pressed")
                 Event().wait(3)
                 
-        LCD_display.booking_409_time ()
+        
         print ("Recording is running")
         #print ("Status code from booking during session: " + str(config.status_code))  
         if (0 < config.remaining_time < 6) and config.warning_sent == False:
