@@ -46,7 +46,7 @@ def button_callback (button_pin):
                 
                 #config.remaining_time = 0
                 web_requests.booking_stop_reservation()
-                pipi_reader.session_check() #asi to tady byt nemusi
+                #pipi_reader.session_check() #asi to tady byt nemusi
                 #TADY JE MISTO NA TO CO SA BUDE DIT, KED USER PODRZI TLACITKO ABY SKONCILA SESSION
                 
                 
