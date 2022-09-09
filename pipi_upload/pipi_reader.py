@@ -14,7 +14,7 @@ from threading import Event
 
 
 def session_check():
-    refresh_rate = 10 #refresh rate of remaining time and files in seconds    
+    refresh_rate = 5 #refresh rate of remaining time and files in seconds    
     while config.remaining_time > 0 :
         
         #Loop checking and updating session information - remaining time, number of files
