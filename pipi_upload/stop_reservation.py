@@ -38,7 +38,7 @@ def button_callback (button_pin):
             if i > 19:
                 
                 GPIO.remove_event_detect(button_pin)
-                GPIO.cleanup(button_pin)
+                #GPIO.cleanup(button_pin)
                 #print ('session ended')
                 #LCD_display.clear()
                 #LCD_display.write ('Session ended',1)
