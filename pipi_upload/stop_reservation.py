@@ -38,14 +38,15 @@ def button_callback (button_pin):
             if i > 19:
                 
                 GPIO.remove_event_detect(button_pin)
+                web_requests.booking_stop_reservation()
                 #GPIO.cleanup(button_pin)
                 #print ('session ended')
-                #LCD_display.clear()
-                #LCD_display.write ('Session ended',1)
-                #LCD_display.write ('by user',2)
+                LCD_display.clear()
+                LCD_display.write ('Session ended',1)
+                LCD_display.write ('by user',2)
                 
                 #config.remaining_time = 0
-                web_requests.booking_stop_reservation()
+                
                 #pipi_reader.session_check() #asi to tady byt nemusi
                 #TADY JE MISTO NA TO CO SA BUDE DIT, KED USER PODRZI TLACITKO ABY SKONCILA SESSION
                 
