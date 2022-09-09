@@ -14,6 +14,7 @@ from threading import Event
 
 
 def session_check():
+    
     refresh_rate = 5 #refresh rate of remaining time and files in seconds    
     while config.remaining_time > 0 :
         
@@ -75,7 +76,7 @@ def main_script():
             elif config.status_code == 500:
                 LCD_display.booking_500 ()  
         else:
-            stop_reservation.ending_reservation() #start the script which will monitor "STOP SESSION" button
+            
         #after succesfull login display will show ("you are logged in as _user name_")
             if config.status_code == 200:
                 LCD_display.booking_200 ()
@@ -86,6 +87,7 @@ def main_script():
             #print("Recording ID: " + str(config.recording_id))
             #print("Reservation ID: " + str(config.reservation_id))
            
+            stop_reservation.ending_reservation() #start the script which will monitor "STOP SESSION" button
             session_check()
             
             LCD_display.session_ended ()
