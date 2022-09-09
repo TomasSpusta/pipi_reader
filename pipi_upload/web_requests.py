@@ -157,4 +157,22 @@ def booking_reservation_info ():
     except Exception as e:
         print("Error in booking_reservation_info")
         print(e)         
-            
+
+def booking_stop_reservation ():
+    try:
+        #booking_response =
+        requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
+    
+        
+        
+        #print (booking_response.status_code)
+        #booking_data = booking_response.json()
+        #print (booking_data)
+        #print ("409 - Recording is running")
+        #config.remaining_time = int (booking_data["timetoend"])
+        #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+        
+    except Exception as e:
+        print("Error in booking_reservation_info")
+        print(e)
+             
