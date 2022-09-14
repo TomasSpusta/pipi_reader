@@ -90,7 +90,7 @@ def booking_409_init ():
     #time.sleep (5)
     
 
-def booking_409_time (): 
+def booking_409_recording (): 
     backlight (False)
     lcd.clear() #clear the display
     write ("Remaining time:", 1)  #print/show string on line 1
