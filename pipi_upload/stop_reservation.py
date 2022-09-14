@@ -6,7 +6,7 @@ import web_requests
 
 
 GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-i = 0
+
 
 def ending_reservation ():    
     GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
@@ -14,11 +14,12 @@ def ending_reservation ():
 def button_deactivated ():
     GPIO.remove_event_detect(config.button_pin)
     
-def button_callback (button_pin):    
+def button_callback (button_pin):
+    i = 0    
     if GPIO.input (button_pin) == GPIO.HIGH:
         i = 0
         LCD_display.clear()
-        LCD_display.booking_409_time ()
+        LCD_display.booking_409_recording ()
         
     else:
         symbol = "|"
