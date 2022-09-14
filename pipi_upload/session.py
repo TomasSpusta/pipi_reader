@@ -85,7 +85,7 @@ def session_end ():
     config.in_session = False
     config.warning_sent = False
     config.logged_in = False
-    GPIO.cleanup(config.button_pin) # it is necessary to figure out how the button pin reacts on cleaning
+    # GPIO.cleanup(config.button_pin) # it is necessary to figure out how the button pin reacts on cleaning
     print ("Recording ended")     
     time.sleep(1)
 
