@@ -85,8 +85,10 @@ def session_end ():
     except Exception as button_e:
         print (button_e)
     
-    LCD_display.session_ended ()
-        
+    if config.status_code == 409:
+        LCD_display.session_ended ()
+    else:
+        pass        
     config.in_session = False
     config.warning_sent = False
     config.logged_in = False
