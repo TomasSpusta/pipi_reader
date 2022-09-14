@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import LCD_display
 import config
-import web_requests
+from web_requests import booking_stop_reservation
 
 
 GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -34,7 +34,7 @@ def button_callback (button_pin):
             time.sleep (button_hold_time/18)
             if i > 19:
                 button_deactivated ()
-                #web_requests.booking_stop_reservation()
+                booking_stop_reservation()
                 LCD_display.clear()
                 LCD_display.write ('Session ended',1)
                 LCD_display.write ('by user',2)             
