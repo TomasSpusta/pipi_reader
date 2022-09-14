@@ -22,9 +22,7 @@ import time
 
 from network_check import network_check
 from github_check import github_check
-from card_reader import card_reader
-import session
-import LCD_display
+
 
 
 
@@ -36,6 +34,11 @@ try:
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch
     github_check (branch = "develop_reconstruction")
+    
+    from card_reader import card_reader
+    import session
+    import LCD_display
+    
     time.sleep (3)
 
     while 1:
