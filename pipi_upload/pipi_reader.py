@@ -19,11 +19,11 @@ def session_check():
     while config.remaining_time > 0 :
         
         #Loop checking and updating session information - remaining time, number of files
-        #config.status_code = web_requests.booking_request_start_measurement()
+        
         web_requests.booking_request_files()
         web_requests.booking_reservation_info ()
-        #time.sleep (refresh_rate) # refresh rate in seconds   
         LCD_display.booking_409_time ()
+        
         t = refresh_rate + 1
         while t > 1: 
             t -= 1
@@ -32,26 +32,17 @@ def session_check():
             #chcek if buton is pushed => try to pause the script
             if GPIO.input (config.button_pin) == GPIO.LOW:
                 print ("Button is pressed")
-                Event().wait(3)
-                
-        
+                Event().wait(3)   
         print ("Recording is running")
+        
         #print ("Status code from booking during session: " + str(config.status_code))  
         if (0 < config.remaining_time < 6) and config.warning_sent == False:
             # Session about to end warning at 5-minute mark 
             config.warning_sent = True
-            LCD_display.about_to_end_w ()
-            
-        #elif config.in_session == True and #(config.status_code == 404 or config.status_code == 500) :
-            #This should check when the session is terminated manualy in the booking system
-            #LCD_display.session_ended () 
-        #    config.remaining_time = 0       
-
-
+            LCD_display.about_to_end_w ()    
 
 def main_script():
-    
-   
+       
     #get card id from rfid reader           
     card_reader.rfid_reader()
     #get response from CRM server => user name, user ID or not in database
@@ -64,7 +55,6 @@ def main_script():
         logs.start()      
         # Load the status code of reservation
         config.status_code = web_requests.booking_request_start_measurement()
-        #print (type (status_code))
         print ("Status code from booking: " + str(config.status_code))  
          
         if config.logged_in == False:
@@ -75,8 +65,7 @@ def main_script():
                 LCD_display.booking_404 ()
             elif config.status_code == 500:
                 LCD_display.booking_500 ()  
-        else:
-            
+        else:   
         #after succesfull login display will show ("you are logged in as _user name_")
             if config.status_code == 200:
                 LCD_display.booking_200 ()
@@ -89,12 +78,12 @@ def main_script():
            
             stop_reservation.ending_reservation() #start the script which will monitor "STOP SESSION" button
             session_check()
-            
             LCD_display.session_ended ()
               
             config.in_session = False
             config.warning_sent = False
             config.logged_in = False
+            GPIO.cleanup(config.button_pin)
             print ("Recording ended")     
             logs.end()
     time.sleep(1)
