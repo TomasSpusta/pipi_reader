@@ -9,7 +9,7 @@ GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 def ending_reservation ():    
-    GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
+    GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 25)
 
 def button_deactivated ():
     GPIO.remove_event_detect(config.button_pin)
