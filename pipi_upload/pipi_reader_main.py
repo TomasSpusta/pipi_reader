@@ -35,7 +35,7 @@ try:
     network_check ()
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch
-    github_check (branch = "develop")
+    github_check (branch = "develop_reconstruction")
 
     while 1:
         try:
