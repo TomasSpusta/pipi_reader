@@ -67,7 +67,7 @@ def session_recording ():
                 print ("Button is pressed")
                 Event().wait(3)
             t -= 0.25
-            print (t)
+            #print (t)
             time.sleep (0.25)
             #chcek if buton is pushed => try to pause the script
             
