@@ -87,7 +87,7 @@ def booking_409_init ():
     write ("Recording is running", 2)
     write ("To stop recording", 3)
     write ("hold the red button", 4)  
-    #time.sleep (5)
+    time.sleep (5)
     
 
 def booking_409_recording (): 
