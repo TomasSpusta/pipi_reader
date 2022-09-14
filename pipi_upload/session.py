@@ -33,7 +33,7 @@ def reservation_check ():
             LCD_display.booking_404 ()
         elif config.status_code == 500:
             LCD_display.booking_500 ()  
-
+        
     #User has reservation on the machine in appropriate time window
     else:   
     #after succesfull login display will show ("you are logged in as _user name_")
@@ -80,6 +80,11 @@ def session_recording ():
     
 def session_end ():
     #when session is ended by time out, or by pressing the button    
+    try:
+        stop_reservation.button_deactivated ()
+    except Exception as button_e:
+        print (button_e)
+    
     LCD_display.session_ended ()
         
     config.in_session = False
