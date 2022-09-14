@@ -20,6 +20,7 @@ def github_check (branch):
     try:
         #cloned_repo = 
         git.Repo.clone_from (github_repo, local_repo, branch=branch)
+        print("Repo cloned")
     except Exception as error:
         #if the repository is already cloned, the folder is present on RPi,
         #error will happen, then we will try to use pull command

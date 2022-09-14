@@ -36,6 +36,7 @@ try:
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch
     github_check (branch = "develop_reconstruction")
+    time.sleep (3)
 
     while 1:
         try:
