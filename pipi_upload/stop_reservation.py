@@ -30,11 +30,11 @@ def button_callback (button_pin):
         while GPIO.input (button_pin) == GPIO.LOW:
             i += 1
             LCD_display.write (i*symbol,2)
-            button_hold_time = 2 #hold time in seconds
+            button_hold_time = 1.5 #hold time in seconds
             time.sleep (button_hold_time/18)
             if i > 19:
-                GPIO.remove_event_detect(button_pin)
-                web_requests.booking_stop_reservation()
+                button_deactivated ()
+                #web_requests.booking_stop_reservation()
                 LCD_display.clear()
                 LCD_display.write ('Session ended',1)
                 LCD_display.write ('by user',2)             
