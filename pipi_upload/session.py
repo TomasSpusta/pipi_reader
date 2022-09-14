@@ -61,14 +61,14 @@ def session_recording ():
         
         t = refresh_rate + 1
         
-        if GPIO.input (config.button_pin) == GPIO.LOW:
-                print ("Button is pressed")
-                Event().wait(5)   
+           
         while t > 1: 
-        
-            t -= 1
+            if GPIO.input (config.button_pin) == GPIO.LOW:
+                print ("Button is pressed")
+                Event().wait(5)
+            t -= 0.5
             print (t)
-            time.sleep (1)
+            time.sleep (0.5)
             #chcek if buton is pushed => try to pause the script
             
         print ("Recording is running")
