@@ -33,7 +33,7 @@ try:
     network_check ()
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch
-    github_check (branch = "develop_reconstruction")
+    github_check (branch = "main")
     
     from card_reader import card_reader
     import session
