@@ -33,7 +33,11 @@ def write (text, row):
     lcd.cursor_pos = (row-1, 0)
     lcd.write_string (text)
 
-
+def version ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write ("Version:",1)
+    write ("X.X.X",2)
 
 def LCD_init (ip, mac):
     backlight (True)
@@ -73,18 +77,28 @@ def booking_200 ():
     write (str(config.user_name), 2)
     write ("Recording started", 3)
     write ("Happy hunting!", 4)
-    time.sleep(5)
-    backlight (False)
+    #time.sleep(5)
+    
 
-def booking_409 ():
+def booking_409_init ():
+    backlight (True)
+    lcd.clear() #clear the display
+    write (config.user_name, 1)  #print/show string on line 1
+    write ("Recording is running", 2)
+    write ("To stop it", 3)
+    write ("hold the red button", 4)  
+    time.sleep (5)
+    
+
+def booking_409_recording (): 
     backlight (False)
     lcd.clear() #clear the display
     write ("Remaining time:", 1)  #print/show string on line 1
-    write ("   ", 2)
+    #write ("   ", 2)
     write (str(config.remaining_time) + " min", 2)
     write ("Number of files:", 3)
-    write ("   ", 4)  
-    write (str(config.files) + " files", 4)  
+    #write ("   ", 4)  
+    write (str(config.files) + " files", 4)
     
 
 def booking_400 ():
@@ -124,7 +138,7 @@ def session_ended ():
     write (str(config.user_name), 2)
     write ("Your session ended", 3)
     write ("See you next time", 4)
-    time.sleep (10)
+    time.sleep (5)
     LCD_waiting()        
     
 def in_database ():
@@ -152,6 +166,7 @@ def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
     backlight(True)
 
 
-
+#def ending_session ():
+    
 
     

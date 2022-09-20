@@ -4,10 +4,12 @@ card_id = 0
 
 user_id = ""
 user_name = ""
+user_full_name = ""
 
 equipment_id = ""
 equipment_name = ""
 
+reservation_id = ""
 recording_id = ""
 remaining_time = 0
 files = 0
@@ -18,3 +20,7 @@ logged_in = False
 in_session = False
 
 status_code = 0
+
+reservation_start_time = "" 
+
+button_pin = 40
