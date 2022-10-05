@@ -66,7 +66,7 @@ def session_recording ():
             if GPIO.input (config.button_pin) == GPIO.LOW:
                 print ("Button is pressed")
                 Event().wait(3)
-                continue
+                break
                 
             if config.ended_by_user == True:
                 break
