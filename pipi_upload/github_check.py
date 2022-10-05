@@ -3,9 +3,8 @@
 
 #import gitpython
 import git
-import time
 import LCD_display
-from web_requests import git_version
+import web_requests
 
 
 def github_check (branch):
@@ -33,7 +32,7 @@ def github_check (branch):
         except Exception as repo_e:
             print ("Problem s repository na disku")
             print (repo_e)
-    git_version ()        
+    web_requests.git_version ()        
     LCD_display.version()
-    time.sleep (3) 
+
 

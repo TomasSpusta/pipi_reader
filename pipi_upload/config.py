@@ -1,5 +1,3 @@
-
-
 mac_address = 0
 
 git_release = ""

@@ -62,6 +62,7 @@ def session_recording ():
         t = refresh_rate + 1
         
         print ("Recording is running")   
+        '''
         while t > 1: 
             if GPIO.input (config.button_pin) == GPIO.LOW:
                 print ("Button is pressed")
@@ -74,7 +75,7 @@ def session_recording ():
             #print (t)
             time.sleep (0.25)
             #chcek if buton is pushed => try to pause the script
-            
+        '''    
         
         
         #print ("Status code from booking during session: " + str(config.status_code))  

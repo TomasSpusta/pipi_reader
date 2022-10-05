@@ -23,17 +23,14 @@ import time
 from network_check import network_check
 from github_check import github_check
 
-
-
-
-
-
 try:
     #Check internet connection, acquire IP address and MAC address
     network_check ()
+    time.sleep (3)
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch
     github_check (branch = "develop_reconstruction")
+    time.sleep (5)
     
     from card_reader import card_reader
     import session
