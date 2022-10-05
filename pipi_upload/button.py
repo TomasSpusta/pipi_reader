@@ -3,7 +3,7 @@ import time
 import LCD_display
 import config
 from web_requests import booking_stop_reservation
-from threading import Event
+
 
 
 GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -28,7 +28,7 @@ def button_callback (button_pin):
         LCD_display.clear()
         LCD_display.write ('Ending session',1)
         print ("Button is pressed")
-        Event().wait(3)
+        
         while GPIO.input (button_pin) == GPIO.LOW:
             i += 1
             LCD_display.write (i*symbol,2)
