@@ -10,7 +10,7 @@ sys.path.append('/home/pi/RFID')
 import equipment_id
 
 
-def git_release ():
+def git_version ():
    # https://api.github.com/repos/{owner}/{repo}/releases/latest
     response = requests.get("https://api.github.com/repos/TomasSpusta/pipi_reader/releases/latest")
     config.git_release = response.json()["name"]

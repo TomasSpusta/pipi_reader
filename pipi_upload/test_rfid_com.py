@@ -27,4 +27,4 @@ import requests
 #config.reservation_id = "5877750e-d01f-ed11-80cf-005056914121"
 #web_requests.booking_reservation_info ()
 response = requests.get("https://api.github.com/repos/TomasSpusta/pipi_reader/releases/latest")
-print(response.json()["name"])
+print(type(response.json()["name"]))

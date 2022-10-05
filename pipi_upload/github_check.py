@@ -5,11 +5,7 @@
 import git
 import time
 import LCD_display
-from web_requests import git_release
-import os
-import sys
-import shutil
-
+from web_requests import git_version
 
 
 def github_check (branch):
@@ -33,12 +29,11 @@ def github_check (branch):
             repo = git.Repo(local_repo)
             repo.git.reset('--hard')
             repo.remotes.origin.pull()
-            git_release ()
             print("Update finished")
         except Exception as repo_e:
             print ("Problem s repository na disku")
             print (repo_e)
-            
+    git_version ()        
     LCD_display.version()
     time.sleep (3) 
 
