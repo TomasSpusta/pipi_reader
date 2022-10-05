@@ -17,10 +17,7 @@ import RPi.GPIO as GPIO
 def network_check (): 
     pi_online_status = False
     # try to acquire IP adress, therefore check connection to the internet
-
-    LCD_display.version()
-    time.sleep (3) 
-       
+      
     while pi_online_status == False:
         try:
             ip = get('https://api.ipify.org').content.decode('utf8')
