@@ -52,6 +52,7 @@ def session_recording ():
     button.ending_reservation() #start the script which will monitor "STOP SESSION" button
     
     refresh_rate = 30 #refresh rate of remaining time and files in seconds    
+    print ("Recording is running")
     while config.remaining_time > 0 :
         
         #Loop checking and updating session information - remaining time, number of files
@@ -61,7 +62,7 @@ def session_recording ():
         
         t = refresh_rate + 1
         
-        print ("Recording is running")
+        
          
         
         while t > 1: 
