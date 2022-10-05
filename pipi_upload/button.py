@@ -14,6 +14,7 @@ def ending_reservation ():
 
 def button_deactivated ():
     GPIO.remove_event_detect(config.button_pin)
+    print("button deactivated")
     
 def button_callback (button_pin):
     i = 0    
@@ -27,7 +28,6 @@ def button_callback (button_pin):
         LCD_display.backlight(True)
         LCD_display.clear()
         LCD_display.write ('Ending session',1)
-        print ("Button is pressed")
         
         while GPIO.input (button_pin) == GPIO.LOW:
             i += 1
