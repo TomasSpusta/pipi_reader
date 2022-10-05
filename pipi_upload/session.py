@@ -51,7 +51,7 @@ def reservation_check ():
 def session_recording ():
     button.ending_reservation() #start the script which will monitor "STOP SESSION" button
     
-    refresh_rate = 30 #refresh rate of remaining time and files in seconds    
+    refresh_rate = 10 #refresh rate of remaining time and files in seconds    
     print ("Recording is running")
     while config.remaining_time > 0 :
         
@@ -61,10 +61,7 @@ def session_recording ():
         LCD_display.booking_409_recording ()
         
         t = refresh_rate + 1
-        
-        
-         
-        
+       
         while t > 1: 
             if GPIO.input (config.button_pin) == GPIO.LOW:
                 print ("Button is pressed")
