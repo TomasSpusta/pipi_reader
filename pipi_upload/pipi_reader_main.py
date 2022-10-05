@@ -25,7 +25,7 @@ from network_check import network_check
 from github_check import github_check
 
 try:
-    faulthandler.enable
+    faulthandler.enable ()
     #Check internet connection, acquire IP address and MAC address
     network_check ()
     time.sleep (3)

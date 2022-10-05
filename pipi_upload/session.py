@@ -100,6 +100,7 @@ def session_end ():
     else:
         pass
     '''
+    
     print ("Clearing states")     
     config.ended_by_user = False   
     config.in_session = False
