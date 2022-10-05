@@ -61,7 +61,8 @@ def session_recording ():
         
         t = refresh_rate + 1
         
-        print ("Recording is running")   
+        print ("Recording is running")
+        time.sleep (refresh_rate)   
         '''
         while t > 1: 
             if GPIO.input (config.button_pin) == GPIO.LOW:
