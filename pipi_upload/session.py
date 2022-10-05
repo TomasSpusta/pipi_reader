@@ -99,7 +99,8 @@ def session_end ():
         LCD_display.session_ended ()
     else:
         pass
-    '''     
+    '''
+    print ("Clearing states")     
     config.ended_by_user = False   
     config.in_session = False
     config.warning_sent = False
