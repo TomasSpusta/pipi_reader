@@ -1,4 +1,8 @@
+
+
 mac_address = 0
+
+git_release = ""
 
 card_id = 0
 
