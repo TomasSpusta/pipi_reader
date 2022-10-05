@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 import LCD_display
 import web_requests
 import config
-import stop_reservation
+import button
 
 from threading import Event   
 
@@ -49,7 +49,7 @@ def reservation_check ():
     
     
 def session_recording ():
-    stop_reservation.ending_reservation() #start the script which will monitor "STOP SESSION" button
+    button.ending_reservation() #start the script which will monitor "STOP SESSION" button
     
     refresh_rate = 5 #refresh rate of remaining time and files in seconds    
     while config.remaining_time > 0 :
@@ -66,6 +66,8 @@ def session_recording ():
             if GPIO.input (config.button_pin) == GPIO.LOW:
                 print ("Button is pressed")
                 Event().wait(3)
+            if config.ended_by_user == True:
+                break
             t -= 0.25
             print (t)
             time.sleep (0.25)
@@ -84,15 +86,18 @@ def session_recording ():
 def session_end ():
     #when session is ended by time out, or by pressing the button    
     try:
-        stop_reservation.button_deactivated ()
+        button.button_deactivated ()
     except Exception as button_e:
         print (button_e)
-    
+        
+    LCD_display.session_ended()
+    '''
     if config.status_code == 409:
         LCD_display.session_ended ()
     else:
-        pass     
-       
+        pass
+    '''     
+    config.ended_by_user = False   
     config.in_session = False
     config.warning_sent = False
     config.logged_in = False

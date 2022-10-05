@@ -37,6 +37,7 @@ def button_callback (button_pin):
                 booking_stop_reservation()
                 LCD_display.clear()
                 LCD_display.write ('Session ended',1)
-                LCD_display.write ('by user',2)             
-                time.sleep (5)
+                LCD_display.write ('by user',2)
+                config.ended_by_user = True             
+                time.sleep (2)
                 
