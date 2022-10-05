@@ -51,7 +51,7 @@ def reservation_check ():
 def session_recording ():
     button.ending_reservation() #start the script which will monitor "STOP SESSION" button
     
-    refresh_rate = 5 #refresh rate of remaining time and files in seconds    
+    refresh_rate = 30 #refresh rate of remaining time and files in seconds    
     while config.remaining_time > 0 :
         
         #Loop checking and updating session information - remaining time, number of files
@@ -72,9 +72,9 @@ def session_recording ():
                 
             if config.ended_by_user == True:
                 break
-            t -= 0.25
+            t -= 1
             #print (t)
-            time.sleep (0.25)
+            time.sleep (1)
             #chcek if buton is pushed => try to pause the script
             
         
