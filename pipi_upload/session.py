@@ -86,6 +86,7 @@ def session_recording ():
     
     
 def session_end ():
+    print ("Ending session")
     #when session is ended by time out, or by pressing the button    
     try:
         button.button_deactivated ()
