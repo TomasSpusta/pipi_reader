@@ -71,7 +71,7 @@ def session_recording ():
             if config.ended_by_user == True:
                 break
             t -= 0.1
-            #print (t)
+            print (t)
             time.sleep (0.1)
             #chcek if buton is pushed => try to pause the script
             
