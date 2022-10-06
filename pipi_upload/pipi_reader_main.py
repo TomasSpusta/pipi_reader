@@ -20,6 +20,7 @@
 import faulthandler
 import RPi.GPIO as GPIO
 import time
+import threading
 
 from network_check import network_check
 from github_check import github_check
@@ -37,8 +38,11 @@ try:
     from card_reader import card_reader
     import session
     import LCD_display
+    import button
     
     time.sleep (3)
+    
+    session_recording_thread = threading.Thread (target=session.session_recording, daemon=True)
 
     while 1:
         try:
@@ -56,7 +60,10 @@ try:
             session.reservation_check ()
             
             #every X seconds check the remaining time of session and number of acquired files
-            session.session_recording ()
+            #session.session_recording ()
+            button.ending_reservation()
+            session_recording_thread.start()
+            
             
             # when session ends reset variables for new user
             session.session_end ()
