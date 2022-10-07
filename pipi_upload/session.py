@@ -122,7 +122,7 @@ def session_recording ():
             '''    
             
            
-            signal.pause ()
+            #signal.pause ()
             #t2.join ()
             
             #print ("Status code from booking during session: " + str(config.status_code))  
