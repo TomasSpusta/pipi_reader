@@ -1,17 +1,15 @@
-from calendar import c
 import RPi.GPIO as GPIO
 import time
 import LCD_display
 import config
 from web_requests import booking_stop_reservation
-from threading import Event
-button_event = Event ()
+
 
 
 GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
-def ending_reservation ():
+def ending_reservation (button_event):
     button_event.wait ()  
     ("ending reservation")  
     GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 10)

@@ -63,8 +63,7 @@ def counting(refresh_rate):
             print("Button pressed in counting loop")
             button_event.set()
             time.sleep (3)
-            
-            #break      
+            button_event.clear()      
          
         if config.ended_by_user == True:
             break   
@@ -81,23 +80,21 @@ def counting(refresh_rate):
     
 def session_recording ():
     if config.logged_in == True:
-        #button.ending_reservation() #start the script which will monitor "STOP SESSION" button
+        t1 = Thread (target=counting, args=(refresh_rate,), daemon=True)
+        t2 = Thread (target=button.ending_reservation, args= (button_event,), daemon=True) 
         
+        #button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         
         refresh_rate = 10 #refresh rate of remaining time and files in seconds    
         print ("Recording is running")
         
         # try to use threads to remove error
-        t1 = Thread (target=counting, args=(refresh_rate,), daemon=True)
-        t2 = Thread (target=button.ending_reservation, daemon=True) 
-    
         
-        t2.start ()
         t1.start ()
-        
+        t2.start ()
         
         while config.remaining_time > 0 :
-            
+            print ("session loop")
             #Loop checking and updating session information - remaining time, number of files
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
@@ -132,7 +129,7 @@ def session_recording ():
                 config.warning_sent = True
                 LCD_display.about_to_end_w ()    
             
-            time.sleep (refresh_rate)
+            #time.sleep (refresh_rate)
     
     
     
