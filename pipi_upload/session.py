@@ -14,6 +14,7 @@ from threading import Event, Thread
 
 button_event = Event ()
 counting_event = Event ()
+update_info_event = Event ()
 
 
 
@@ -73,58 +74,45 @@ def counting(refresh_rate):
         #print (c)
         time.sleep (counting_step) 
     #print ("counting ended")
+    
+def update_recording_info (refresh_rate):
+    
+    web_requests.booking_request_files ()
+    web_requests.booking_reservation_info ()
+    LCD_display.booking_409_recording ()
+    time.sleep (refresh_rate)
 
     
 
     
 def session_recording ():
     if config.logged_in == True:
-        refresh_rate = 10
-        #t1 = Thread (target=counting, args=(refresh_rate,), daemon=True)
-        t2 = Thread (target=button.ending_reservation, args= (button_event,), daemon=True) 
+        refresh_rate = 10  #refresh rate of remaining time and files in seconds    
+        t1 = Thread (target=update_recording_info, args=(refresh_rate,), daemon=True)
+        t2 = Thread (target=button.ending_reservation, daemon=True) 
         
         #button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         
-         #refresh rate of remaining time and files in seconds    
+        
         print ("Recording is running")
         
         # try to use threads to remove error
-
+        t1.start ()
         t2.start ()
         
         
         while config.remaining_time > 0 :
             print ("session loop")
+                        
+            if GPIO.input == GPIO.LOW:
+                print ("Button is pressed in loop")
+                #button_event.set()
+                time.sleep (3)
+                #button_event.clear()
+            
+            
             #Loop checking and updating session information - remaining time, number of files
-            web_requests.booking_request_files ()
-            web_requests.booking_reservation_info ()
-            LCD_display.booking_409_recording ()
-           
-            #counting_event.set ()
-            
-            counting (refresh_rate)
-            
-            '''
-            t = refresh_rate + 1
-        
-            while t > 1: 
-                if GPIO.input (config.button_pin) == GPIO.LOW:
-                    print ("Button is pressed")
-                    Event().wait(3)
-                    break
-                    
-                if config.ended_by_user == True:
-                    break
-                t -= 0.1
-                #print (t)
-                time.sleep (0.1)
-                #chcek if buton is pushed => try to pause the script
-            '''    
-            
-           
-            #signal.pause ()
-            #t2.join ()
-            
+                     
             #print ("Status code from booking during session: " + str(config.status_code))  
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
                 # Session about to end warning at 5-minute mark 
@@ -163,5 +151,19 @@ def session_end ():
         print ("Recording ended")     
         time.sleep(1)
 
-  
-# 
+'''
+            t = refresh_rate + 1
+        
+            while t > 1: 
+                if GPIO.input (config.button_pin) == GPIO.LOW:
+                    print ("Button is pressed")
+                    Event().wait(3)
+                    break
+                    
+                if config.ended_by_user == True:
+                    break
+                t -= 0.1
+                #print (t)
+                time.sleep (0.1)
+                #chcek if buton is pushed => try to pause the script
+'''    
