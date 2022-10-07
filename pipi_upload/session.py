@@ -76,7 +76,6 @@ def counting(refresh_rate):
     #print ("counting ended")
     
 def update_recording_info (refresh_rate):
-    
     web_requests.booking_request_files ()
     web_requests.booking_reservation_info ()
     LCD_display.booking_409_recording ()
@@ -87,7 +86,7 @@ def update_recording_info (refresh_rate):
     
 def session_recording ():
     if config.logged_in == True:
-        refresh_rate = 10  #refresh rate of remaining time and files in seconds    
+        refresh_rate = 5  #refresh rate of remaining time and files in seconds    
         t1 = Thread (target=update_recording_info, args=(refresh_rate,), daemon=True)
         t2 = Thread (target=button.ending_reservation, daemon=True) 
         

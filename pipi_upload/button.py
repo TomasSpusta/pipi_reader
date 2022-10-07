@@ -47,4 +47,5 @@ def button_callback (button_pin):
                 LCD_display.write ('by user',2)
                 config.ended_by_user = True             
                 time.sleep (2)
+                LCD_display.session_ended ()
                 
