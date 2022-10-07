@@ -9,7 +9,10 @@ import web_requests
 import config
 import button
 
-from threading import Event   
+from threading import Event, Thread 
+
+event = Event ()
+
 
 
 def user_check ():
@@ -47,6 +50,22 @@ def reservation_check ():
         print("Reservation ID: " + str(config.reservation_id))
 
     
+def counting():
+    global c
+    c = 0
+    print ("Counting started")
+    while c < 20:
+        counting_step = 0.1
+        c += counting_step
+        print (c)
+        time.sleep (counting_step)
+        if GPIO.input (config.button_pin) == GPIO.LOW:
+            event.set()
+            time.sleep (3)       
+    event.clear()
+    print ("counting ended")
+    
+
     
 def session_recording ():
     if config.logged_in == True:
@@ -78,6 +97,20 @@ def session_recording ():
                 time.sleep (0.1)
                 #chcek if buton is pushed => try to pause the script
             '''    
+            
+            # try to use threads to remove error
+           
+            t1 = Thread (target=counting, daemon=True)
+            t2 = Thread (target=button.booking_stop_reservation, daemon=True) 
+    
+            t1.start ()
+            t2.start ()
+    
+            t2.join ()
+            
+            
+            
+            
             
             
             #print ("Status code from booking during session: " + str(config.status_code))  
