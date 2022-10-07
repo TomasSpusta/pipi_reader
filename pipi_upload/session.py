@@ -93,7 +93,7 @@ def session_recording ():
     
         
         t2.start ()
-        t1.start ()
+        
         
         
         while config.remaining_time > 0 :
@@ -102,6 +102,7 @@ def session_recording ():
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
             LCD_display.booking_409_recording ()
+            t1.start ()
             counting_event.set ()
             
             '''
