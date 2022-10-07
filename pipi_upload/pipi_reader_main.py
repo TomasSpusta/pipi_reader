@@ -20,6 +20,7 @@
 import faulthandler
 import RPi.GPIO as GPIO
 import time
+import threading
 
 
 from network_check import network_check
@@ -72,6 +73,7 @@ try:
 except KeyboardInterrupt:
     print("CTRL + V pressed, script ended in pipi_reader script")
     
+    threading.enumerate()
     time.sleep (0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        
