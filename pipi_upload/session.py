@@ -8,10 +8,13 @@ import LCD_display
 import web_requests
 import config
 import button
+import signal
 
 from threading import Event, Thread 
 
-event = Event ()
+button_event = Event ()
+counting_event = Event ()
+
 
 
 
@@ -51,16 +54,16 @@ def reservation_check ():
 
     
 def counting(refresh_rate):
-    global c
+    counting_event.wait()
     c = refresh_rate + 1
     print ("Counting started")
     while c > 1:
         
         if GPIO.input (config.button_pin) == GPIO.LOW:
             print("Button pressed in counting loop")
-            event.set()
+            button_event.set()
             time.sleep (3)
-            event.clear()
+            button_event.clear()
             break      
          
         if config.ended_by_user == True:
@@ -88,6 +91,7 @@ def session_recording ():
     
         
         t2.start ()
+        t1.start ()
         
         
         while config.remaining_time > 0 :
@@ -96,6 +100,7 @@ def session_recording ():
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
             LCD_display.booking_409_recording ()
+            counting_event.set ()
             
             '''
             t = refresh_rate + 1
@@ -113,9 +118,10 @@ def session_recording ():
                 time.sleep (0.1)
                 #chcek if buton is pushed => try to pause the script
             '''    
-            t1.start ()
+            
            
-           # t2.join ()
+            signal.pause ()
+            #t2.join ()
             
             #print ("Status code from booking during session: " + str(config.status_code))  
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
