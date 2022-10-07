@@ -74,8 +74,8 @@ def counting(refresh_rate):
         print (c)
         time.sleep (counting_step) 
     print ("counting ended")
-    button_event.clear()
-    counting_event.clear()
+    #button_event.clear()
+    #counting_event.clear()
     
 
     
