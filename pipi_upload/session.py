@@ -57,6 +57,7 @@ def counting(refresh_rate):
     while c > 1:
         
         if GPIO.input (config.button_pin) == GPIO.LOW:
+            print("Button pressed in counting loop")
             event.set()
             time.sleep (3)
             event.clear()
@@ -114,7 +115,7 @@ def session_recording ():
             '''    
             t1.start ()
            
-            t2.join ()
+           # t2.join ()
             
             #print ("Status code from booking during session: " + str(config.status_code))  
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
