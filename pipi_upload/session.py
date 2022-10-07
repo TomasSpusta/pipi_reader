@@ -70,7 +70,7 @@ def counting(refresh_rate):
         
         counting_step = 0.1
         c -= counting_step
-        print (c)
+        #print (c)
         time.sleep (counting_step) 
     print ("counting ended")
 
