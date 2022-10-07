@@ -74,6 +74,7 @@ def counting(refresh_rate):
         print (c)
         time.sleep (counting_step) 
     print ("counting ended")
+    counting_event.clear()
     
 
     
@@ -82,7 +83,7 @@ def session_recording ():
         #button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         
         
-        refresh_rate = 20 #refresh rate of remaining time and files in seconds    
+        refresh_rate = 10 #refresh rate of remaining time and files in seconds    
         print ("Recording is running")
         
         # try to use threads to remove error
