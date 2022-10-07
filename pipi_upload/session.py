@@ -80,12 +80,13 @@ def counting(refresh_rate):
     
 def session_recording ():
     if config.logged_in == True:
+        refresh_rate = 10
         t1 = Thread (target=counting, args=(refresh_rate,), daemon=True)
         t2 = Thread (target=button.ending_reservation, args= (button_event,), daemon=True) 
         
         #button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         
-        refresh_rate = 10 #refresh rate of remaining time and files in seconds    
+         #refresh rate of remaining time and files in seconds    
         print ("Recording is running")
         
         # try to use threads to remove error
