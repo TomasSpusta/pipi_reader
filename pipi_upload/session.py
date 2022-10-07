@@ -56,11 +56,11 @@ def reservation_check ():
 def counting(refresh_rate):
 
     c = refresh_rate + 1
-    print ("Counting started")
+    #print ("Counting started")
     while c > 1:
         
         if GPIO.input (config.button_pin) == GPIO.LOW:
-            print("Button pressed in counting loop")
+            #print("Button pressed in counting loop")
             button_event.set()
             time.sleep (3)
             button_event.clear()      
@@ -72,7 +72,7 @@ def counting(refresh_rate):
         c -= counting_step
         #print (c)
         time.sleep (counting_step) 
-    print ("counting ended")
+    #print ("counting ended")
 
     
 
@@ -144,7 +144,9 @@ def session_end ():
         except Exception as button_e:
             print (button_e)
             
-        LCD_display.session_ended()
+        LCD_display.session_ended()        
+        time.sleep (3)
+      
         '''
         if config.status_code == 409:
             LCD_display.session_ended ()
