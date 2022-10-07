@@ -63,7 +63,7 @@ def counting(refresh_rate):
             print("Button pressed in counting loop")
             button_event.set()
             time.sleep (3)
-            button_event.clear()
+            
             break      
          
         if config.ended_by_user == True:
@@ -74,6 +74,7 @@ def counting(refresh_rate):
         print (c)
         time.sleep (counting_step) 
     print ("counting ended")
+    button_event.clear()
     counting_event.clear()
     
 
