@@ -20,12 +20,12 @@ def button_deactivated ():
     print("button deactivated")
     
 def button_callback (button_pin):
-    global c
+    
     
     i = 0    
     if GPIO.input (button_pin) == GPIO.HIGH:
         i = 0
-        c = 0
+       
         LCD_display.clear()
         LCD_display.booking_409_recording ()
         
@@ -43,7 +43,6 @@ def button_callback (button_pin):
             if i > 19:
                 button_deactivated ()
                 booking_stop_reservation()
-                c = 20
                 LCD_display.clear()
                 LCD_display.write ('Session ended',1)
                 LCD_display.write ('by user',2)

@@ -50,19 +50,25 @@ def reservation_check ():
         print("Reservation ID: " + str(config.reservation_id))
 
     
-def counting():
+def counting(refresh_rate):
     global c
-    c = 0
+    c = refresh_rate + 1
     print ("Counting started")
-    while c < 20:
-        counting_step = 0.1
-        c += counting_step
-        print (c)
-        time.sleep (counting_step)
+    while c > 1:
+        
         if GPIO.input (config.button_pin) == GPIO.LOW:
             event.set()
-            time.sleep (3)       
-    event.clear()
+            time.sleep (3)
+            event.clear()
+            break      
+         
+        if config.ended_by_user == True:
+            break   
+        
+        counting_step = 0.1
+        c -= counting_step
+        print (c)
+        time.sleep (counting_step) 
     print ("counting ended")
     
 
@@ -71,15 +77,24 @@ def session_recording ():
     if config.logged_in == True:
         #button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         
+        
         refresh_rate = 20 #refresh rate of remaining time and files in seconds    
         print ("Recording is running")
+        
+        # try to use threads to remove error
+        t1 = Thread (target=counting, args=(refresh_rate,), daemon=True)
+        t2 = Thread (target=button.ending_reservation, daemon=True) 
+    
+        
+        t2.start ()
+        
+        
         while config.remaining_time > 0 :
             
             #Loop checking and updating session information - remaining time, number of files
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
             LCD_display.booking_409_recording ()
-            
             
             '''
             t = refresh_rate + 1
@@ -97,21 +112,9 @@ def session_recording ():
                 time.sleep (0.1)
                 #chcek if buton is pushed => try to pause the script
             '''    
-            
-            # try to use threads to remove error
-           
-            t1 = Thread (target=counting, daemon=True)
-            t2 = Thread (target=button.booking_stop_reservation, daemon=True) 
-    
             t1.start ()
-            t2.start ()
-    
+           
             t2.join ()
-            
-            
-            
-            
-            
             
             #print ("Status code from booking during session: " + str(config.status_code))  
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
