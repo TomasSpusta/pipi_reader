@@ -5,14 +5,14 @@ import LCD_display
 import config
 from web_requests import booking_stop_reservation
 from threading import Event
-event = Event ()
+button_event = Event ()
 
 
 GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 def ending_reservation ():
-    event.wait ()    
+    button_event.wait ()    
     GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 10)
     
     
