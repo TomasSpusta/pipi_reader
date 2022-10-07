@@ -42,7 +42,7 @@ try:
     
     time.sleep (3)
     
-    session_recording_thread = threading.Thread (target=session.session_recording, daemon=True)
+    
 
     while 1:
         try:
