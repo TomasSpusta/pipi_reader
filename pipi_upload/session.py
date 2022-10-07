@@ -76,10 +76,11 @@ def counting(refresh_rate):
     #print ("counting ended")
     
 def update_recording_info (refresh_rate):
-    web_requests.booking_request_files ()
-    web_requests.booking_reservation_info ()
-    LCD_display.booking_409_recording ()
-    time.sleep (refresh_rate)
+    while config.remaining_time > 0 :
+        web_requests.booking_request_files ()
+        web_requests.booking_reservation_info ()
+        LCD_display.booking_409_recording ()
+        time.sleep (refresh_rate)
 
     
 
