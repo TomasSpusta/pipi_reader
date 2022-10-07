@@ -102,7 +102,7 @@ def session_recording ():
         
         
         while config.remaining_time > 0 :
-            print ("session loop")
+            #print ("session loop")
                         
             if GPIO.input == GPIO.LOW:
                 print ("Button is pressed in loop")
