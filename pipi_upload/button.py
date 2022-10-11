@@ -29,9 +29,10 @@ def button_callback (button_pin):
     else:
 
         print("Button Pressed")
-        LCD_display.backlight(True)
+        
       
         while GPIO.input (button_pin) == GPIO.LOW:
+            LCD_display.backlight(True)
             i += 1
             #LCD_display.write (i*symbol,2)
             button_hold_time = 1.5 #hold time in seconds

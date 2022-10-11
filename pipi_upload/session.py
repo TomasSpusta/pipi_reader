@@ -53,6 +53,8 @@ def session_recording ():
         
         #Loop checking and updating session information - remaining time, number of files
         while config.remaining_time > 0 :
+            if config.ended_by_user == True:
+                break  
             #print ("session loop")
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
