@@ -36,7 +36,7 @@ def reservation_check ():
     else:   
     #after succesfull login display will show ("you are logged in as _user name_")
         if config.status_code == 200:
-            LCD_display.booking_200 ()
+            #LCD_display.booking_200 ()
             print ("Recording started")
             LCD_display.booking_409_init ()
         elif config.status_code == 409:
@@ -53,6 +53,7 @@ def session_recording ():
         
         #Loop checking and updating session information - remaining time, number of files
         while config.remaining_time > 0 :
+            time.sleep (refresh_rate)
             if config.ended_by_user == True:
                 break  
             #print ("session loop")
@@ -66,7 +67,7 @@ def session_recording ():
                 config.warning_sent = True
                 LCD_display.about_to_end_w ()    
             
-            time.sleep (refresh_rate)
+            
             
             
     
