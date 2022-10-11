@@ -8,15 +8,6 @@ import LCD_display
 import web_requests
 import config
 import button
-import signal
-
-from threading import Event, Thread 
-
-button_event = Event ()
-counting_event = Event ()
-update_info_event = Event ()
-
-
 
 
 def user_check ():
@@ -88,28 +79,19 @@ def update_recording_info (refresh_rate):
 def session_recording ():
     if config.logged_in == True:
         refresh_rate = 5  #refresh rate of remaining time and files in seconds    
-        t1 = Thread (target=update_recording_info, args=(refresh_rate,), daemon=True)
-        t2 = Thread (target=button.ending_reservation, daemon=True) 
-        
-        #button.ending_reservation() #start the script which will monitor "STOP SESSION" button
+          
+        button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         
         
         print ("Recording is running")
         
         # try to use threads to remove error
-        t1.start ()
-        t2.start ()
+
         
         
         while config.remaining_time > 0 :
             #print ("session loop")
-                        
-            if GPIO.input == GPIO.LOW:
-                print ("Button is pressed in loop")
-                #button_event.set()
-                time.sleep (3)
-                #button_event.clear()
-            
+            update_recording_info (refresh_rate)                      
             
             #Loop checking and updating session information - remaining time, number of files
                      
@@ -134,14 +116,7 @@ def session_end ():
             
         LCD_display.session_ended()        
         time.sleep (3)
-      
-        '''
-        if config.status_code == 409:
-            LCD_display.session_ended ()
-        else:
-            pass
-        '''
-        
+            
         print ("Clearing states")     
         config.ended_by_user = False   
         config.in_session = False
@@ -151,19 +126,3 @@ def session_end ():
         print ("Recording ended")     
         time.sleep(1)
 
-'''
-            t = refresh_rate + 1
-        
-            while t > 1: 
-                if GPIO.input (config.button_pin) == GPIO.LOW:
-                    print ("Button is pressed")
-                    Event().wait(3)
-                    break
-                    
-                if config.ended_by_user == True:
-                    break
-                t -= 0.1
-                #print (t)
-                time.sleep (0.1)
-                #chcek if buton is pushed => try to pause the script
-'''    

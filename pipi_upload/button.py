@@ -10,7 +10,6 @@ GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 def ending_reservation ():
-    #button_event.wait ()  
     ("ending reservation")  
     GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
     
@@ -24,19 +23,17 @@ def button_callback (button_pin):
     if GPIO.input (button_pin) == GPIO.HIGH:
         print("Button released")
         i = 0   
-        LCD_display.clear()
-        LCD_display.booking_409_recording ()
+        LCD_display.backlight (False)
+
         
     else:
-        symbol = "|"
+
         print("Button Pressed")
         LCD_display.backlight(True)
-        LCD_display.clear()
-        LCD_display.write ('Ending session',1)
-        
+      
         while GPIO.input (button_pin) == GPIO.LOW:
             i += 1
-            LCD_display.write (i*symbol,2)
+            #LCD_display.write (i*symbol,2)
             button_hold_time = 1.5 #hold time in seconds
             time.sleep (button_hold_time/18)
             if i > 19:
