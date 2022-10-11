@@ -44,64 +44,29 @@ def reservation_check ():
         print("Recording ID: " + str(config.recording_id))
         print("Reservation ID: " + str(config.reservation_id))
 
-    
-def counting(refresh_rate):
-
-    c = refresh_rate + 1
-    #print ("Counting started")
-    while c > 1:
-        
-        if GPIO.input (config.button_pin) == GPIO.LOW:
-            #print("Button pressed in counting loop")
-            button_event.set()
-            time.sleep (3)
-            button_event.clear()      
-         
-        if config.ended_by_user == True:
-            break   
-        
-        counting_step = 0.1
-        c -= counting_step
-        #print (c)
-        time.sleep (counting_step) 
-    #print ("counting ended")
-    
-def update_recording_info (refresh_rate):
-    while config.remaining_time > 0 :
-        web_requests.booking_request_files ()
-        web_requests.booking_reservation_info ()
-        LCD_display.booking_409_recording ()
-        time.sleep (refresh_rate)
-
-    
-
-    
 def session_recording ():
     if config.logged_in == True:
         refresh_rate = 5  #refresh rate of remaining time and files in seconds    
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
-        
-        
         print ("Recording is running")
         
-        # try to use threads to remove error
-
-        
-        
+        #Loop checking and updating session information - remaining time, number of files
         while config.remaining_time > 0 :
             #print ("session loop")
-            update_recording_info (refresh_rate)                      
-            
-            #Loop checking and updating session information - remaining time, number of files
-                     
+            web_requests.booking_request_files ()
+            web_requests.booking_reservation_info ()
+            LCD_display.booking_409_recording ()          
+     
             #print ("Status code from booking during session: " + str(config.status_code))  
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
                 # Session about to end warning at 5-minute mark 
                 config.warning_sent = True
                 LCD_display.about_to_end_w ()    
             
-            #time.sleep (refresh_rate)
+            time.sleep (refresh_rate)
+            
+            
     
     
     
