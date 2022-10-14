@@ -37,7 +37,7 @@ def version ():
     backlight (True)
     lcd.clear() #clear the display
     write ("Version:",1)
-    write ("X.X.X",2)
+    write (config.git_release,2)
 
 def LCD_init (ip, mac):
     backlight (True)
@@ -88,16 +88,17 @@ def booking_409_init ():
     write ("To stop it", 3)
     write ("hold the red button", 4)  
     time.sleep (5)
+    lcd.clear()
     
 
 def booking_409_recording (): 
     backlight (False)
-    lcd.clear() #clear the display
+    #lcd.clear() #clear the display
     write ("Remaining time:", 1)  #print/show string on line 1
-    #write ("   ", 2)
+    write ("                ", 2)
     write (str(config.remaining_time) + " min", 2)
     write ("Number of files:", 3)
-    #write ("   ", 4)  
+    write ("                ", 4)  
     write (str(config.files) + " files", 4)
     
 
@@ -138,8 +139,7 @@ def session_ended ():
     write (str(config.user_name), 2)
     write ("Your session ended", 3)
     write ("See you next time", 4)
-    time.sleep (5)
-    LCD_waiting()        
+    
     
 def in_database ():
     #user card is in internal database

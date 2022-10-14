@@ -9,7 +9,6 @@
 import config
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
-import time
 import LCD_display
 import web_requests
 import RPi.GPIO as GPIO
@@ -17,10 +16,7 @@ import RPi.GPIO as GPIO
 def network_check (): 
     pi_online_status = False
     # try to acquire IP adress, therefore check connection to the internet
-
-    LCD_display.version()
-    time.sleep (3) 
-       
+      
     while pi_online_status == False:
         try:
             ip = get('https://api.ipify.org').content.decode('utf8')
@@ -52,7 +48,7 @@ def network_check ():
     print ("Equipment ID: " + str (config.equipment_id))
             
     LCD_display.LCD_init (ip, config.mac_address)
-    time.sleep (5)
+
 
 
 

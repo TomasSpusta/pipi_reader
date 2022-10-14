@@ -9,6 +9,14 @@ import unidecode
 sys.path.append('/home/pi/RFID')
 import equipment_id
 
+
+def git_version ():
+   # https://api.github.com/repos/{owner}/{repo}/releases/latest
+    response = requests.get("https://api.github.com/repos/TomasSpusta/pipi_reader/releases/latest")
+    config.git_release = response.json()["name"]
+    print (config.git_release)
+
+
 def crm_request_mac ():
     #mac_address = str (mac_address)
     payload = {"mac_address":config.mac_address}

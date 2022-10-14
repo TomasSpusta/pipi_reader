@@ -17,29 +17,33 @@
 
 
 #Import section
+import faulthandler
 import RPi.GPIO as GPIO
 import time
+import threading
+
 
 from network_check import network_check
 from github_check import github_check
 
-
-
-
-
-
 try:
+    faulthandler.enable ()
     #Check internet connection, acquire IP address and MAC address
     network_check ()
+    time.sleep (3)
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch
     github_check (branch = "main")
+    time.sleep (5)
     
     from card_reader import card_reader
     import session
     import LCD_display
     
+    
     time.sleep (3)
+    
+    
 
     while 1:
         try:
@@ -69,6 +73,7 @@ try:
 except KeyboardInterrupt:
     print("CTRL + V pressed, script ended in pipi_reader script")
     
+    print (threading.enumerate())
     time.sleep (0.5)
     LCD_display.backlight (False)
     LCD_display.clear ()        
