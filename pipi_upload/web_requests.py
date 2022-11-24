@@ -21,7 +21,7 @@ def crm_request_mac ():
     #mac_address = str (mac_address)
     payload = {"mac_address":config.mac_address}
     try:
-        crm_response = requests.post ("https://betacrm.api.ceitec.cz/get-equipment-by-mac-address", json = payload)
+        crm_response = requests.post ("https://crm.api.ceitec.cz/get-equipment-by-mac-address", json = payload)
         crm_data = crm_response.json()
         #print (crm_data)
         
@@ -44,7 +44,7 @@ def crm_request_rfid ():
     payload = {"rfid":config.card_id}
     
     try:
-        crm_response = requests.post ("https://betacrm.api.ceitec.cz/get-contact-by-rfid", json = payload)
+        crm_response = requests.post ("https://crm.api.ceitec.cz/get-contact-by-rfid", json = payload)
         crm_data = crm_response.json()
         #print (crm_data)
         

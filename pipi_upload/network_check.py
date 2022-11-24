@@ -11,6 +11,7 @@ from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import LCD_display
 import web_requests
+import time
 import RPi.GPIO as GPIO
 
 def network_check (): 
@@ -43,6 +44,10 @@ def network_check ():
                 config.mac_address = 0
                 print (mac_e)
                 print ("Problem with MAC address")
+        else:
+            LCD_display.LCD_init (ip, config.mac_address)
+            time.sleep (1)
+            
 
     print ("Equipment name: " + str (config.equipment_name))
     print ("Equipment ID: " + str (config.equipment_id))
