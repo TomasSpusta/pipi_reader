@@ -1,4 +1,4 @@
-mac_address = 0
+mac_address = ""
 
 git_release = ""
 

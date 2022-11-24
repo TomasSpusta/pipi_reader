@@ -49,7 +49,7 @@ def LCD_init (ip, mac):
     else:
         write (ip, 2) # otherwise display IP adress
     write ("MAC adress:",3) # display MAC adress
-    write (str(mac),4)
+    write (mac,4)
     
 def LCD_waiting ():
     backlight (True)
