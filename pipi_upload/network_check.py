@@ -42,7 +42,7 @@ def network_check ():
                     print ("CRM has problem with MAC address")
                     
             except Exception as mac_e:
-                config.mac_address = ""
+                config.mac_address = " "
                 print (mac_e)
                 print ("Problem with MAC address")
         else:
