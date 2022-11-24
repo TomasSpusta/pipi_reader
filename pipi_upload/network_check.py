@@ -22,13 +22,14 @@ def network_check ():
         try:
             ip = get('https://api.ipify.org').content.decode('utf8')
             print('My public IP address is: {}'.format(ip))    
-            pi_online_status = True
+            
             
         except Exception as ip_e: # if there is an error = no internet connection, ip = 0
             ip = 0
             print (ip_e) 
         
         if ip != 0:
+            pi_online_status = True
             try:   
                 config.mac_address = gma() # get MAC address
                 print("My MAC adress is: {}".format(config.mac_address))
