@@ -26,6 +26,15 @@ def flashing (interval, number):
         time.sleep(interval)
         backlight (False)
         
+def display (line1, line2, line3, line4, clear = True,):
+    # display ("Your VUT card is not", "in database yet.", "Let's change that.","", clear = True)
+    if clear == True:
+        lcd.clear()
+    write (line1,1)
+    write (line2,2)
+    write (line3,3)
+    write (line4,4)
+        
 def clear():
     lcd.clear()
 
@@ -64,9 +73,9 @@ def not_in_database ():
     backlight (True)
     lcd.clear() #clear the display
     write ("Your card" , 1)  #print/show string on line 1
-    write ("is not in a database" , 2)
-    write ("Please contact", 3) 
-    write ("User Office in C1.04", 4) 
+    write ("is not in a database." , 2)
+    write ("Please register it", 3) 
+    write ("in booking system.", 4) 
     time.sleep (5)
     LCD_waiting()
     
