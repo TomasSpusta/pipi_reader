@@ -15,10 +15,10 @@ lcd = CharLCD('PCF8574', 0x27)
 #Clear display:
     #lcd.clear()
 #
-'''
+
 def backlight (status=True):
     lcd.backlight_enabled = status
-'''
+
     
 def flashing (interval, number):
     for _ in range (number):
