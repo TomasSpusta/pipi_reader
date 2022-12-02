@@ -13,13 +13,16 @@ def card_reader():
     
     # convert decimal number from RFID reader to hexadecimal number
     hex_num = hex (RFID_id)
-    # trim the last 2 characters from the hexadecimal
+    # trim the last 2 characters from the hexadecimal number
     trimmed_hex_num = hex_num [2:10:]
-    print (trimmed_hex_num)
     
+    #print (trimmed_hex_num)
+    
+    # translate the entities in hex format to the hex format from PC RFID reader
     altered_hex_num = trimmed_hex_num [6] + trimmed_hex_num [7] + trimmed_hex_num [4] + trimmed_hex_num [5] + trimmed_hex_num [2] + trimmed_hex_num [3] + trimmed_hex_num [0] + trimmed_hex_num [1]
     
-    print (altered_hex_num)
+    #print (altered_hex_num)
     
-    new_dec_num = int (altered_hex_num,16)
-    print (new_dec_num)
+    # convert altered hexadecimal number to the new decimal number, which will be the card_id sent to the API
+    config.card_id = int (altered_hex_num,16)
+    #print (config.card_id)
