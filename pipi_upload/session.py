@@ -20,32 +20,33 @@ def user_check ():
         
     
 def reservation_check ():
-    config.status_code = web_requests.booking_request_start_measurement()
-    print ("Status code from booking: " + str(config.status_code))  
-    
-    if config.logged_in == False:
-    # Display error notifications, when booking error occures
-        if config.status_code == 400:
-            LCD_display.booking_400 ()
-        elif config.status_code == 404:
-            LCD_display.booking_404 ()
-        elif config.status_code == 500:
-            LCD_display.booking_500 ()  
+    if config.in_database == True:
+        config.status_code = web_requests.booking_request_start_measurement()
+        print ("Status code from booking: " + str(config.status_code))  
         
-    #User has reservation on the machine in appropriate time window
-    else:   
-    #after succesfull login display will show ("you are logged in as _user name_")
-        if config.status_code == 200:
-            #LCD_display.booking_200 ()
-            print ("Recording started")
-            LCD_display.booking_409_init ()
-        elif config.status_code == 409:
-            LCD_display.booking_409_init ()
-        print("Recording ID: " + str(config.recording_id))
-        print("Reservation ID: " + str(config.reservation_id))
+        if config.logged_in == False:
+        # Display error notifications, when booking error occures
+            if config.status_code == 400:
+                LCD_display.booking_400 ()
+            elif config.status_code == 404:
+                LCD_display.booking_404 ()
+            elif config.status_code == 500:
+                LCD_display.booking_500 ()  
+            
+        #User has reservation on the machine in appropriate time window
+        else:   
+        #after succesfull login display will show ("you are logged in as _user name_")
+            if config.status_code == 200:
+                #LCD_display.booking_200 ()
+                print ("Recording started")
+                LCD_display.booking_409_init ()
+            elif config.status_code == 409:
+                LCD_display.booking_409_init ()
+            print("Recording ID: " + str(config.recording_id))
+            print("Reservation ID: " + str(config.reservation_id))
 
 def session_recording ():
-    if config.logged_in == True:
+    if config.in_database == True and config.logged_in == True:
         refresh_rate = 5  #refresh rate of remaining time and files in seconds    
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
@@ -66,13 +67,7 @@ def session_recording ():
                 # Session about to end warning at 5-minute mark 
                 config.warning_sent = True
                 LCD_display.about_to_end_w ()    
-            
-            
-            
-            
-    
-    
-    
+  
 def session_end ():
     if config.logged_in == True:
         print ("Ending session")
