@@ -99,9 +99,6 @@ def booking_500 ():
     display ("Hi",str(config.user_name),"Internal ERROR.","Try to log in again.",clear=True,backlight_status=True)
     time.sleep (5)
     LCD_waiting()
-
-def session_ended ():
-    display ("Hi",str(config.user_name),"Your session ended.","See you next time.",clear=True,backlight_status=True)  
     
 def in_database ():
     #user card is in internal database
@@ -112,5 +109,5 @@ def about_to_end_w (): ### Dodelat, aby ukazoval session is about to end a blika
     flashing(0.3, 5) 
     time.sleep (5)
 
-def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
-    display (str(config.user_name),"Your session","has expired.","", clear=True,backlight_status=True)  
+def session_ended ():
+    display ("Hi",str(config.user_name),"Your session ended.","See you next time.",clear=True,backlight_status=True)  
