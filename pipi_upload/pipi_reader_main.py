@@ -33,7 +33,11 @@ try:
     time.sleep (3)
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch
-    github_check (branch = "develop_reader")
+
+    
+
+    github_check (branch = "main")
+
     time.sleep (5)
     
     from card_reader import card_reader
