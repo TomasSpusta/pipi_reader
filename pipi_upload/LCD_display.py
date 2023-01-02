@@ -18,13 +18,24 @@ lcd = CharLCD('PCF8574', 0x27)
 
 def backlight (status=True):
     lcd.backlight_enabled = status
+
     
 def flashing (interval, number):
     for _ in range (number):
         time.sleep (interval)
-        backlight (True)
+        lcd.backlight_enabled = True
         time.sleep(interval)
-        backlight (False)
+        lcd.backlight_enabled = False
+        
+def display (line1, line2, line3, line4, clear = True, backlight_status = True):
+    # display ("Your VUT card is not", "in database yet.", "Let's change that.","", clear = True)
+    lcd.backlight_enabled = backlight_status
+    if clear == True:
+        lcd.clear()
+    write (line1,1)
+    write (line2,2)
+    write (line3,3)
+    write (line4,4)
         
 def clear():
     lcd.clear()
@@ -34,13 +45,10 @@ def write (text, row):
     lcd.write_string (text)
 
 def version ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Version:",1)
-    write (config.git_release,2)
+    display ("","Version:",config.git_release,"",clear=True, backlight_status=True)
 
 def LCD_init (ip, mac):
-    backlight (True)
+    lcd.backlight_enabled = True
     lcd.clear() #clear the display
     write ("IP adress:", 1) #show IP adress
     
@@ -52,121 +60,54 @@ def LCD_init (ip, mac):
     write (mac,4)
     
 def LCD_waiting ():
-    backlight (True)
     config.logged_in = False
-    lcd.clear() #clear the display
-    write ("Welcome on ", 1)  #print/show string on line 2
-    write (config.equipment_name, 2) #lcd.text(instrument_name, 2) #print/show string on line 3
-    write ("Please log in\n\rwith your user card", 3)
+    display ("Welcome on ", config.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
+    
 
 def not_in_database ():
     #user card is not in internal database, need to contact user office
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Your card" , 1)  #print/show string on line 1
-    write ("is not in a database" , 2)
-    write ("Please contact", 3) 
-    write ("User Office in C1.04", 4) 
+    display ("Your card","is not in database.","Please register it","in booking system.",clear=True, backlight_status=True)
     time.sleep (5)
     LCD_waiting()
     
 def booking_200 ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Hi", 1)  #print/show string on line 1
-    write (str(config.user_name), 2)
-    write ("Recording started", 3)
-    write ("Happy hunting!", 4)
+    display ("Hi",config.user_name,"Recording started","Happy hunting!",clear=True, backlight_status=True)
     #time.sleep(5)
     
 
 def booking_409_init ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write (config.user_name, 1)  #print/show string on line 1
-    write ("Recording is running", 2)
-    write ("To stop it", 3)
-    write ("hold the red button", 4)  
+    display (config.user_name,"Recording is running", "To stop it", "hold the red button", clear=True, backlight_status=True)
     #time.sleep (5)
     #lcd.clear()
     
 
 def booking_409_recording (): 
-    backlight (False)  
-    lcd.clear() #clear the display
-    write ("Remaining time:", 1)  #print/show string on line 1
-    #write ("                ", 2)
-    write (str(config.remaining_time) + " min", 2)
-    write ("Number of files:", 3)
-    #write ("                ", 4)  
-    write (str(config.files) + " files", 4)
+    display("Remaining time:", str(config.remaining_time) + " min", "Number of files:", str(config.files) + " files", clear=True, backlight_status=False)
     
 
 def booking_400 ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Hi", 1)  #print/show string on line 1
-    write (str(config.user_name), 2)
-    write ("Invalid booking", 3)
-    write ("parameters", 4)
+    display ("Hi",str(config.user_name),"Invalid booking","parameters.",clear=True,backlight_status=True)
     time.sleep (5)
     LCD_waiting()
 
 def booking_404 ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Hi", 1)  #print/show string on line 1
-    write (str(config.user_name), 2)
-    write ("No future booking", 3)
-    write ("Please make one", 4)
+    display ("Hi",str(config.user_name),"No future bookings.","Please make one.",clear=True,backlight_status=True)
     time.sleep (5)
     LCD_waiting() 
     
 def booking_500 ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Hi", 1)  #print/show string on line 1
-    write (str(config.user_name), 2)
-    write ("Internal ERROR", 3)
-    write ("Try to log in again", 4)
+    display ("Hi",str(config.user_name),"Internal ERROR.","Try to log in again.",clear=True,backlight_status=True)
     time.sleep (5)
     LCD_waiting()
-
-def session_ended ():
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Hi", 1)  #print/show string on line 1
-    write (str(config.user_name), 2)
-    write ("Your session ended", 3)
-    write ("See you next time", 4)
-    
     
 def in_database ():
     #user card is in internal database
-    backlight (True)
-    lcd.clear() #clear the display
-    write ("Hello", 1)  #print/show string on line 1
-    write (str(config.user_name), 2)
-    write ("Recording started", 3)
-    write ("Happy hunting!", 4)
-    
+    display ("Hi",str(config.user_name),"Recording started.","Happy hunting!",clear=True,backlight_status=True)   
 
 def about_to_end_w (): ### Dodelat, aby ukazoval session is about to end a blikalo
-    lcd.clear() #clear the display
-    write ("Dear user,\n\ryour session\n\ris about to end\n\rin " + str(config.remaining_time) + (" minutes"), 1)
+    display (str(config.user_name),"Your session","is about to end","in " + str(config.remaining_time) + " minutes.", clear=True,backlight_status=True)
     flashing(0.3, 5) 
-    backlight(True)
     time.sleep (5)
-    backlight (False)
 
-def session_expired_w (): # chceme nejake auto odhlasenie po expiracii?
-    lcd.clear()
-    write ("Dear user,\n\ryour session\n\rhas expired", 1)
-    #lcd.text ("Dear user, your session expired, you will be automaticly logged off in 5 minutes", 1)
-    backlight(True)
-
-
-#def ending_session ():
-    
-
-    
+def session_ended ():
+    display ("Hi",str(config.user_name),"Your session ended.","See you next time.",clear=True,backlight_status=True)  
