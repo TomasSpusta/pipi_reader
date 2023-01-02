@@ -9,7 +9,7 @@ reader = SimpleMFRC522()
 
 def card_reader():
     RFID_id, text = reader.read()
-    #print ('Readed card: ' + str(rfid)) 
+    #print ('Readed card: ' + str(RFID_id)) 
     
     # convert decimal number from RFID reader to hexadecimal number
     hex_num = hex (RFID_id)
@@ -24,12 +24,15 @@ def card_reader():
     #print (altered_hex_num)
     
     # convert altered hexadecimal number to the new decimal number, which will be the card_id sent to the API
-    converted_altered_hex_num = int (altered_hex_num,16)
+    converted_altered_hex_num = str (int (altered_hex_num,16))
+    #print (converted_altered_hex_num)
     
     if len (converted_altered_hex_num) == 9:
         config.card_id = str ("0" + converted_altered_hex_num)      
     else :   
         config.card_id = converted_altered_hex_num
+    
     #print (config.card_id)
+    #print (len (config.card_id))
     
     # TO DO: there is prbolem with cards starting with 0 ZERO, there needs to be condition, when lenght card_id is 9, add zero on the firrts place.
