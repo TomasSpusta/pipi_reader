@@ -2,7 +2,7 @@ mac_address = ""
 
 git_release = ""
 
-card_id = 0
+card_id = ""
 
 user_id = ""
 user_name = ""
