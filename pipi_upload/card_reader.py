@@ -24,5 +24,12 @@ def card_reader():
     #print (altered_hex_num)
     
     # convert altered hexadecimal number to the new decimal number, which will be the card_id sent to the API
-    config.card_id = int (altered_hex_num,16)
+    converted_altered_hex_num = int (altered_hex_num,16)
+    
+    if len (converted_altered_hex_num) == 9:
+        config.card_id = str ("0" + converted_altered_hex_num)      
+    else :   
+        config.card_id = converted_altered_hex_num
     #print (config.card_id)
+    
+    # TO DO: there is prbolem with cards starting with 0 ZERO, there needs to be condition, when lenght card_id is 9, add zero on the firrts place.
