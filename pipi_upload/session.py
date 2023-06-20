@@ -45,16 +45,16 @@ def reservation_check ():
             print("Recording ID: " + str(config.recording_id))
             print("Reservation ID: " + str(config.reservation_id))
 
-def session_recording ():
+def session_recording (refresh_rate = 5):
     if config.in_database == True and config.logged_in == True:
-        refresh_rate = 5  #refresh rate of remaining time and files in seconds    
+        
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
         
         #Loop checking and updating session information - remaining time, number of files
         while config.remaining_time > 0 :
-            time.sleep (refresh_rate)
+            time.sleep (refresh_rate) #refresh rate of remaining time and files in seconds
             if config.ended_by_user == True:
                 break  
             #print ("session loop")

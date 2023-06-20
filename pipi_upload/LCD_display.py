@@ -14,7 +14,6 @@ lcd = CharLCD('PCF8574', 0x27)
     #lcd.backlight_enabled = True/False
 #Clear display:
     #lcd.clear()
-#
 
 def backlight (status=True):
     lcd.backlight_enabled = status
@@ -76,7 +75,7 @@ def booking_200 ():
     
 
 def booking_409_init ():
-    display (config.user_name,"Recording is running", "To stop it", "hold the red button", clear=True, backlight_status=True)
+    display ("Recording is running", "To stop it", "hold the red button","for 3 seconds", clear=True, backlight_status=True)
     #time.sleep (5)
     #lcd.clear()
     
@@ -91,7 +90,9 @@ def booking_400 ():
     LCD_waiting()
 
 def booking_404 ():
-    display ("Hi",str(config.user_name),"No future bookings.","Please make one.",clear=True,backlight_status=True)
+    #display ("Hi",str(config.user_name),"No future bookings.","Please make one.",clear=True,backlight_status=True)
+    #display("No future bookings", "of yours", "in next 30 minutes.", "Please make one.", clear=True, backlight_status=True)
+    display("You have any", "future bookings", "in next 30 minutes.", "Please make one.", clear=True, backlight_status=True)
     time.sleep (5)
     LCD_waiting() 
     
