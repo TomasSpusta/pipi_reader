@@ -33,9 +33,9 @@ try:
     time.sleep (3)
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch   
-    github_check (branch = "main")
+    github_check (branch = "develop")
     time.sleep (2)
-    github_check (branch = "main")
+    github_check (branch = "develop")
     time.sleep (5)
     
     from card_reader import card_reader
