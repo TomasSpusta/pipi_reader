@@ -1,7 +1,7 @@
 spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 import gspread
 
-gc = gspread.service_account()
+gc = gspread.service_account(filename='/home/bluebox/service_account.json')
 
 sh = gc.open_by_key(spredsheet_id)
 
