@@ -32,8 +32,10 @@ try:
     network_check ()
     time.sleep (3)
 
-    #Connect to GIT HUB and download the latest version from "main" or "develop" branch
-    github_check (branch = "develop")
+    #Connect to GIT HUB and download the latest version from "main" or "develop" branch   
+    github_check (branch = "main")
+    time.sleep (2)
+    github_check (branch = "main")
     time.sleep (5)
     
     from card_reader import card_reader
@@ -61,7 +63,7 @@ try:
             session.reservation_check ()
             
             #every X seconds check the remaining time of session and number of acquired files
-            session.session_recording ()
+            session.session_recording (refresh_rate= 5)
             
             # when session ends reset variables for new user
             session.session_end ()
