@@ -7,6 +7,7 @@
 #4: Run "pipi_reader.py"
 
 import config
+import log
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
 import LCD_display
@@ -67,7 +68,9 @@ def network_check ():
 
     print ("Equipment name: " + str (config.equipment_name))
     print ("Equipment ID: " + str (config.equipment_id))
-            
+    
+    log.makeLog() 
+           
     LCD_display.LCD_init (ip, config.mac_address)
 
 
