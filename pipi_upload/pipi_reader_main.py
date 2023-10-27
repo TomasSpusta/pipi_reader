@@ -20,7 +20,7 @@
 import faulthandler
 import RPi.GPIO as GPIO
 import time
-import log
+
 
 
 from network_check import network_check
@@ -36,17 +36,19 @@ try:
     github_check (branch = "develop")
     time.sleep (2)
     github_check (branch = "develop")
-    time.sleep (5)
+    time.sleep (2)
     
-    log.makeLog() 
+    
     
     from card_reader import card_reader
     import session
     import LCD_display
+    import log
     
     
     time.sleep (3)
     
+    log.makeLog() 
     
 
     while 1:
