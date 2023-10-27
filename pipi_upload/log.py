@@ -37,7 +37,7 @@ def makeLog ():
 
     ws.update_cell(entry_row,time_col, str(now) )
     ws.update_cell(entry_row,ip_col, str(config.ip_eth0 + " " + config.ip_wlan0))
-    ws.update_cell(entry_row,equip_col,config.equipment_name)
+    ws.update_cell(entry_row,equip_col, config.equipment_name)
     #ws.update_cell(entry_row,user_col, (config.user_name + " " + config.user_id))
     
 
