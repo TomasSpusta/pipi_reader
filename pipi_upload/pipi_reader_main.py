@@ -39,6 +39,7 @@ try:
     time.sleep (5)
     
     log.makeLog() 
+    
     from card_reader import card_reader
     import session
     import LCD_display

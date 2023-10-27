@@ -41,9 +41,9 @@ def network_check ():
         if ip_eth0 or ip_wlan0 != 0:
             
             if ip_eth0 !=0:
-                ip = ip_eth0
+                ip = config.ip_eth0
             else:
-                ip = ip_wlan0 
+                ip = config.ip_wlan0 
             
             pi_online_status = True
             try:   
