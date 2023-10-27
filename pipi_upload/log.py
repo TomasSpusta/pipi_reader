@@ -18,12 +18,13 @@ def makeLog ():
         ws = sh.worksheet(config.mac_address)
     
     except Exception as e:
-        print (e)
+        #print (e)
         sh.add_worksheet(title=config.mac_address, rows=100, cols=20)
-        
         ws = sh.worksheet(config.mac_address)
-        
-        
+        ws.update_cell(1,1, "Time stamp" )
+        ws.update_cell(1,2, "IP address" ) 
+        ws.update_cell(1,3, "Equipment"  )
+              
 
     number_of_entries = len (ws.col_values(1))
     entry_row = number_of_entries + 1 
