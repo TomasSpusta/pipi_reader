@@ -28,3 +28,6 @@ reservation_start_time = ""
 
 button_pin = 40
 
+ip_eth0 = ""
+ip_wlan0 = ""
+

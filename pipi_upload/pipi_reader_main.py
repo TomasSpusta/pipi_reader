@@ -33,18 +33,22 @@ try:
     time.sleep (3)
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch   
-    github_check (branch = "main")
+    github_check (branch = "develop")
     time.sleep (2)
-    github_check (branch = "main")
-    time.sleep (5)
+    github_check (branch = "develop")
+    time.sleep (2)
+    
+    
     
     from card_reader import card_reader
     import session
     import LCD_display
+    import log
     
     
     time.sleep (3)
     
+    log.makeLog() 
     
 
     while 1:

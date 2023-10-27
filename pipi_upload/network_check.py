@@ -13,6 +13,7 @@ import LCD_display
 import web_requests
 import time
 import RPi.GPIO as GPIO
+import netifaces as ni
 
 def network_check (): 
     pi_online_status = False
@@ -20,15 +21,33 @@ def network_check ():
       
     while pi_online_status == False:
         try:
-            ip = get('https://api.ipify.org').content.decode('utf8')
-            print('My public IP address is: {}'.format(ip))    
-            
-            
-        except Exception as ip_e: # if there is an error = no internet connection, ip = 0
-            ip = 0
-            print (ip_e) 
+            ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
+        except Exception as ip_e_eth0:
+            #print (ip_e_eth0)
+            ip_eth0 = 0
+        print('My local eth0 IP address is: {}'.format(ip_eth0))     
         
-        if ip != 0:
+        try:
+            ip_wlan0 = ni.ifaddresses ("wlan0")[ni.AF_INET][0]["addr"]       
+        except Exception as ip_e_wlan0:
+            #print (ip_e_wlan0)
+            ip_wlan0 = 0
+        print('My local wlan0 IP address is: {}'.format(ip_wlan0))
+        #print('My public IP address is: {}'.format(ip))    
+        
+        if ip_eth0 or ip_wlan0 != 0:
+            
+            if ip_eth0 !=0:
+                config.ip_eth0 = ip_eth0
+                
+            if ip_wlan0 !=0:
+                config.ip_wlan0 = ip_wlan0
+                
+            if ip_eth0 !=0:
+                ip = ip_eth0
+            else:
+                ip = ip_wlan0
+            
             pi_online_status = True
             try:   
                 config.mac_address = gma() # get MAC address
@@ -47,12 +66,13 @@ def network_check ():
                 print ("Problem with MAC address")
         else:
             LCD_display.LCD_init (ip, config.mac_address)
-            time.sleep (1)
-            
+            time.sleep (1)        
 
     print ("Equipment name: " + str (config.equipment_name))
     print ("Equipment ID: " + str (config.equipment_id))
-            
+    
+
+           
     LCD_display.LCD_init (ip, config.mac_address)
 
 
