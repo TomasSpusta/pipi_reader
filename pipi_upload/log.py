@@ -49,6 +49,8 @@ def makeLog (log_info):
         ws.update_cell(entry_row,user_in, "Logged in")
     if config.ended_by_user == True:
         ws.update_cell(entry_row,user_off, "Manual log off")
+    if config.ended_by_user == False:
+        ws.update_cell(entry_row,user_off, "Time log off")
     
 
     

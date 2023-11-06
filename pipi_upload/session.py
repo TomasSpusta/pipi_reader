@@ -79,6 +79,7 @@ def session_end ():
         except Exception as button_e:
             print (button_e)
             
+        makeLog("time ended session")
         LCD_display.session_ended()        
         time.sleep (3)
             
