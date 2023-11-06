@@ -40,6 +40,7 @@ def button_callback (button_pin):
             if i > 19:
                 try:
                     button_deactivated ()
+                    time.sleep (4)
                            
                 except Exception as e:
                     print (e)
