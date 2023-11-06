@@ -57,7 +57,7 @@ def session_recording (refresh_rate = 5):
         while config.remaining_time > 0 :
             time.sleep (refresh_rate) #refresh rate of remaining time and files in seconds
             if config.ended_by_user == True:
-                makeLog("user ended session LOG")
+                
                 break  
             
             #print ("session loop")
@@ -80,7 +80,7 @@ def session_end ():
         except Exception as button_e:
             print (button_e)
             
-        makeLog("time ended session")
+        makeLog("User off LOG")
         
         LCD_display.session_ended()        
         time.sleep (3)
