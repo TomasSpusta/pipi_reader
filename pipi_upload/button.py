@@ -38,10 +38,13 @@ def button_callback (button_pin):
             button_hold_time = 1.5 #hold time in seconds
             time.sleep (button_hold_time/18)
             if i > 19:
-                button_deactivated ()
-                booking_stop_reservation()
-                LCD_display.display ('Session ended','by user',"","", clear=True, backlight_status=True)
-                config.ended_by_user = True             
+                try:
+                    button_deactivated ()
+                    booking_stop_reservation()
+                    LCD_display.display ('Session ended','by user',"","", clear=True, backlight_status=True)
+                    config.ended_by_user = True             
+                except Exception as e:
+                    print (e)
                 #time.sleep (2)
                 #LCD_display.session_ended ()
                 
