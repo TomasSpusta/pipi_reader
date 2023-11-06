@@ -79,16 +79,17 @@ def booking_request_start_measurement ():
    #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION
     
     
-    payload = {"contactId":config.user_id, "equipmentId":config.equipment_id}
+    #payload = {"contactId":config.user_id, "equipmentId":config.equipment_id}
+    payload = {"contact":config.user_id, "equipment":config.equipment_id}
 
     try:
-        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
-        booking_response = requests.post ("https://booking.ceitec.cz/api/recording/start/",  params = payload)
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
+        #booking_response = requests.post ("https://booking.ceitec.cz/api/recording/start/",  params = payload)
         
         
         #print (payload)
-        print ("Booking response:")
-        print(booking_response.text)
+        #print ("Booking response:")
+        #print(booking_response.text)
         print ("Booking status code: " + str(booking_response.status_code))
         #print(booking_response.status_code)
         
@@ -139,8 +140,8 @@ def booking_request_files ():
     #payload = {"recording":recording_id}
     
     try:
-        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
-        booking_response = requests.post ("https://booking.ceitec.cz/api/recording/" + str(config.recording_id) + "/file-info")
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
+        #booking_response = requests.post ("https://booking.ceitec.cz/api/recording/" + str(config.recording_id) + "/file-info")
      
 
         
@@ -160,8 +161,8 @@ def booking_reservation_info ():
     #config.logged_in = True
     #config.in_session = True
     try:
-        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id) + "/")
-        booking_response = requests.get ("https://booking.ceitec.cz/api/service-appointment/" + str(config.reservation_id) + "/raspberry")
+        booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id) + "/")
+        #booking_response = requests.get ("https://booking.ceitec.cz/api/service-appointment/" + str(config.reservation_id) + "/raspberry")
 
         
         #print (booking_response.status_code)
@@ -176,12 +177,12 @@ def booking_reservation_info ():
         print(e)         
 
 def booking_stop_reservation ():
-    payload = {"serviceAppointmentId":config.user_id, "equipmentId":config.equipment_id}
+    #payload = {"serviceAppointmentId":config.user_id, "equipmentId":config.equipment_id}
     try:
         #booking_response =
-        #requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
+        requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
         
-        requests.get ("https://booking.ceitec.cz/api/recording/stop",params=payload)  
+        #requests.get ("https://booking.ceitec.cz/api/recording/stop",params=payload)  
     
         
         
