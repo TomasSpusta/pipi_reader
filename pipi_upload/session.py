@@ -48,7 +48,7 @@ def reservation_check ():
 
 def session_recording (refresh_rate = 5):
     if config.in_database == True and config.logged_in == True:
-        makeLog ("user in LOG")
+        makeLog ("User in LOG")
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
