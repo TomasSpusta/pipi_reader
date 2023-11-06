@@ -43,12 +43,12 @@ try:
     from card_reader import card_reader
     import session
     import LCD_display
-    import log
+    from log import makeLog
     
     
     time.sleep (3)
     
-    log.makeLog() 
+    makeLog() 
     
 
     while 1:
@@ -66,11 +66,16 @@ try:
             #in appropriate time window and start recording
             session.reservation_check ()
             
+            makeLog()
+            
             #every X seconds check the remaining time of session and number of acquired files
             session.session_recording (refresh_rate= 5)
             
+            makeLog ()
+            
             # when session ends reset variables for new user
             session.session_end ()
+            
         
         except Exception as e:
             print("Error in main code")

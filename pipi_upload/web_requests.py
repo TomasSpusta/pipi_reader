@@ -60,7 +60,7 @@ def crm_request_rfid ():
             config.user_name = unidecode.unidecode (user_name)
             config.user_id = crm_data[0]["contactid"]
             #print (config.user_name)
-            #print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
+            print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:
         print("Error in crm_request_rfid:")
@@ -79,13 +79,17 @@ def booking_request_start_measurement ():
    #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION
     
     
-    payload = {"contact":config.user_id, "equipment":config.equipment_id}
+    payload = {"contactId":config.user_id, "equipmentId":config.equipment_id}
 
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
+        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
+        booking_response = requests.post ("https://booking.ceitec.cz/api/recording/start/",  params = payload)
         
-        #print ("Booking response:")
-        #print ("Booking status code: " + str(booking_response.status_code))
+        
+        #print (payload)
+        print ("Booking response:")
+        print(booking_response.text)
+        print ("Booking status code: " + str(booking_response.status_code))
         #print(booking_response.status_code)
         
         if booking_response.status_code == 200:
@@ -135,7 +139,10 @@ def booking_request_files ():
     #payload = {"recording":recording_id}
     
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
+        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
+        booking_response = requests.post ("https://booking.ceitec.cz/api/recording/" + str(config.recording_id) + "/file-info")
+     
+
         
         #print (booking_response.status_code)
         if booking_response.status_code == 200 or 409:
@@ -153,7 +160,9 @@ def booking_reservation_info ():
     #config.logged_in = True
     #config.in_session = True
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id) + "/")
+        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id) + "/")
+        booking_response = requests.get ("https://booking.ceitec.cz/api/service-appointment/" + str(config.reservation_id) + "/raspberry")
+
         
         #print (booking_response.status_code)
         booking_data = booking_response.json()
@@ -167,9 +176,12 @@ def booking_reservation_info ():
         print(e)         
 
 def booking_stop_reservation ():
+    payload = {"serviceAppointmentId":config.user_id, "equipmentId":config.equipment_id}
     try:
         #booking_response =
-        requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
+        #requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
+        
+        requests.get ("https://booking.ceitec.cz/api/recording/stop",params=payload)  
     
         
         
