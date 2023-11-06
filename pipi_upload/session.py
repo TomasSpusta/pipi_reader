@@ -69,7 +69,8 @@ def session_recording (refresh_rate = 5):
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
                 # Session about to end warning at 5-minute mark 
                 config.warning_sent = True
-                LCD_display.about_to_end_w ()    
+                LCD_display.about_to_end_w ()  
+        makeLog ("User end LOG")  
   
 def session_end ():
     if config.logged_in == True:
@@ -80,8 +81,6 @@ def session_end ():
         except Exception as button_e:
             print (button_e)
             
-        makeLog("User off LOG")
-        
         LCD_display.session_ended()        
         time.sleep (3)
             
@@ -89,6 +88,7 @@ def session_end ():
         config.ended_by_user = False   
         config.in_session = False
         config.warning_sent = False
+        makeLog("Time end LOG")
         config.logged_in = False
         # GPIO.cleanup(config.button_pin) # it is necessary to figure out how the button pin reacts on cleaning
         print ("Recording ended")     
