@@ -8,6 +8,7 @@ import LCD_display
 import web_requests
 import config
 import button
+from log import makeLog
 
 
 def user_check ():
@@ -47,7 +48,7 @@ def reservation_check ():
 
 def session_recording (refresh_rate = 5):
     if config.in_database == True and config.logged_in == True:
-        
+        makeLog ("user logged in")
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
@@ -56,6 +57,7 @@ def session_recording (refresh_rate = 5):
         while config.remaining_time > 0 :
             time.sleep (refresh_rate) #refresh rate of remaining time and files in seconds
             if config.ended_by_user == True:
+                makeLog("user ended session")
                 break  
             #print ("session loop")
             web_requests.booking_request_files ()

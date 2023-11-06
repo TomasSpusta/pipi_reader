@@ -48,7 +48,7 @@ try:
     
     time.sleep (3)
     
-    makeLog() 
+    makeLog("startup") 
     
 
     while 1:
@@ -61,18 +61,14 @@ try:
             
             #check if user is in the RFID database
             session.user_check ()
-            
+                       
             #check if the user has reservation on the equipment
             #in appropriate time window and start recording
             session.reservation_check ()
             
-            makeLog()
-            
             #every X seconds check the remaining time of session and number of acquired files
             session.session_recording (refresh_rate= 5)
-            
-            makeLog ()
-            
+                       
             # when session ends reset variables for new user
             session.session_end ()
             
