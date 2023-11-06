@@ -27,7 +27,7 @@ def makeLog (log_info):
         ws.update_cell(1,3, "Equipment"  )
         ws.update_cell(1,4, "User info" )
         ws.update_cell(1,5, "User log in" )
-        ws.update_cell(1,6, "User self log off" )
+        ws.update_cell(1,6, "User log off" )
               
 
     number_of_entries = len (ws.col_values(1))
