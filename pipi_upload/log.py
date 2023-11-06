@@ -44,16 +44,16 @@ def makeLog (log_info):
     ws.update_cell(entry_row,time_col, str(now) )
     ws.update_cell(entry_row,ip_col, str(config.ip_eth0 + " " + config.ip_wlan0))
     ws.update_cell(entry_row,equip_col, config.equipment_name)
-    ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
+    
     
     if config.logged_in == True:
+        ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
         ws.update_cell(entry_row,user_in, "Logged in")
         
-    if config.in_session == True and config.ended_by_user == True:
-        ws.update_cell(entry_row,user_off, "Manual log off")
+    if config.in_session == False or config.ended_by_user == True:
+        ws.update_cell(entry_row,user_off, "Logged off")
         
-    if config.in_session == False and config.ended_by_user == False:
-        ws.update_cell(entry_row,user_off, "Time log off")
+  
     
 
     
