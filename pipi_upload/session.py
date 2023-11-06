@@ -79,6 +79,7 @@ def session_end ():
         #when session is ended by time out, or by pressing the button    
         try:
             button.button_deactivated ()
+            time.sleep (1)
         except Exception as button_e:
             print (button_e)
             
