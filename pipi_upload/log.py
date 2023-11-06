@@ -46,9 +46,9 @@ def makeLog (log_info):
     ws.update_cell(entry_row,equip_col, config.equipment_name)
     ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
     if config.logged_in == True:
-        ws.update_cell(entry_row,user_in, now)
+        ws.update_cell(entry_row,user_in, "Logged in")
     if config.ended_by_user == True:
-        ws.update_cell(entry_row,user_off, now)
+        ws.update_cell(entry_row,user_off, "Manual log off")
     
 
     

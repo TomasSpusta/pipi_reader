@@ -48,7 +48,7 @@ try:
     
     time.sleep (3)
     
-    makeLog("startup") 
+    makeLog("startup log") 
     
 
     while 1:
