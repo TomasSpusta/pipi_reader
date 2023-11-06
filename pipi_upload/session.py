@@ -48,7 +48,7 @@ def reservation_check ():
 
 def session_recording (refresh_rate = 5):
     if config.in_database == True and config.logged_in == True:
-        makeLog ("user logged in")
+        makeLog ("user in LOG")
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
@@ -57,8 +57,9 @@ def session_recording (refresh_rate = 5):
         while config.remaining_time > 0 :
             time.sleep (refresh_rate) #refresh rate of remaining time and files in seconds
             if config.ended_by_user == True:
-                makeLog("user ended session")
+                makeLog("user ended session LOG")
                 break  
+            
             #print ("session loop")
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
@@ -80,6 +81,7 @@ def session_end ():
             print (button_e)
             
         makeLog("time ended session")
+        
         LCD_display.session_ended()        
         time.sleep (3)
             

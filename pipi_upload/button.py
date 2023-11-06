@@ -11,7 +11,7 @@ GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def ending_reservation ():
     #Function dealing with exding the reseravation after button is pushed for 2 seconds
-    print ("ending reservation")  
+    print ("Button activated")  
     GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
     
     
