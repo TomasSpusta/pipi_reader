@@ -5,6 +5,12 @@ import time
 import config
 import sys
 import unidecode
+from datetime import datetime
+
+
+
+
+
 
 #sys.path.append('/home/pi/RFID')
 #import equipment_id
@@ -69,27 +75,22 @@ def crm_request_rfid ():
     
 def booking_request_start_measurement ():
 #API request from Booking system - inputs are user_ID, instrument_ID, outputs are remaining_time, number_of_files
-   
-   #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION 
-    # RFID-TEST:
-    #config.equipment_id = "45856b41-8ae8-ec11-80cd-005056914121"  
-    # KERR-MICROSCOPE:
-    #config.equipment_id = "907ebc62-37f1-e711-8b1a-005056991551"
-    #config.equipment_id = equipment_id.equip_id
-   #### THIS NEEDS TO BE COMMENTED OUT IN REAL SITUATION
     
+    payload = {"contactId":config.user_id, "equipmentId":config.equipment_id}
+    #payload = {"contact":config.user_id, "equipment":config.equipment_id}
     
-    #payload = {"contactId":config.user_id, "equipmentId":config.equipment_id}
-    payload = {"contact":config.user_id, "equipment":config.equipment_id}
-
+    checkToken()
+    
+    headers = {"Authorization" : "Bearer " + config.token}
+    
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
-        #booking_response = requests.post ("https://booking.ceitec.cz/api/recording/start/",  params = payload)
+        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/start-by-contact-equipment",  params = payload)
+        booking_response = requests.post ("https://booking.ceitec.cz/api/recording/start/",  json= payload, headers = headers)
         
         
         #print (payload)
         #print ("Booking response:")
-        #print(booking_response.text)
+        print(booking_response.url)
         print ("Booking status code: " + str(booking_response.status_code))
         #print(booking_response.status_code)
         
@@ -132,25 +133,24 @@ def booking_request_start_measurement ():
         return booking_response.status_code    
         
     except Exception as e:
-        print("Error in booking_request_start_measurement")
+        print("Error in booking_request_start_measurement:")
         print(e)
     
     
 def booking_request_files ():
     #payload = {"recording":recording_id}
+    headers = {"Authorization" : "Bearer " + config.token}
     
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
-        #booking_response = requests.post ("https://booking.ceitec.cz/api/recording/" + str(config.recording_id) + "/file-info")
+        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
+        booking_response = requests.get ("https://booking.ceitec.cz/api/recording/" + str(config.recording_id) + "/file-info", headers = headers)
      
-
-        
         #print (booking_response.status_code)
         if booking_response.status_code == 200 or 409:
             booking_data = booking_response.json()
             #print (booking_data)
-          # print (booking_data["filesCount"])
-            config.files = booking_data["filesCount"]            
+            print ("Number of data files: " + str(booking_data["count"]))
+            config.files = booking_data["count"]            
         else:
             print ("nejaky problemek s datama")
     except Exception as e:
@@ -158,11 +158,12 @@ def booking_request_files ():
         print(e)
     
 def booking_reservation_info ():
+    headers = {"Authorization" : "Bearer " + config.token}
     #config.logged_in = True
     #config.in_session = True
     try:
-        booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id) + "/")
-        #booking_response = requests.get ("https://booking.ceitec.cz/api/service-appointment/" + str(config.reservation_id) + "/raspberry")
+        #booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id) + "/")
+        booking_response = requests.get ("https://booking.ceitec.cz/api/service-appointment/" + str(config.reservation_id) + "/raspberry", headers=headers)
 
         
         #print (booking_response.status_code)
@@ -170,23 +171,24 @@ def booking_reservation_info ():
         #print (booking_data)
         #print ("409 - Recording is running")
         config.remaining_time = int (booking_data["timetoend"])
-        #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+        print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         
     except Exception as e:
         print("Error in booking_reservation_info")
         print(e)         
 
 def booking_stop_reservation ():
-    #payload = {"serviceAppointmentId":config.user_id, "equipmentId":config.equipment_id}
+    payload = {"serviceAppointmentId":config.reservation_id, "equipmentId":config.equipment_id}
+    headers = {"Authorization" : "Bearer " + config.token}
     try:
-        #booking_response =
-        requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
         
-        #requests.get ("https://booking.ceitec.cz/api/recording/stop",params=payload)  
+        #requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
+        
+        booking_response = requests.post ("https://booking.ceitec.cz/api/recording/stop",json=payload,headers=headers)  
     
         
         
-        #print (booking_response.status_code)
+        print (booking_response.status_code)
         #booking_data = booking_response.json()
         #print (booking_data)
         #print ("409 - Recording is running")
@@ -196,4 +198,56 @@ def booking_stop_reservation ():
     except Exception as e:
         print("Error in booking_reservation_info")
         print(e)
-             
+         
+def loadTokenData ():
+    print("Loading token data")
+    try:
+        file = "pipi_upload/tokenData.txt"
+        f = open (file, "r").readlines()
+        expiration = f[0][:-1]
+        tokenString = f[1]
+        config.token_expiration = expiration
+        config.token = tokenString
+    except Exception as e:
+        print (e)
+    
+    
+def writeTokenData ():
+    
+    API_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
+    payload = {"apiKey":API_key}  
+       
+    try: 
+        print("Requesting token")
+        token_request = requests.post ("https://booking.ceitec.cz/api/login",json=payload)
+        token_expiration = token_request.json()["expiresAt"] 
+        token = token_request.json()["accessToken"]
+        
+        print ("New token created")
+        print ("Saving token data")
+        
+        file = "pipi_upload/tokenData.txt"
+        f = open (file, "w")
+        f.writelines([token_expiration+"\n",token])
+        f.close()  
+      
+    except Exception as key_e :
+        print ("Error in get_token: " + key_e)
+
+def checkToken():
+    print("Comparing dates")
+    time_now = datetime.now().isoformat(timespec="seconds")      
+    timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
+    tokenExpiration = datetime.strptime(config.token_expiration,"%Y-%m-%dT%H:%M:%S")
+    
+    #print ("time now: " + str(timeNow))
+    #print ("time exp: " + str(tokenExpiration)) 
+    #print(timeNow <= tokenExpiration)
+    
+    if tokenExpiration <= timeNow:
+        
+        writeTokenData()
+    
+    print("Token is valid")
+    
+loadTokenData()
