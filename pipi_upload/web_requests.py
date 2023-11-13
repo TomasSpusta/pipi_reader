@@ -12,8 +12,9 @@ from datetime import datetime
 
 
 
-sys.path.append('/home/bluebox')
+#sys.path.append('/home/bluebox')
 #import equipment_id
+token_address = "pipi_upload/tokenData.txt"
 
 
 def git_version ():
@@ -90,9 +91,9 @@ def booking_request_start_measurement ():
         
         #print (payload)
         #print ("Booking response:")
-        print(booking_response.url)
+        #print(booking_response.url)
         print ("Booking status code: " + str(booking_response.status_code))
-        #print(booking_response.status_code)
+        print(booking_response.text)
         
         if booking_response.status_code == 200:
             config.logged_in = True
@@ -202,7 +203,7 @@ def booking_stop_reservation ():
 def loadTokenData ():
     print("Loading token data")
     try:
-        file = "tokenData.txt"
+        file = token_address
         f = open (file, "r").readlines()
         expiration = f[0][:-1]
         tokenString = f[1]
@@ -226,9 +227,9 @@ def writeTokenData ():
         print ("New token created")
         print ("Saving token data")
         
-        file = "tokenData.txt"
+        file = token_address
         f = open (file, "w")
-        f.writelines([token_expiration+"\n",token])
+        f.writelines([token_expiration + "\n", token])
         f.close()  
       
     except Exception as key_e :
@@ -245,9 +246,12 @@ def checkToken():
     #print(timeNow <= tokenExpiration)
     
     if tokenExpiration <= timeNow:
-        
-        writeTokenData()
-    
-    print("Token is valid")
-    
+        if config.user_id == "2c5c963c-68ba-e311-85a1-005056991551":
+            writeTokenData()
+            print("New token created")
+        else:
+            print ("Other user requested api actions")
+            print ("No token needed")
+            pass
+
 loadTokenData()
