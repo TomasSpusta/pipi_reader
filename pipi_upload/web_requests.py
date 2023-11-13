@@ -12,7 +12,7 @@ from datetime import datetime
 
 
 
-#sys.path.append('/home/pi/RFID')
+sys.path.append('/home/bluebox')
 #import equipment_id
 
 
