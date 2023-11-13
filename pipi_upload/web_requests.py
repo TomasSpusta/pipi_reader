@@ -249,6 +249,8 @@ def checkToken():
         if config.user_id == "2c5c963c-68ba-e311-85a1-005056991551":
             writeTokenData()
             print("New token created")
+            loadTokenData ()
+            print("New token loaded")
         else:
             print ("Other user requested api actions")
             print ("No token needed")
