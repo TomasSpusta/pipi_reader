@@ -8,7 +8,8 @@ gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account
 spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
 
-def makeLog ():
+def makeLog (log_info):
+    print (log_info)
     sh = gc.open_by_key(spredsheet_id)
     #gc = gspread.service_account()
     
@@ -24,6 +25,9 @@ def makeLog ():
         ws.update_cell(1,1, "Time stamp" )
         ws.update_cell(1,2, "IP address" ) 
         ws.update_cell(1,3, "Equipment"  )
+        ws.update_cell(1,4, "User info" )
+        ws.update_cell(1,5, "User log in" )
+        ws.update_cell(1,6, "User log off" )
               
 
     number_of_entries = len (ws.col_values(1))
@@ -31,14 +35,26 @@ def makeLog ():
     time_col = 1
     ip_col = 2
     equip_col = 3
-    user_col = 4
+    user_info_col = 4
+    user_in = 5
+    user_off = 6
     api_crm_col = 5
     api_booking_col = 6    
 
     ws.update_cell(entry_row,time_col, str(now) )
     ws.update_cell(entry_row,ip_col, str(config.ip_eth0 + " " + config.ip_wlan0))
     ws.update_cell(entry_row,equip_col, config.equipment_name)
-    #ws.update_cell(entry_row,user_col, (config.user_name + " " + config.user_id))
+    
+    
+    if config.in_session == True:
+        ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
+        ws.update_cell(entry_row,user_in, "Logged in")
+        
+    if config.logged_in and (config.in_session == False or config.ended_by_user == True):
+        ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
+        ws.update_cell(entry_row,user_off, "Logged off")
+        
+  
     
 
     

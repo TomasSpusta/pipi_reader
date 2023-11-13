@@ -8,6 +8,7 @@ import LCD_display
 import web_requests
 import config
 import button
+from log import makeLog
 
 
 def user_check ():
@@ -47,7 +48,7 @@ def reservation_check ():
 
 def session_recording (refresh_rate = 5):
     if config.in_database == True and config.logged_in == True:
-        
+        makeLog ("User in LOG")
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
@@ -55,8 +56,9 @@ def session_recording (refresh_rate = 5):
         #Loop checking and updating session information - remaining time, number of files
         while config.remaining_time > 0 :
             time.sleep (refresh_rate) #refresh rate of remaining time and files in seconds
-            if config.ended_by_user == True:
+            if config.ended_by_user == True: 
                 break  
+            
             #print ("session loop")
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
@@ -66,23 +68,27 @@ def session_recording (refresh_rate = 5):
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
                 # Session about to end warning at 5-minute mark 
                 config.warning_sent = True
-                LCD_display.about_to_end_w ()    
+                LCD_display.about_to_end_w ()  
+        
   
 def session_end ():
     if config.logged_in == True:
         print ("Ending session")
+        config.in_session = False
+        makeLog("Off LOG")
         #when session is ended by time out, or by pressing the button    
         try:
             button.button_deactivated ()
+            time.sleep (1)
         except Exception as button_e:
             print (button_e)
             
         LCD_display.session_ended()        
         time.sleep (3)
-            
+                    
         print ("Clearing states")     
         config.ended_by_user = False   
-        config.in_session = False
+        
         config.warning_sent = False
         config.logged_in = False
         # GPIO.cleanup(config.button_pin) # it is necessary to figure out how the button pin reacts on cleaning
