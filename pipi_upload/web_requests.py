@@ -14,7 +14,8 @@ from datetime import datetime
 
 #sys.path.append('/home/bluebox')
 #import equipment_id
-token_address = "pipi_upload/tokenData.txt"
+#token_address = "pipi_upload/tokenData.txt"
+token_address = "tokenData.txt"
 
 
 def git_version ():
