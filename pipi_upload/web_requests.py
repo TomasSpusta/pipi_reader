@@ -173,7 +173,7 @@ def booking_reservation_info ():
         #print (booking_data)
         #print ("409 - Recording is running")
         config.remaining_time = int (booking_data["timetoend"])
-        print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+        #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         
     except Exception as e:
         print("Error in booking_reservation_info")
