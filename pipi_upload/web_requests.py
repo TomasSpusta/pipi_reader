@@ -213,6 +213,7 @@ def loadTokenData ():
         tokenString = f[1]
         config.token_expiration = expiration
         config.token = tokenString
+        print("Token data loaded")
     except Exception as e:
         print (e)
     
