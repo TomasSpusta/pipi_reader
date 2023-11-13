@@ -202,7 +202,7 @@ def booking_stop_reservation ():
 def loadTokenData ():
     print("Loading token data")
     try:
-        file = "pipi_upload/tokenData.txt"
+        file = "tokenData.txt"
         f = open (file, "r").readlines()
         expiration = f[0][:-1]
         tokenString = f[1]
@@ -226,7 +226,7 @@ def writeTokenData ():
         print ("New token created")
         print ("Saving token data")
         
-        file = "pipi_upload/tokenData.txt"
+        file = "tokenData.txt"
         f = open (file, "w")
         f.writelines([token_expiration+"\n",token])
         f.close()  
