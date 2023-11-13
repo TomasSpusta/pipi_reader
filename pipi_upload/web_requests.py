@@ -62,7 +62,7 @@ def crm_request_rfid ():
         else:          
             config.in_database = True
             user_name = crm_data[0]["firstname"]
-            config.user_full_name = crm_data[0]["full_name"]
+            #config.user_full_name = crm_data[0]["full_name"]
             config.user_name = unidecode.unidecode (user_name)
             config.user_id = crm_data[0]["contactid"]
             #print (config.user_name)
