@@ -33,12 +33,13 @@ try:
     time.sleep (3)
 
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch   
-    github_check (branch = "main")
+    github_check (branch = "pipired")
     time.sleep (2)
+
     github_check (branch = "main")
     time.sleep (2)
     
-    
+
     
     from card_reader import card_reader
     import session

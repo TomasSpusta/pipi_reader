@@ -203,6 +203,7 @@ def booking_stop_reservation ():
     except Exception as e:
         print("Error in booking_reservation_info")
         print(e)
+
          
 def loadTokenData ():
     print("Loading token data")
