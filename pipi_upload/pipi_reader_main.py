@@ -21,11 +21,6 @@ import faulthandler
 import RPi.GPIO as GPIO
 import time
 
-
-
-from network_check import network_check
-from github_check import github_check
-
 try:
     faulthandler.enable ()
         
