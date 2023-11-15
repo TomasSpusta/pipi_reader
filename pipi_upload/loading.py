@@ -26,5 +26,5 @@ except Exception as github_error:
 
 sleep (1)
 
-    
+import pipi_reader_main
     
