@@ -10,7 +10,7 @@ import network_check
 try:
     network_check ()
 except Exception as network_error:
-    LCD_display.display (network_error) 
+    LCD_display.display (network_error,"","" ,"",clear=True, backlight_status=True) 
 sleep (1)
 
 import github_check
@@ -19,7 +19,7 @@ import github_check
 try:
     github_check (branch = "develop")    
 except Exception as github_error:
-    LCD_display.display (github_error) 
+    LCD_display.display (github_error,"","" ,"",clear=True, backlight_status=True) 
 sleep (1)
 
     
