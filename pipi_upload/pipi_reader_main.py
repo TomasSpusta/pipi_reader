@@ -35,16 +35,18 @@ try:
     #Connect to GIT HUB and download the latest version from "main" or "develop" branch   
     github_check (branch = "pipired")
     time.sleep (2)
+
     github_check (branch = "pipired")
-    time.sleep (5)
     
     from card_reader import card_reader
     import session
     import LCD_display
+    from log import makeLog
     
     
     time.sleep (3)
     
+    makeLog("startup LOG") 
     
 
     while 1:
@@ -57,16 +59,17 @@ try:
             
             #check if user is in the RFID database
             session.user_check ()
-            
+                       
             #check if the user has reservation on the equipment
             #in appropriate time window and start recording
             session.reservation_check ()
             
             #every X seconds check the remaining time of session and number of acquired files
             session.session_recording (refresh_rate= 5)
-            
+                       
             # when session ends reset variables for new user
             session.session_end ()
+            
         
         except Exception as e:
             print("Error in main code")

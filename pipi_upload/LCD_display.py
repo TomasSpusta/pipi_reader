@@ -92,7 +92,7 @@ def booking_400 ():
 def booking_404 ():
     #display ("Hi",str(config.user_name),"No future bookings.","Please make one.",clear=True,backlight_status=True)
     #display("No future bookings", "of yours", "in next 30 minutes.", "Please make one.", clear=True, backlight_status=True)
-    display("You have any", "future bookings", "in next 30 minutes.", "Please make one.", clear=True, backlight_status=True)
+    display("You have no", "future bookings", "in next 30 minutes.", "Please make one.", clear=True, backlight_status=True)
     time.sleep (5)
     LCD_waiting() 
     

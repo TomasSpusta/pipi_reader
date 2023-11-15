@@ -1,3 +1,7 @@
+token_expiration = "2023-11-11T13:32:44"
+
+token = ""
+
 mac_address = ""
 
 git_release = ""
@@ -27,4 +31,10 @@ status_code = 0
 reservation_start_time = "" 
 
 button_pin = 40
+
+ip_eth0 = ""
+ip_wlan0 = ""
+
+
+
 
