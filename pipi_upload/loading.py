@@ -1,7 +1,7 @@
 import LCD_display
 from time import sleep
 
-LCD_display.display ("Loading packages.","Please wait.", clear=True, backlight_status=True)
+LCD_display.display ("Loading packages.","Please wait.","" ,"",clear=True, backlight_status=True)
 sleep (5)
 
 import network_check
