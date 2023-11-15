@@ -28,25 +28,13 @@ from github_check import github_check
 
 try:
     faulthandler.enable ()
-    #Check internet connection, acquire IP address and MAC address
-    network_check ()
-    time.sleep (3)
-
-    #Connect to GIT HUB and download the latest version from "main" or "develop" branch   
-    github_check (branch = "develop")
-    time.sleep (2)
-    github_check (branch = "develop")
-    time.sleep (2)
-    
-    
-    
+        
     from card_reader import card_reader
     import session
     import LCD_display
     from log import makeLog
     
-    
-    time.sleep (3)
+    time.sleep (1)
     
     makeLog("startup LOG") 
     
