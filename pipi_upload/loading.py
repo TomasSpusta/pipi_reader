@@ -25,6 +25,11 @@ except Exception as github_error:
     LCD_display.display (github_error,"","" ,"",clear=True, backlight_status=True) 
 
 LCD_display.display ("Loading program","","" ,"",clear=True, backlight_status=True)
+
 sleep (3)
-import pipi_reader_main
-    
+
+try:
+    import pipi_reader_main
+except Exception as pipi_reader_main_Error:
+    LCD_display.display (pipi_reader_main_Error,"","" ,"",clear=True, backlight_status=True)    
+    print (pipi_reader_main_Error)
