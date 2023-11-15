@@ -30,8 +30,8 @@ try:
     from log import makeLog
     
     time.sleep (1)
-    LCD_display.display ("pokus loadingu","","" ,"",clear=True, backlight_status=True) 
-    time.sleep (2)
+    #LCD_display.display ("pokus loadingu","","" ,"",clear=True, backlight_status=True) 
+    #time.sleep (2)
     
     makeLog("startup LOG") 
     
