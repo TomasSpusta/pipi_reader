@@ -20,6 +20,7 @@ def network_check ():
     # try to acquire IP adress, therefore check connection to the internet
       
     while pi_online_status == False:
+        LCD_display.display ("Network check","","" ,"",clear=True, backlight_status=True) 
         try:
             ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
         except Exception as ip_e_eth0:
