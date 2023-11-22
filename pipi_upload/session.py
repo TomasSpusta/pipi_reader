@@ -12,16 +12,18 @@ from log import makeLog
 
 
 def user_check ():
+    LCD_display.display("Checking user","","","",True,True,2)
     web_requests.crm_request_rfid()
     if config.in_database == False:
         # If card ID is not it the internal database, LCD displays the error 
         LCD_display.not_in_database() 
     else:
-        
+        LCD_display.display("User in CRM","","","",True,True,2)
         print ('User in RFID CRM database')
         
     
 def reservation_check ():
+    LCD_display.display("Checking reservation","","","",True,True,2)
     if config.in_database == True:
         config.status_code = web_requests.booking_request_start_measurement()
         print ("Status code from booking: " + str(config.status_code))  

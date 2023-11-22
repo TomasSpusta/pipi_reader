@@ -56,6 +56,7 @@ try:
             
             #Wait for the card swipe 
             card_reader ()
+            LCD_display.display("Card Scanned","","","",True,True,2)
             
             #check if user is in the RFID database
             session.user_check ()
