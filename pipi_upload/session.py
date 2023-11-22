@@ -17,6 +17,7 @@ def user_check ():
         # If card ID is not it the internal database, LCD displays the error 
         LCD_display.not_in_database() 
     else:
+        
         print ('User in RFID CRM database')
         
     
