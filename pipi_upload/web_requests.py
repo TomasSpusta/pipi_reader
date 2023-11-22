@@ -101,6 +101,8 @@ def booking_request_start_measurement ():
         #print(booking_response.url)
         print ("Booking status code: " + str(booking_response.status_code))
         print(booking_response.text)
+        LCD_display.display("Rec Resp", str(booking_response.text),str(booking_response.status_code),"",True,True,2)
+        
         
         if booking_response.status_code == 200:
             config.logged_in = True
@@ -272,7 +274,7 @@ def checkToken():
                 LCD_display.display("Simple user","No token needed" ,"","",True,True,2)
                 print ("Other user requested api actions")
                 print ("No token needed")
-                pass
+                #pass
     except Exception as e:
         print (e)
         LCD_display.display("Check Token E", str(e),"","",True,True,2)
