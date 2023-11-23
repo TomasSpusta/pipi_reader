@@ -218,7 +218,7 @@ def loadTokenData ():
         print (e)
     
     
-def writeTokenData ():
+def getToken ():
     
     API_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
     payload = {"apiKey":API_key}  
@@ -241,24 +241,31 @@ def writeTokenData ():
         print ("Error in get_token: " + key_e)
 
 def checkToken():
-    print("Comparing dates")
-    time_now = datetime.now().isoformat(timespec="seconds")      
-    timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
-    tokenExpiration = datetime.strptime(config.token_expiration,"%Y-%m-%dT%H:%M:%S")
-    
-    #print ("time now: " + str(timeNow))
-    #print ("time exp: " + str(tokenExpiration)) 
-    #print(timeNow <= tokenExpiration)
-    
-    if tokenExpiration <= timeNow:
-        if config.user_id == "2c5c963c-68ba-e311-85a1-005056991551":
-            writeTokenData()
+   try:
+        print("Comparing dates")
+        time_now = datetime.now().isoformat(timespec="seconds")      
+        timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
+        tokenExpiration = datetime.strptime(config.token_expiration,"%Y-%m-%dT%H:%M:%S")
+        
+        #print ("time now: " + str(timeNow))
+        #print ("time exp: " + str(tokenExpiration)) 
+        #print(timeNow <= tokenExpiration)
+        
+        if tokenExpiration <= timeNow:
+            print("Token is old, requesting new token")
+            LCD_display.display("Token","is old," ,"requesting","new one",True,True,2)
+            getToken()
             print("New token created")
+            LCD_display.display("Token Created"," " ,"","",True,True,2)
             loadTokenData ()
             print("New token loaded")
+            LCD_display.display("Token Loaded"," " ,"","",True,True,2)
         else:
-            print ("Other user requested api actions")
-            print ("No token needed")
-            pass
+            LCD_display.display("Token is valid","" ,"","",True,True,2)
+            print("New token loaded")
+            #pass
+    except Exception as e:
+        print (e)
+        LCD_display.display("Check Token E", str(e),"","",True,True,2)
 
 loadTokenData()
