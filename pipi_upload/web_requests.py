@@ -228,7 +228,7 @@ def loadTokenData ():
         LCD_display.display("Load Token E", str(e),"","",True,True,2)
     
     
-def writeTokenData ():
+def getToken ():
     
     API_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
     payload = {"apiKey":API_key}  
@@ -263,18 +263,18 @@ def checkToken():
         #print(timeNow <= tokenExpiration)
         
         if tokenExpiration <= timeNow:
-            if config.user_id == "2c5c963c-68ba-e311-85a1-005056991551":
-                writeTokenData()
-                print("New token created")
-                LCD_display.display("Token Created"," " ,"","",True,True,2)
-                loadTokenData ()
-                print("New token loaded")
-                LCD_display.display("Token Loaded"," " ,"","",True,True,2)
-            else:
-                LCD_display.display("Simple user","No token needed" ,"","",True,True,2)
-                print ("Other user requested api actions")
-                print ("No token needed")
-                #pass
+            print("Token is old, requesting new token")
+            LCD_display.display("Token","is old," ,"requesting","new one",True,True,2)
+            getToken()
+            print("New token created")
+            LCD_display.display("Token Created"," " ,"","",True,True,2)
+            loadTokenData ()
+            print("New token loaded")
+            LCD_display.display("Token Loaded"," " ,"","",True,True,2)
+        else:
+            LCD_display.display("Token is valid","" ,"","",True,True,2)
+            print("New token loaded")
+            #pass
     except Exception as e:
         print (e)
         LCD_display.display("Check Token E", str(e),"","",True,True,2)
