@@ -1,6 +1,6 @@
 token_expiration = "2023-11-11T13:32:44"
-
 token = ""
+#headers = {"Authorization" : "Bearer " + token}
 
 mac_address = ""
 
