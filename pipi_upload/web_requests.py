@@ -6,6 +6,7 @@ import config
 import sys
 import unidecode
 from datetime import datetime
+import LCD_display
 
 
 
@@ -74,6 +75,7 @@ def crm_request_rfid ():
             print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:
+        
         print("Error in crm_request_rfid:")
         print (e)
    
@@ -138,6 +140,7 @@ def booking_request_start_measurement ():
         return booking_response.status_code    
         
     except Exception as e:
+        LCD_display.display("Start meas E", str(e),"","",True,True,2)
         print("Error in booking_request_start_measurement:")
         print(e)
     
@@ -159,6 +162,7 @@ def booking_request_files ():
         else:
             print ("nejaky problemek s datama")
     except Exception as e:
+        LCD_display.display("Request files E", str(e),"","",True,True,2)
         print("Error in booking_request_files")
         print(e)
     
@@ -179,6 +183,7 @@ def booking_reservation_info ():
         #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         
     except Exception as e:
+        LCD_display.display("Res info E", str(e),"","",True,True,2)
         print("Error in booking_reservation_info")
         print(e)         
 
@@ -202,6 +207,7 @@ def booking_stop_reservation ():
         
     except Exception as e:
         print("Error in booking_reservation_info")
+        LCD_display.display("Check Token E", str(e),"","",True,True,2)
         print(e)
          
 def loadTokenData ():
@@ -215,6 +221,7 @@ def loadTokenData ():
         config.token = tokenString
         print("Token data loaded")
     except Exception as e:
+        LCD_display.display("Load Token E", str(e),"","",True,True,2)
         print (e)
     
     
@@ -237,11 +244,12 @@ def getToken ():
         f.writelines([token_expiration + "\n", token])
         f.close()  
       
-    except Exception as key_e :
-        print ("Error in get_token: " + key_e)
+    except Exception as e :
+        LCD_display.display("Get Token E", str(e),"","",True,True,2)
+        print ("Error in get_token: " + e)
 
 def checkToken():
-   try:
+    try:
         print("Comparing dates")
         time_now = datetime.now().isoformat(timespec="seconds")      
         timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
@@ -253,16 +261,16 @@ def checkToken():
         
         if tokenExpiration <= timeNow:
             print("Token is old, requesting new token")
-            LCD_display.display("Token","is old," ,"requesting","new one",True,True,2)
+            #LCD_display.display("Token","is old," ,"requesting","new one",True,True,2)
             getToken()
             print("New token created")
-            LCD_display.display("Token Created"," " ,"","",True,True,2)
+            #LCD_display.display("Token Created"," " ,"","",True,True,2)
             loadTokenData ()
             print("New token loaded")
-            LCD_display.display("Token Loaded"," " ,"","",True,True,2)
+            #LCD_display.display("Token Loaded"," " ,"","",True,True,2)
         else:
-            LCD_display.display("Token is valid","" ,"","",True,True,2)
-            print("New token loaded")
+            #LCD_display.display("Token is valid","" ,"","",True,True,2)
+            print("Token is valid")
             #pass
     except Exception as e:
         print (e)
