@@ -170,6 +170,7 @@ def booking_request_files ():
         LCD_display.display("request_files E", str(e),"","",True,True,2)
     
 def booking_reservation_info ():
+    checkToken()
     headers = {"Authorization" : "Bearer " + config.token}
     #config.logged_in = True
     #config.in_session = True
@@ -264,16 +265,16 @@ def checkToken():
         
         if tokenExpiration <= timeNow:
             print("Token is old, requesting new token")
-            LCD_display.display("Token","is old," ,"requesting","new one",True,True,2)
+            #LCD_display.display("Token","is old," ,"requesting","new one",True,True,2)
             getToken()
             print("New token created")
-            LCD_display.display("Token Created"," " ,"","",True,True,2)
+            #LCD_display.display("Token Created"," " ,"","",True,True,2)
             loadTokenData ()
             print("New token loaded")
-            LCD_display.display("Token Loaded"," " ,"","",True,True,2)
+            #LCD_display.display("Token Loaded"," " ,"","",True,True,2)
         else:
-            LCD_display.display("Token is valid","" ,"","",True,True,2)
-            print("New token loaded")
+            #LCD_display.display("Token is valid","" ,"","",True,True,2)
+            print("Token is valid")
             #pass
     except Exception as e:
         print (e)
