@@ -20,7 +20,7 @@ def network_check ():
     # try to acquire IP adress, therefore check connection to the internet
       
     while config.online_status == False:
-        LCD_display.display ("Network check","","" ,"",clear=True, backlight_status=True,sleep=2) 
+        LCD_display.display ("Network check","","" ,"",clear=True, backlight_status=True, sleep=2) 
         try:
             ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
         except Exception as ip_e_eth0:
@@ -67,7 +67,7 @@ def network_check ():
                 print ("Problem with MAC address")
         else:
             LCD_display.LCD_init (ip, config.mac_address)
-            time.sleep (1)        
+            time.sleep (3)        
 
     print ("Equipment name: " + str (config.equipment_name))
     print ("Equipment ID: " + str (config.equipment_id))
