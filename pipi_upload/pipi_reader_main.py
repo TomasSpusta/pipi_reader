@@ -20,6 +20,7 @@
 import faulthandler
 import RPi.GPIO as GPIO
 import time
+import LCD_display
 
 try:
     faulthandler.enable ()
