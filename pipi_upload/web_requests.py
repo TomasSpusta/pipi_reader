@@ -171,7 +171,7 @@ def booking_request_files ():
         LCD_display.display("request_files E", str(e),"","",True,True,2)
     
 def booking_reservation_info ():
-    checkToken()
+    #checkToken()
     headers = {"Authorization" : "Bearer " + config.token}
     #config.logged_in = True
     #config.in_session = True
