@@ -4,7 +4,7 @@ import config
 import datetime
 
 
-gc = gspread.service_account(filename='/home/bluebox/service_account.json')
+gc = gspread.service_account(filename='/home/pipired/pipi_reader/service_account.json')
 spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
 

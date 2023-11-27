@@ -36,6 +36,7 @@ def display (line1, line2, line3, line4, clear = True, backlight_status = True, 
     write (line3,3)
     write (line4,4)
     time.sleep (sleep)
+
         
 def clear():
     lcd.clear()
@@ -76,7 +77,7 @@ def booking_200 ():
     
 
 def booking_409_init ():
-    display ("Recording is running", "To stop it", "hold the red button","for 3 seconds", clear=True, backlight_status=True)
+    display ("Recording is running", "To stop it", "hold the blue button","for 3 seconds", clear=True, backlight_status=True)
     #time.sleep (5)
     #lcd.clear()
     
