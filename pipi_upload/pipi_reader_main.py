@@ -22,9 +22,9 @@ import RPi.GPIO as GPIO
 import time
 import LCD_display
 
+
 try:
     faulthandler.enable ()
-        
     from card_reader import card_reader
     import session
     from log import makeLog
@@ -43,6 +43,7 @@ try:
             
             #Wait for the card swipe 
             card_reader ()
+            LCD_display.display("Card Scanned","","","",True,True,2)
             
             #check if user is in the RFID database
             session.user_check ()
@@ -58,9 +59,13 @@ try:
             session.session_end ()
             
         
-        except Exception as e:
-            print("Error in main code")
-            print(e)   
+        except Exception as main_while_error:
+            print("Error in main while code: " + str(main_while_error))
+            LCD_display.display("Main while error", str(main_while_error),"","",True,True,2)
+
+except Exception as main_code_error:
+    print("Error in main code: " + str(main_code_error))
+    LCD_display.display("Main code error", str(main_code_error), "", "", True,True,2)
 
 except KeyboardInterrupt:
     print("CTRL + V pressed, script ended in pipi_reader script")

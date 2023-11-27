@@ -6,6 +6,7 @@ import config
 import sys
 import unidecode
 from datetime import datetime
+import LCD_display
 
 
 
@@ -15,7 +16,10 @@ from datetime import datetime
 #sys.path.append('/home/bluebox')
 #import equipment_id
 #token_address = "pipi_upload/tokenData.txt"
-token_address = "tokenData.txt"
+token_address = "/home/pipired/pipi_reader/pipi_upload/tokenData.txt"
+
+
+#token_address = "tokenData.txt"
 
 
 def git_version ():
@@ -45,6 +49,7 @@ def crm_request_mac ():
     except Exception as e:
         print("Error in crm_request_mac")
         print (e)
+        LCD_display.display("crm_request_mac E", str(e),"","",True,True,2)
     
         
 def crm_request_rfid ():
@@ -73,6 +78,7 @@ def crm_request_rfid ():
     except Exception as e:
         print("Error in crm_request_rfid:")
         print (e)
+        LCD_display.display("crm_request_rfid E", str(e),"","",True,True,2)
    
     
 def booking_request_start_measurement ():
@@ -95,6 +101,8 @@ def booking_request_start_measurement ():
         #print(booking_response.url)
         print ("Booking status code: " + str(booking_response.status_code))
         print(booking_response.text)
+        #LCD_display.display("Rec Resp", str(booking_response.text),str(booking_response.status_code),"",True,True,2)
+        
         
         if booking_response.status_code == 200:
             config.logged_in = True
@@ -137,6 +145,7 @@ def booking_request_start_measurement ():
     except Exception as e:
         print("Error in booking_request_start_measurement:")
         print(e)
+        LCD_display.display("StartMeasError", str(e),"","",True,True,2)
     
     
 def booking_request_files ():
@@ -158,8 +167,10 @@ def booking_request_files ():
     except Exception as e:
         print("Error in booking_request_files")
         print(e)
+        LCD_display.display("request_files E", str(e),"","",True,True,2)
     
 def booking_reservation_info ():
+    checkToken()
     headers = {"Authorization" : "Bearer " + config.token}
     #config.logged_in = True
     #config.in_session = True
@@ -177,7 +188,8 @@ def booking_reservation_info ():
         
     except Exception as e:
         print("Error in booking_reservation_info")
-        print(e)         
+        print(e) 
+        LCD_display.display("res_info E", str(e),"","",True,True,2)        
 
 def booking_stop_reservation ():
     payload = {"serviceAppointmentId":config.reservation_id, "equipmentId":config.equipment_id}
@@ -200,6 +212,7 @@ def booking_stop_reservation ():
     except Exception as e:
         print("Error in booking_reservation_info")
         print(e)
+        LCD_display.display("stop_res E", str(e),"","",True,True,2)
          
 def loadTokenData ():
     print("Loading token data")
@@ -213,9 +226,10 @@ def loadTokenData ():
         print("Token data loaded")
     except Exception as e:
         print (e)
+        LCD_display.display("Load Token E", str(e),"","",True,True,2)
     
     
-def writeTokenData ():
+def getToken ():
     
     API_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
     payload = {"apiKey":API_key}  
@@ -234,28 +248,36 @@ def writeTokenData ():
         f.writelines([token_expiration + "\n", token])
         f.close()  
       
-    except Exception as key_e :
-        print ("Error in get_token: " + key_e)
+    except Exception as e :
+        print ("Error in get_token: " + e)
+        LCD_display.display("Get Token E", str(e),"","",True,True,2)
 
 def checkToken():
-    print("Comparing dates")
-    time_now = datetime.now().isoformat(timespec="seconds")      
-    timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
-    tokenExpiration = datetime.strptime(config.token_expiration,"%Y-%m-%dT%H:%M:%S")
-    
-    #print ("time now: " + str(timeNow))
-    #print ("time exp: " + str(tokenExpiration)) 
-    #print(timeNow <= tokenExpiration)
-    
-    if tokenExpiration <= timeNow:
-        if config.user_id == "2c5c963c-68ba-e311-85a1-005056991551":
-            writeTokenData()
+    try:
+        print("Comparing dates")
+        time_now = datetime.now().isoformat(timespec="seconds")      
+        timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
+        tokenExpiration = datetime.strptime(config.token_expiration,"%Y-%m-%dT%H:%M:%S")
+        
+        #print ("time now: " + str(timeNow))
+        #print ("time exp: " + str(tokenExpiration)) 
+        #print(timeNow <= tokenExpiration)
+        
+        if tokenExpiration <= timeNow:
+            print("Token is old, requesting new token")
+            #LCD_display.display("Token","is old," ,"requesting","new one",True,True,2)
+            getToken()
             print("New token created")
+            #LCD_display.display("Token Created"," " ,"","",True,True,2)
             loadTokenData ()
             print("New token loaded")
+            #LCD_display.display("Token Loaded"," " ,"","",True,True,2)
         else:
-            print ("Other user requested api actions")
-            print ("No token needed")
-            pass
+            #LCD_display.display("Token is valid","" ,"","",True,True,2)
+            print("Token is valid")
+            #pass
+    except Exception as e:
+        print (e)
+        LCD_display.display("Check Token E", str(e),"","",True,True,2)
 
 loadTokenData()
