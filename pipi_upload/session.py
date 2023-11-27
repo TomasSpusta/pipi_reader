@@ -13,6 +13,7 @@ from log import makeLog
 
 def user_check ():
     LCD_display.display ("User check","","" ,"",True, True, sleep=2) 
+    
     web_requests.crm_request_rfid()
     if config.in_database == False:
         # If card ID is not it the internal database, LCD displays the error 
@@ -24,6 +25,7 @@ def user_check ():
     
 def reservation_check ():
     LCD_display.display ("Reservation check","","" ,"",True, True, sleep=2) 
+    
     if config.in_database == True:
         config.status_code = web_requests.booking_request_start_measurement()
         print ("Status code from booking: " + str(config.status_code))  
@@ -50,6 +52,7 @@ def reservation_check ():
             print("Reservation ID: " + str(config.reservation_id))
 
 def session_recording (refresh_rate = 5):
+    
     if config.in_database == True and config.logged_in == True:
         makeLog ("User in LOG")
           
@@ -58,6 +61,7 @@ def session_recording (refresh_rate = 5):
         
         #Loop checking and updating session information - remaining time, number of files
         while config.remaining_time > 0 :
+            web_requests.checkToken()
             time.sleep (refresh_rate) #refresh rate of remaining time and files in seconds
             if config.ended_by_user == True: 
                 break  
