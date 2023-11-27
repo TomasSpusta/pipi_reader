@@ -35,7 +35,8 @@ def display (line1, line2, line3, line4, clear = True, backlight_status = True, 
     write (line2,2)
     write (line3,3)
     write (line4,4)
-    time.sleep(sleep)
+    time.sleep (sleep)
+
         
 def clear():
     lcd.clear()
