@@ -12,7 +12,7 @@ def github_check (branch):
     
     #location of the local folder where the github repository will be downloaded (pulled)
 
-    local_repo = "/home/pipired/pipi_reader"
+    local_repo = "/home/bluebox/pipi_reader"
     
     #location/address of the remote github repository
     github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
