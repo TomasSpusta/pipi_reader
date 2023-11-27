@@ -82,6 +82,7 @@ def booking_request_start_measurement ():
     #payload = {"contact":config.user_id, "equipment":config.equipment_id}
     
     checkToken()
+    print ("check token in request start")
     
     headers = {"Authorization" : "Bearer " + config.token}
     
