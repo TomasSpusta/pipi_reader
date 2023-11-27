@@ -30,4 +30,5 @@ if config.online_status == True :
         LCD_display.display ("Main program error",pipi_reader_main_Error,"" ,"",clear=True, backlight_status=True)    
         print (pipi_reader_main_Error)
         
-
+else:
+    LCD_display.display ("No internet"," connection.","Please check cable" ,"Please check wifi" ,True, True, 2) 
