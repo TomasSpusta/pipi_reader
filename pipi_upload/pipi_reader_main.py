@@ -27,7 +27,6 @@ try:
         
     from card_reader import card_reader
     import session
-    import LCD_display
     from log import makeLog
     
     time.sleep (1)
