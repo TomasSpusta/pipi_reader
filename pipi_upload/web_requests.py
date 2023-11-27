@@ -49,6 +49,7 @@ def crm_request_mac ():
     except Exception as e:
         print("Error in crm_request_mac")
         print (e)
+        LCD_display.display("crm_request_mac E", str(e),"","",True,True,2)
     
         
 def crm_request_rfid ():
@@ -78,6 +79,7 @@ def crm_request_rfid ():
         
         print("Error in crm_request_rfid:")
         print (e)
+        LCD_display.display("crm_request_rfid E", str(e),"","",True,True,2)
    
     
 def booking_request_start_measurement ():
@@ -87,6 +89,7 @@ def booking_request_start_measurement ():
     #payload = {"contact":config.user_id, "equipment":config.equipment_id}
     
     checkToken()
+    print ("check token in request start")
     
     headers = {"Authorization" : "Bearer " + config.token}
     
@@ -100,6 +103,8 @@ def booking_request_start_measurement ():
         #print(booking_response.url)
         print ("Booking status code: " + str(booking_response.status_code))
         print(booking_response.text)
+        #LCD_display.display("Rec Resp", str(booking_response.text),str(booking_response.status_code),"",True,True,2)
+        
         
         if booking_response.status_code == 200:
             config.logged_in = True
@@ -143,6 +148,7 @@ def booking_request_start_measurement ():
         LCD_display.display("Start meas E", str(e),"","",True,True,2)
         print("Error in booking_request_start_measurement:")
         print(e)
+        LCD_display.display("StartMeasError", str(e),"","",True,True,2)
     
     
 def booking_request_files ():
@@ -165,8 +171,10 @@ def booking_request_files ():
         LCD_display.display("Request files E", str(e),"","",True,True,2)
         print("Error in booking_request_files")
         print(e)
+        LCD_display.display("request_files E", str(e),"","",True,True,2)
     
 def booking_reservation_info ():
+    #checkToken()
     headers = {"Authorization" : "Bearer " + config.token}
     #config.logged_in = True
     #config.in_session = True
@@ -185,7 +193,8 @@ def booking_reservation_info ():
     except Exception as e:
         LCD_display.display("Res info E", str(e),"","",True,True,2)
         print("Error in booking_reservation_info")
-        print(e)         
+        print(e) 
+        LCD_display.display("res_info E", str(e),"","",True,True,2)        
 
 def booking_stop_reservation ():
     payload = {"serviceAppointmentId":config.reservation_id, "equipmentId":config.equipment_id}
@@ -209,6 +218,7 @@ def booking_stop_reservation ():
         print("Error in booking_reservation_info")
         LCD_display.display("Check Token E", str(e),"","",True,True,2)
         print(e)
+        LCD_display.display("stop_res E", str(e),"","",True,True,2)
          
 def loadTokenData ():
     print("Loading token data")
@@ -223,6 +233,7 @@ def loadTokenData ():
     except Exception as e:
         LCD_display.display("Load Token E", str(e),"","",True,True,2)
         print (e)
+        LCD_display.display("Load Token E", str(e),"","",True,True,2)
     
     
 def getToken ():
@@ -245,8 +256,10 @@ def getToken ():
         f.close()  
       
     except Exception as e :
-        LCD_display.display("Get Token E", str(e),"","",True,True,2)
+
         print ("Error in get_token: " + e)
+        LCD_display.display("Get Token E", str(e),"","",True,True,2)
+
 
 def checkToken():
     try:

@@ -20,31 +20,18 @@
 import faulthandler
 import RPi.GPIO as GPIO
 import time
+import LCD_display
 
-
-
-from network_check import network_check
-from github_check import github_check
 
 try:
     faulthandler.enable ()
-    #Check internet connection, acquire IP address and MAC address
-    network_check ()
-    time.sleep (3)
-
-    #Connect to GIT HUB and download the latest version from "main" or "develop" branch   
-    github_check (branch = "pipired")
-    time.sleep (2)
-
-    github_check (branch = "pipired")
-    
     from card_reader import card_reader
     import session
-    import LCD_display
     from log import makeLog
     
-    
-    time.sleep (3)
+    time.sleep (1)
+    #LCD_display.display ("pokus loadingu","","" ,"",clear=True, backlight_status=True) 
+    #time.sleep (2)
     
     makeLog("startup LOG") 
     
@@ -56,6 +43,7 @@ try:
             
             #Wait for the card swipe 
             card_reader ()
+            LCD_display.display("Card Scanned","","","",True,True,2)
             
             #check if user is in the RFID database
             session.user_check ()
@@ -71,9 +59,13 @@ try:
             session.session_end ()
             
         
-        except Exception as e:
-            print("Error in main code")
-            print(e)   
+        except Exception as main_while_error:
+            print("Error in main while code: " + str(main_while_error))
+            LCD_display.display("Main while error", str(main_while_error),"","",True,True,2)
+
+except Exception as main_code_error:
+    print("Error in main code: " + str(main_code_error))
+    LCD_display.display("Main code error", str(main_code_error), "", "", True,True,2)
 
 except KeyboardInterrupt:
     print("CTRL + V pressed, script ended in pipi_reader script")
