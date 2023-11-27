@@ -4,6 +4,8 @@ token = ""
 
 #headers = {"Authorization" : "Bearer " + token}
 
+online_status = False
+
 mac_address = ""
 
 git_release = ""

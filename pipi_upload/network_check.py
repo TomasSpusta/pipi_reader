@@ -16,11 +16,11 @@ import RPi.GPIO as GPIO
 import netifaces as ni
 
 def network_check (): 
-    pi_online_status = False
+    config.online_status = False
     # try to acquire IP adress, therefore check connection to the internet
       
-    while pi_online_status == False:
-        LCD_display.display ("Network check","","" ,"",clear=True, backlight_status=True) 
+    while config.online_status == False:
+        LCD_display.display ("Network check","","" ,"",clear=True, backlight_status=True,sleep=2) 
         try:
             ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
         except Exception as ip_e_eth0:
@@ -49,7 +49,7 @@ def network_check ():
             else:
                 ip = ip_wlan0
             
-            pi_online_status = True
+            config.online_status = True
             try:   
                 config.mac_address = gma() # get MAC address
                 print("My MAC adress is: {}".format(config.mac_address))
@@ -71,9 +71,7 @@ def network_check ():
 
     print ("Equipment name: " + str (config.equipment_name))
     print ("Equipment ID: " + str (config.equipment_id))
-    
-
-           
+       
     LCD_display.LCD_init (ip, config.mac_address)
 
 

@@ -8,7 +8,8 @@ import web_requests
 
 
 def github_check (branch):
-    LCD_display.display ("Repo check","","" ,"",clear=True, backlight_status=True) 
+    LCD_display.display ("Repo check","","" ,"",clear=True, backlight_status=True, sleep=2) 
+    
     #location of the local folder where the github repository will be downloaded (pulled)
     local_repo = "/home/bluebox/pipi_reader"
     #location/address of the remote github repository
