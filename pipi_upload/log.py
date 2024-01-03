@@ -5,12 +5,12 @@ import datetime
 
 
 gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
-spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
-
+#spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
 def makeLog (log_info):
     print (log_info)
-    sh = gc.open_by_key(spredsheet_id)
+    sh = verify_spreadsheet()
+    #sh = gc.open_by_key(spredsheet_id)
     #gc = gspread.service_account()
     
     now = datetime.datetime.now()
@@ -19,7 +19,7 @@ def makeLog (log_info):
         ws = sh.worksheet(config.mac_address)
     
     except Exception as e:
-        #print (e)
+        print (e)
         sh.add_worksheet(title=config.mac_address, rows=100, cols=20)
         ws = sh.worksheet(config.mac_address)
         ws.update_cell(1,1, "Time stamp" )
@@ -55,7 +55,22 @@ def makeLog (log_info):
         ws.update_cell(entry_row,user_off, "Logged off")
         
   
+#For every instrumewnt there is spreadsheet - because there is limitation for opening
+# the one spreadsheet from more sources -> I think.
+def verify_spreadsheet():
+    try:
+        sh = gc.open(config.equipment_name)
+        
+    except Exception as e:
+        print (e)
+        #if spreadsheet does not exist, create one
+        gc.create(config.equipment_name)
+        sh = gc.open(config.equipment_name)
+    return sh
+        
+        
     
+       
 
     
     
