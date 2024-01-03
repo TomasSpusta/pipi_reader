@@ -13,6 +13,7 @@ def verify_spreadsheet(sheet_name):
     try:
         print ("Opening")
         sh = gc.open(sheet_name)
+        sh.share('n4norfid@gmail.com', perm_type='user', role='writer', notify=True)
         print ("Sh:" + str(sh))
        
      
@@ -21,7 +22,7 @@ def verify_spreadsheet(sheet_name):
         print ("Creating SH")
         #if spreadsheet does not exist, create one
         sh = gc.create(sheet_name)
-        sh.share('n4norfid@gmail.com', perm_type='user', role='writer')
+        sh.share('n4norfid@gmail.com', perm_type='user', role='writer', notify=True)
         sh = gc.open(sheet_name)
         print ("Sh:" + str(sh))
     return sh
