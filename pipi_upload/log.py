@@ -63,7 +63,10 @@ def makeLog (log_info):
 # the one spreadsheet from more sources -> I think.
 def verify_spreadsheet():
     try:
+        print ("Opening")
         sh = gc.open(config.equipment_name)
+        print ("Sh:" + str(sh))
+        
         
     except Exception as e:
         print (e)
@@ -71,6 +74,7 @@ def verify_spreadsheet():
         sh = gc.create(config.equipment_name)
         sh.share('n4norfid@gmail.com', perm_type='user', role='writer')
         sh = gc.open(config.equipment_name)
+        print ("Sh:" + str(sh))
     return sh
         
         
