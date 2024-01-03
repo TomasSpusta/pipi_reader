@@ -29,9 +29,10 @@ def verify_spreadsheet(sheet_name):
 
 def makeLog (log_info):
     print (log_info)
+
     sh = verify_spreadsheet(sheet_name)
-    #sh = gc.open_by_key(spredsheet_id)
-    #gc = gspread.service_account()
+
+
     
     now = datetime.datetime.now()
     
@@ -73,13 +74,11 @@ def makeLog (log_info):
     if config.logged_in and (config.in_session == False or config.ended_by_user == True):
         ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
         ws.update_cell(entry_row,user_off, "Logged off")
-    
-    print('Closing SH')
-    sh.client.session.close()   
-  
+
+    ws.client.session.close()
     
 
-    
+
     
     
     
