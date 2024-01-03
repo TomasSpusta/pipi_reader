@@ -76,6 +76,7 @@ def crm_request_rfid ():
             print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as e:
+        
         print("Error in crm_request_rfid:")
         print (e)
         LCD_display.display("crm_request_rfid E", str(e),"","",True,True,2)
@@ -144,6 +145,7 @@ def booking_request_start_measurement ():
         return booking_response.status_code    
         
     except Exception as e:
+        LCD_display.display("Start meas E", str(e),"","",True,True,2)
         print("Error in booking_request_start_measurement:")
         print(e)
         LCD_display.display("StartMeasError", str(e),"","",True,True,2)
@@ -166,6 +168,7 @@ def booking_request_files ():
         else:
             print ("nejaky problemek s datama")
     except Exception as e:
+        LCD_display.display("Request files E", str(e),"","",True,True,2)
         print("Error in booking_request_files")
         print(e)
         LCD_display.display("request_files E", str(e),"","",True,True,2)
@@ -188,6 +191,7 @@ def booking_reservation_info ():
         #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         
     except Exception as e:
+        LCD_display.display("Res info E", str(e),"","",True,True,2)
         print("Error in booking_reservation_info")
         print(e) 
         LCD_display.display("res_info E", str(e),"","",True,True,2)        
@@ -212,6 +216,7 @@ def booking_stop_reservation ():
         
     except Exception as e:
         print("Error in booking_reservation_info")
+        LCD_display.display("Check Token E", str(e),"","",True,True,2)
         print(e)
         LCD_display.display("stop_res E", str(e),"","",True,True,2)
          
@@ -226,6 +231,7 @@ def loadTokenData ():
         config.token = tokenString
         print("Token data loaded")
     except Exception as e:
+        LCD_display.display("Load Token E", str(e),"","",True,True,2)
         print (e)
         LCD_display.display("Load Token E", str(e),"","",True,True,2)
     
@@ -250,8 +256,10 @@ def getToken ():
         f.close()  
       
     except Exception as e :
+
         print ("Error in get_token: " + e)
         LCD_display.display("Get Token E", str(e),"","",True,True,2)
+
 
 def checkToken():
     try:
