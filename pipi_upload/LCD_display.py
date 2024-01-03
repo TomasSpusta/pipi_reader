@@ -77,7 +77,7 @@ def booking_200 ():
     
 
 def booking_409_init ():
-    display ("Recording is running", "To stop it", "hold the blue button","for 3 seconds", clear=True, backlight_status=True)
+    display ("Recording is running", "To stop it", "hold the button","for 3 seconds", clear=True, backlight_status=True)
     #time.sleep (5)
     #lcd.clear()
     

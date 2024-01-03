@@ -19,9 +19,10 @@ if config.online_status == True :
 
     #Connect to GIT HUB and download the latest version from "main", "develop", "pipired" branch   
     try:
-        github_check (branch = "develop")    
+        github_check (branch = "main")    
     except Exception as github_error:
         LCD_display.display ("Repository error", github_error,"" ,"",clear=True, backlight_status=True,sleep=2) 
+    sleep(3)
 
     try:
         LCD_display.display ("Loading program","","" ,"",clear=True, backlight_status=True, sleep=3)
