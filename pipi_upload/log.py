@@ -7,7 +7,7 @@ import datetime
 gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
 #spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
-sheet_name = config.equipment_name
+sheet_name = config.mac_address
 
 def verify_spreadsheet(sheet_name):
     try:
