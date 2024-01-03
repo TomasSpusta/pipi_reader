@@ -39,7 +39,7 @@ def makeLog (log_info):
         ws = sh.worksheet(config.mac_address)
     
     except Exception as e:
-        #print (e)
+        print (e)
         sh.add_worksheet(title=config.mac_address, rows=100, cols=20)
         ws = sh.worksheet(config.mac_address)
         ws.update_cell(1,1, "Time stamp" )
