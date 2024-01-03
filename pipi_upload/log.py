@@ -68,9 +68,9 @@ def verify_spreadsheet():
     except Exception as e:
         print (e)
         #if spreadsheet does not exist, create one
-        gc.create(config.equipment_name)
-        sh = gc.open(config.equipment_name)
+        sh = gc.create(config.equipment_name)
         sh.share('n4norfid@gmail.com', perm_type='user', role='writer')
+        sh = gc.open(config.equipment_name)
     return sh
         
         
