@@ -11,9 +11,8 @@ sheet_name = config.equipment_name
 
 def verify_spreadsheet(sheet_name):
     try:
-        print ("Opening")
+        print ("Opening SH")
         sh = gc.open(sheet_name)
-        sh.share('n4norfid@gmail.com', perm_type='user', role='writer', notify=True)
         print ("Sh:" + str(sh))
        
      
