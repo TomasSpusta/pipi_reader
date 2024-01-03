@@ -5,14 +5,34 @@ import datetime
 
 
 gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
-spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
+#spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
+
+sheet_name = config.equipment_name
+
+def verify_spreadsheet(sheet_name):
+    try:
+        print ("Opening SH")
+        sh = gc.open(sheet_name)
+        print ("Sh:" + str(sh))
+       
+     
+    except Exception as e:
+        print (e)
+        print ("Creating SH")
+        #if spreadsheet does not exist, create one
+        sh = gc.create(sheet_name)
+        sh.share('n4norfid@gmail.com', perm_type='user', role='writer', notify=True)
+        sh = gc.open(sheet_name)
+        print ("Sh:" + str(sh))
+    return sh
 
 
 def makeLog (log_info):
     print (log_info)
-    '''
-    sh = gc.open_by_key(spredsheet_id)
-    #gc = gspread.service_account()
+
+    sh = verify_spreadsheet(sheet_name)
+
+
     
     now = datetime.datetime.now()
     
@@ -20,7 +40,7 @@ def makeLog (log_info):
         ws = sh.worksheet(config.mac_address)
     
     except Exception as e:
-        #print (e)
+        print (e)
         sh.add_worksheet(title=config.mac_address, rows=100, cols=20)
         ws = sh.worksheet(config.mac_address)
         ws.update_cell(1,1, "Time stamp" )
@@ -54,11 +74,11 @@ def makeLog (log_info):
     if config.logged_in and (config.in_session == False or config.ended_by_user == True):
         ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
         ws.update_cell(entry_row,user_off, "Logged off")
-    
+
     ws.client.session.close()
     
 
-'''    
+
     
     
     
