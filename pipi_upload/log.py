@@ -10,6 +10,7 @@ gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account
 def makeLog (log_info):
     print (log_info)
     try:
+        print ("checking sh")
         sh = verify_spreadsheet()
     except Exception:
         print (Exception)
@@ -69,6 +70,7 @@ def verify_spreadsheet():
         #if spreadsheet does not exist, create one
         gc.create(config.equipment_name)
         sh = gc.open(config.equipment_name)
+        sh.share('n4norfid@gmail.com', perm_type='user', role='writer')
     return sh
         
         
