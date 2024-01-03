@@ -10,6 +10,7 @@ spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
 def makeLog (log_info):
     print (log_info)
+    '''
     sh = gc.open_by_key(spredsheet_id)
     #gc = gspread.service_account()
     
@@ -57,7 +58,7 @@ def makeLog (log_info):
     ws.client.session.close()
     
 
-    
+'''    
     
     
     
