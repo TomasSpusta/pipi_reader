@@ -9,7 +9,10 @@ gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account
 
 def makeLog (log_info):
     print (log_info)
-    sh = verify_spreadsheet()
+    try:
+        sh = verify_spreadsheet()
+    except Exception:
+        print (Exception)
     #sh = gc.open_by_key(spredsheet_id)
     #gc = gspread.service_account()
     
