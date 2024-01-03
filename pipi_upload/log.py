@@ -53,8 +53,8 @@ def makeLog (log_info):
     if config.logged_in and (config.in_session == False or config.ended_by_user == True):
         ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
         ws.update_cell(entry_row,user_off, "Logged off")
-        
-  
+    
+    ws.client.session.close()
     
 
     
