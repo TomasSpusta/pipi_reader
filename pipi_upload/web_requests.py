@@ -220,7 +220,7 @@ def booking_stop_reservation ():
         booking_response = requests.post ("https://booking.ceitec.cz/api/recording/stop",json=payload,headers=headers)  
     
         print (booking_response.status_code)
-        write_log(11, datetime.now(), booking_response.status_code)
+        
         #booking_data = booking_response.json()
         #print (booking_data)
         #print ("409 - Recording is running")
