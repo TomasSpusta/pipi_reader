@@ -40,13 +40,14 @@ def crm_request_mac ():
         
         if len (crm_data) == 0:
             print ("Problem with mac address")
-            write_log(5, "CRM data: " + str(crm_data),datetime.now())
+            write_log(5, crm_data,datetime.now())
             #if len(data) == 0 that means that something is wrong with mac address or equipment
             
         else:          
             config.equipment_name = crm_data[0]["alias"]
             config.equipment_id = crm_data[0]["equipmentid"]
-            write_log(5,config.equipment_name,datetime.now())
+            #write_log(5,config.equipment_name,datetime.now())
+            write_log(5,"equip name",datetime.now())
             #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             
     except Exception as crm_mac_e:
@@ -58,7 +59,7 @@ def crm_request_mac ():
         
 def crm_request_rfid ():
     #scanned_rfid = str (scanned_rfid)
-    config.log_row + 1 
+    config.log_row += 1 
     payload = {"rfid":config.card_id}
     
     try:
