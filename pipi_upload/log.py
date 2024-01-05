@@ -8,7 +8,7 @@ import LCD_display
 gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
 #spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
-sheet_name = config.mac_address
+sh_name = config.mac_address
 
 def open_sh(sh_name):
     try:
@@ -44,7 +44,7 @@ def prepare_headers (ws):
     ws.update_cell(1,7, "CARD SWIPE")           #message: time stamp, note: card ID
     ws.update_cell(1,8, "USER INFO")            #message: time stamp, note: user name + user ID 
     ws.update_cell(1,9, "TOKEN")                #message: time stamp, note: token OK, token created, ERROR
-    ws.update_cell(1,10, "RECORDING START")      #message: time stamp, note: recording OK, or NOK
+    ws.update_cell(1,10, "RECORDING START")     #message: time stamp, note: recording OK, or NOK
     ws.update_cell(1,11, "RECORDING END")       #message: time stamp, note: recording ended by user
     print ("Headers prepared")
   
