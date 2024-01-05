@@ -18,12 +18,12 @@ except Exception as network_error:
 if config.online_status == True :
 
     try:
-        open_sh()
+        open_sh(config.mac_address)
         write_log(1,datetime.datetime.now())
         write_log(2,config.ip_eth0,datetime.datetime.now())
         write_log(3,config.ip_wlan0,datetime.datetime.now())
     except Exception as sh_log_error:
-        print (sh_log_error)
+        print ("sh_log_error: " + str(sh_log_error))
         LCD_display.display ("Log sh error", sh_log_error,"" ,"",clear=True, backlight_status=True,sleep=2) 
     
 
