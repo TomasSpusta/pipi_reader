@@ -1,7 +1,7 @@
 
 import gspread
 import config
-import datetime
+from datetime import datetime
 import LCD_display
 
 

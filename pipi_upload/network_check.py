@@ -6,7 +6,7 @@
 #3: download new firmware
 #4: Run "pipi_reader.py"
 
-import datetime
+from datetime import datetime
 import config
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
