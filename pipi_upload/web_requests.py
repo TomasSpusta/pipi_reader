@@ -58,6 +58,7 @@ def crm_request_mac ():
         
 def crm_request_rfid ():
     #scanned_rfid = str (scanned_rfid)
+    config.log_row + 1 
     payload = {"rfid":config.card_id}
     
     try:
@@ -174,7 +175,7 @@ def booking_request_files ():
         if booking_response.status_code == 200 or 409:
             booking_data = booking_response.json()
             #print (booking_data)
-            print ("Number of data files: " + str(booking_data["count"]))
+            #print ("Number of data files: " + str(booking_data["count"]))
             config.files = booking_data["count"]            
         else:
             print ("nejaky problemek s datama")

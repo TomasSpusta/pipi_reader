@@ -66,7 +66,7 @@ def session_recording (refresh_rate = 5):
         #Loop checking and updating session information - remaining time, number of files
         while config.remaining_time > 0 :
             web_requests.checkToken()
-            print ("check token in while loop")
+            #print ("check token in while loop")
             time.sleep (refresh_rate) #refresh rate of remaining time and files in seconds
             if config.ended_by_user == True: 
                 break  
