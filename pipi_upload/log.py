@@ -51,7 +51,7 @@ def prepare_headers (ws):
 def write_log(column, log_msg, log_note=None):
     try:
         ws = config.sh.sheet1
-        print('Writing to SH')
+        print('Writing to SH at columnt no.' + str (column) )
         ws.update_cell(config.log_row, column, str(log_msg))
         if log_note != None:
             note_A1_coordinates = gspread.utils.rowcol_to_a1(config.log_row, column)
