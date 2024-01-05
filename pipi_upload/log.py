@@ -1,8 +1,10 @@
 
+
 import gspread
 import config
 from datetime import datetime
 import LCD_display
+
 
 
 gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
@@ -49,6 +51,9 @@ def prepare_headers (ws):
     print ("Headers prepared")
   
 def write_log(column, log_msg, log_note=None):
+    '''
+    col 5 MAC address
+    '''
     try:
         ws = config.sh.sheet1
         print('Writing to SH at column no.' + str (column) )
