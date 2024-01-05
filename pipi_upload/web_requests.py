@@ -61,6 +61,7 @@ def crm_request_rfid ():
     #scanned_rfid = str (scanned_rfid)
     config.log_row += 1 
     write_log(1,datetime.now())
+    print ("------------------------CARD SWIPE------------------------")
     
     payload = {"rfid":config.card_id}
     
