@@ -46,8 +46,8 @@ def crm_request_mac ():
         else:          
             config.equipment_name = crm_data[0]["alias"]
             config.equipment_id = crm_data[0]["equipmentid"]
-            #write_log(5,config.equipment_name,datetime.now())
-            write_log(5,"equip name",datetime.now())
+            write_log(5,config.equipment_name,datetime.now())
+            
             #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             
     except Exception as crm_mac_e:
@@ -60,6 +60,8 @@ def crm_request_mac ():
 def crm_request_rfid ():
     #scanned_rfid = str (scanned_rfid)
     config.log_row += 1 
+    write_log(1,datetime.now())
+    
     payload = {"rfid":config.card_id}
     
     try:

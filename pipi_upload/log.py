@@ -35,7 +35,7 @@ def open_sh(sh_name):
 
 def prepare_headers (ws):
     print ("Preparing header")
-    ws.update_cell(1,1, "INTERNET CONNECTION")  #message: time stamp, note: none
+    ws.update_cell(1,1, "ACCESS")  #message: time stamp, note: none
     ws.update_cell(1,2, "LAN IP ADDRESS")       #message: ip address, note: timestamp
     ws.update_cell(1,3, "WLAN IP ADDRESS")      #message: ip address, note: timestamp
     ws.update_cell(1,4, "GITHUB")               #message: version, note: none
