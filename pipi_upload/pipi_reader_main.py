@@ -30,15 +30,11 @@ try:
     from card_reader import card_reader
     import session
     
-    
     time.sleep (1)
     LCD_display.display ("Main starting","","" ,"",clear=True, backlight_status=True) 
     write_log(6, dt.datetime.now())
     time.sleep (1)
-    
-    
-    
-
+       
     while 1:
         try:
             #initial waiting screen

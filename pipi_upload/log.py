@@ -57,7 +57,7 @@ def write_log(column, log_msg, log_note=None):
             note_A1_coordinates = gspread.utils.rowcol_to_a1(config.log_row, column)
             ws.update_note (note_A1_coordinates,str(log_note))
         print('Closing SH')
-        ws.client.session.close()
+       # ws.client.session.close()
         
     except Exception as log_error:
         print (log_error)

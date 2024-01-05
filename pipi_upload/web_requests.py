@@ -51,8 +51,7 @@ def crm_request_mac ():
             
     except Exception as crm_mac_e:
         
-        print("Error in crm_request_mac")
-        print (crm_mac_e)
+        print("Error in crm_request_mac: " + str(crm_mac_e))
         write_log(5,crm_mac_e,datetime.now())
         LCD_display.display("crm_request_mac E", str(crm_mac_e),"","",True,True,2)
     
