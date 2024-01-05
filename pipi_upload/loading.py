@@ -2,7 +2,7 @@ from datetime import datetime
 import LCD_display
 from time import sleep
 import config
-from log import write_log, open_sh
+
 
 
 LCD_display.display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=5)
@@ -16,16 +16,6 @@ except Exception as network_error:
     LCD_display.display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
 
 if config.online_status == True :
-
-    try:
-        open_sh(config.mac_address)
-        write_log(1,datetime.now())
-        write_log(2,config.ip_eth0,datetime.now())
-        write_log(3,config.ip_wlan0,datetime.now())
-    except Exception as sh_log_error:
-        print ("sh_log_error: " + str(sh_log_error))
-        LCD_display.display ("Log sh error", sh_log_error,"" ,"",clear=True, backlight_status=True,sleep=2) 
-    
 
     from github_check import github_check
 

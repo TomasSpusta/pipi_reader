@@ -15,6 +15,7 @@ import web_requests
 import time
 import RPi.GPIO as GPIO
 import netifaces as ni
+from log import write_log, open_sh
 
 
 def network_check (): 
@@ -57,6 +58,16 @@ def network_check ():
                 ip = ip_wlan0
             
             config.online_status = True
+            
+            try:
+                open_sh(config.mac_address)
+                write_log(1,datetime.now())
+                write_log(2,config.ip_eth0,datetime.now())
+                write_log(3,config.ip_wlan0,datetime.now())
+            except Exception as sh_log_error:
+                print ("sh_log_error: " + str(sh_log_error))
+                LCD_display.display ("Log sh error", sh_log_error,"" ,"",clear=True, backlight_status=True,sleep=2) 
+            
             try:   
                 config.mac_address = gma() # get MAC address
                 print("My MAC adress is: {}".format(config.mac_address))
