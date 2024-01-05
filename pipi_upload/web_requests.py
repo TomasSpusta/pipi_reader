@@ -274,7 +274,7 @@ def getToken ():
 
 def checkToken():
     try:
-        print("Comparing dates")
+        #print("Comparing dates")
         time_now = datetime.now().isoformat(timespec="seconds")      
         timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
         tokenExpiration = datetime.strptime(config.token_expiration,"%Y-%m-%dT%H:%M:%S")
@@ -294,10 +294,11 @@ def checkToken():
             #LCD_display.display("Token Loaded"," " ,"","",True,True,2)
         else:
             #LCD_display.display("Token is valid","" ,"","",True,True,2)
-            print("Token is valid")
-            #pass
-    except Exception as e:
-        print (e)
-        LCD_display.display("Check Token E", str(e),"","",True,True,2)
+            #print("Token is valid")
+            pass
+    except Exception as check_token_e:
+        print (check_token_e)
+        LCD_display.display("Check Token E", str(check_token_e),"","",True,True,2)
+        write_log(9, datetime.now(), check_token_e)
 
 loadTokenData()
