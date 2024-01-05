@@ -1,8 +1,10 @@
+import datetime
 import RPi.GPIO as GPIO
 import time
 import LCD_display
 import config
 from web_requests import booking_stop_reservation
+from log import write_log
 
 
 #Setup a GPIO pin on RPi
@@ -42,6 +44,7 @@ def button_callback (button_pin):
                 LCD_display.display ('Session ended','by user',"","", clear=True, backlight_status=True)
                                                      
                 booking_stop_reservation()
+                write_log(11, datetime.datetime.now(), "Ended by user")
                 config.ended_by_user = True
                 time.sleep (2)
                 #button_deactivated ()

@@ -6,6 +6,7 @@
 #3: download new firmware
 #4: Run "pipi_reader.py"
 
+import datetime
 import config
 from requests import get
 from getmac import get_mac_address as gma #module for mac adress
@@ -15,34 +16,40 @@ import time
 import RPi.GPIO as GPIO
 import netifaces as ni
 
+
 def network_check (): 
     config.online_status = False
     # try to acquire IP adress, therefore check connection to the internet
       
     while config.online_status == False:
-        LCD_display.display ("Network check","","" ,"",clear=True, backlight_status=True, sleep=2) 
+        LCD_display.display ("Network check","","" ,"",True, True, sleep=2) 
+        
         try:
             ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
         except Exception as ip_e_eth0:
-            #print (ip_e_eth0)
+            print (ip_e_eth0)
+            
             ip_eth0 = 0
-        print('My local eth0 IP address is: {}'.format(ip_eth0))     
+        #print('My local eth0 IP address is: {}'.format(ip_eth0))     
         
         try:
             ip_wlan0 = ni.ifaddresses ("wlan0")[ni.AF_INET][0]["addr"]       
         except Exception as ip_e_wlan0:
-            #print (ip_e_wlan0)
+            print (ip_e_wlan0)
+            
             ip_wlan0 = 0
-        print('My local wlan0 IP address is: {}'.format(ip_wlan0))
-        #print('My public IP address is: {}'.format(ip))    
+        #print('My local wlan0 IP address is: {}'.format(ip_wlan0))
+       
         
         if ip_eth0 or ip_wlan0 != 0:
             
             if ip_eth0 !=0:
                 config.ip_eth0 = ip_eth0
+               
                 
             if ip_wlan0 !=0:
                 config.ip_wlan0 = ip_wlan0
+                
                 
             if ip_eth0 !=0:
                 ip = ip_eth0
@@ -54,15 +61,12 @@ def network_check ():
                 config.mac_address = gma() # get MAC address
                 print("My MAC adress is: {}".format(config.mac_address))
                 
-                try:
-                    # Send request to CRM to obtain equipment info according to MAC address
-                    web_requests.crm_request_mac()
-                except Exception as  e_CRM:
-                    print (e_CRM)
-                    print ("CRM has problem with MAC address")
+                # Send request to CRM to obtain equipment info according to MAC address
+                web_requests.crm_request_mac()
+               
                     
             except Exception as mac_e:
-                config.mac_address = " "
+               
                 print (mac_e)
                 print ("Problem with MAC address")
         else:

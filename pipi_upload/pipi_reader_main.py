@@ -17,23 +17,26 @@
 
 
 #Import section
+import datetime
 import faulthandler
 import RPi.GPIO as GPIO
 import time
 import LCD_display
+from log import write_log
 
 
 try:
     faulthandler.enable ()
     from card_reader import card_reader
     import session
-    from log import makeLog
+    
     
     time.sleep (1)
     LCD_display.display ("Main starting","","" ,"",clear=True, backlight_status=True) 
+    write_log(6, datetime.datetime.now())
     time.sleep (1)
     
-    makeLog("startup LOG") 
+    
     
 
     while 1:

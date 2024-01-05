@@ -2,34 +2,72 @@
 import gspread
 import config
 import datetime
+import LCD_display
 
 
 gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
 #spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
-sheet_name = config.equipment_name
+sheet_name = config.mac_address
 
-def verify_spreadsheet(sheet_name):
+def open_sh(sh_name):
     try:
         print ("Opening SH")
-        sh = gc.open(sheet_name)
-        print ("Sh:" + str(sh))
-       
-     
+        sh = gc.open(sh_name)
+        print ("SH Opened")
+  
     except Exception as e:
         print (e)
         print ("Creating SH")
         #if spreadsheet does not exist, create one
-        sh = gc.create(sheet_name)
+        sh = gc.create(sh_name)
+        print ("SH Created")
         sh.share('n4norfid@gmail.com', perm_type='user', role='writer', notify=True)
-        sh = gc.open(sheet_name)
-        print ("Sh:" + str(sh))
-    return sh
+        print ("SH Shared")
+        sh = gc.open(sh_name)
+        print ("SH Opened")
+        
+    ws = sh.sheet1
+    if len (ws.col_values(1)) == 0:
+        prepare_headers(ws)
+    config.log_row = len (ws.col_values(1)) + 1
+    config.sh = sh
 
+def prepare_headers (ws):
+    print ("Preparing header")
+    ws.update_cell(1,1, "INTERNET CONNECTION")  #message: time stamp, note: none
+    ws.update_cell(1,2, "LAN IP ADDRESS")       #message: ip address, note: timestamp
+    ws.update_cell(1,3, "WLAN IP ADDRESS")      #message: ip address, note: timestamp
+    ws.update_cell(1,4, "GITHUB")               #message: version, note: none
+    ws.update_cell(1,5, "INSTRUMENT")           #message: instrument name, note: timestamp
+    ws.update_cell(1,6, "MAIN SCRIPT")          #message: time stamp, note: none
+    ws.update_cell(1,7, "CARD SWIPE")           #message: time stamp, note: card ID
+    ws.update_cell(1,8, "USER INFO")            #message: time stamp, note: user name + user ID 
+    ws.update_cell(1,9, "TOKEN")                #message: time stamp, note: token OK, token created, ERROR
+    ws.update_cell(1,10, "RECORDING START")      #message: time stamp, note: recording OK, or NOK
+    ws.update_cell(1,11, "RECORDING END")       #message: time stamp, note: recording ended by user
+    print ("Headers prepared")
+  
+def write_log(column, log_msg, log_note=None):
+    try:
+        ws = config.sh.sheet1
+        print('Writing to SH')
+        ws.update_cell(config.log_row, column, str(log_msg))
+        if log_note != None:
+            note_A1_coordinates = gspread.utils.rowcol_to_a1(config.log_row, column)
+            ws.update_note (note_A1_coordinates,str(log_note))
+        print('Closing SH')
+        ws.client.session.close()
+        
+    except Exception as log_error:
+        print (log_error)
+        LCD_display.display ("LOG Error",str(log_error),"" ,"" ,True, True, 2)
 
+    
+'''
 def makeLog (log_info):
     print (log_info)
-    sh = verify_spreadsheet(sheet_name)
+    sh = open_sh(sheet_name)
     #sh = gc.open_by_key(spredsheet_id)
     #gc = gspread.service_account()
     
@@ -75,17 +113,5 @@ def makeLog (log_info):
         ws.update_cell(entry_row,user_off, "Logged off")
     
     print('Closing SH')
-    sh.client.session.close()   
-  
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    sh.client.session.close()    
+'''  

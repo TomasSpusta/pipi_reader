@@ -2,13 +2,14 @@
 #sudo killall python3
 
 
+import datetime
 import time
 import RPi.GPIO as GPIO
 import LCD_display
 import web_requests
 import config
 import button
-from log import makeLog
+from log import write_log
 
 
 def user_check ():
@@ -57,7 +58,7 @@ def reservation_check ():
 def session_recording (refresh_rate = 5):
     
     if config.in_database == True and config.logged_in == True:
-        makeLog ("User in LOG")
+        
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
@@ -80,13 +81,16 @@ def session_recording (refresh_rate = 5):
                 # Session about to end warning at 5-minute mark 
                 config.warning_sent = True
                 LCD_display.about_to_end_w ()  
+        else :
+            web_requests.booking_stop_reservation ()
+            write_log(11, datetime.datetime.now(), "Ended by time")
         
   
 def session_end ():
     if config.logged_in == True:
         print ("Ending session")
         config.in_session = False
-        makeLog("Off LOG")
+       
         #when session is ended by time out, or by pressing the button    
         try:
             button.button_deactivated ()
@@ -94,6 +98,7 @@ def session_end ():
         except Exception as button_e:
             print (button_e)
             
+        
         LCD_display.session_ended()        
         time.sleep (3)
                     
