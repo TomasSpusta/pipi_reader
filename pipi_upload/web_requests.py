@@ -40,20 +40,20 @@ def crm_request_mac ():
         
         if len (crm_data) == 0:
             print ("Problem with mac address")
-            write_log(5, "CRM data: " + str(crm_data),datetime.datetime.now())
+            write_log(5, "CRM data: " + str(crm_data),datetime.now())
             #if len(data) == 0 that means that something is wrong with mac address or equipment
             
         else:          
             config.equipment_name = crm_data[0]["alias"]
             config.equipment_id = crm_data[0]["equipmentid"]
-            write_log(5,config.equipment_name,datetime.datetime.now())
+            write_log(5,config.equipment_name,datetime.now())
             #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             
     except Exception as crm_mac_e:
         
         print("Error in crm_request_mac")
         print (crm_mac_e)
-        write_log(5,crm_mac_e,datetime.datetime.now())
+        write_log(5,crm_mac_e,datetime.now())
         LCD_display.display("crm_request_mac E", str(crm_mac_e),"","",True,True,2)
     
         
@@ -69,7 +69,7 @@ def crm_request_rfid ():
         if len (crm_data) == 0:
             config.in_database = False
             print ("Problem with ID card, not in database")
-            write_log(8,datetime.datetime.now(), config.card_id)
+            write_log(8,datetime.now(), config.card_id)
             #if len(data) == 0 that means that rfid number is not in database
             #print ('Card is not in the database')       
         else:          
@@ -78,12 +78,12 @@ def crm_request_rfid ():
             #config.user_full_name = crm_data[0]["full_name"]
             config.user_name = unidecode.unidecode (user_name)
             config.user_id = crm_data[0]["contactid"]
-            write_log(8,config.user_name +" "+  config.user_id,datetime.datetime.now())
+            write_log(8,config.user_name +" "+  config.user_id,datetime.now())
             #print (config.user_name)
             print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
              
     except Exception as CRM_request_e:
-        write_log(8, CRM_request_e, datetime.datetime.now())
+        write_log(8, CRM_request_e, datetime.now())
         print("Error in crm_request_rfid:")
         print (CRM_request_e)
         LCD_display.display("crm_request_rfid E", str(CRM_request_e),"","",True,True,2)
@@ -124,18 +124,18 @@ def booking_request_start_measurement ():
             config.reservation_start_time = booking_data["start"]
             #print ("Reservation_ID: " +str (config.reservation_id))
             
-            write_log(10, datetime.datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.status_code)
             
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
         elif booking_response.status_code == 400:
             config.logged_in = False
-            write_log(10, datetime.datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.status_code)
             #print ("400 - Invalid input parameters")     
         
         elif booking_response.status_code == 404:
             config.logged_in = False
-            write_log(10, datetime.datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.status_code)
             #print ("404 - Reservation not found for given parameters, or missing reservation session")    
         
         elif booking_response.status_code == 409:
@@ -149,10 +149,10 @@ def booking_request_start_measurement ():
             config.reservation_start_time = booking_data["start"]
             #print ("Reservation_ID: " +str (config.reservation_id))
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
-            write_log(10, datetime.datetime.now(), booking_response.status_code)        
+            write_log(10, datetime.now(), booking_response.status_code)        
         elif booking_response.status_code == 500:
             config.logged_in = False
-            write_log(10, datetime.datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.status_code)
             #print ("500 - Internal error")  
         
         return booking_response.status_code    
@@ -216,7 +216,7 @@ def booking_stop_reservation ():
         booking_response = requests.post ("https://booking.ceitec.cz/api/recording/stop",json=payload,headers=headers)  
     
         print (booking_response.status_code)
-        write_log(11, datetime.datetime.now(), booking_response.status_code)
+        write_log(11, datetime.now(), booking_response.status_code)
         #booking_data = booking_response.json()
         #print (booking_data)
         #print ("409 - Recording is running")
@@ -227,7 +227,7 @@ def booking_stop_reservation ():
         print("Error in booking_stop_reservation: " + str(stop_res_e))
         
         LCD_display.display("stop_res E", str(stop_res_e),"","",True,True,2)
-        write_log(11, datetime.datetime.now(), stop_res_e)
+        write_log(11, datetime.now(), stop_res_e)
          
 def loadTokenData ():
     print("Loading token data")
@@ -257,7 +257,7 @@ def getToken ():
         token = token_request.json()["accessToken"]
         
         print ("New token created")
-        write_log(9, datetime.datetime.now(), "New token created")
+        write_log(9, datetime.now(), "New token created")
         print ("Saving token data")
         
         file = token_address
@@ -269,7 +269,7 @@ def getToken ():
 
         print ("Error in get_token: " + get_token_e)
         LCD_display.display("Get Token E", str(get_token_e),"","",True,True,2)
-        write_log(9, datetime.datetime.now(), get_token_e)
+        write_log(9, datetime.now(), get_token_e)
 
 
 def checkToken():

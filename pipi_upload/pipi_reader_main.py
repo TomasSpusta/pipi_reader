@@ -17,7 +17,7 @@
 
 
 #Import section
-import datetime
+import datetime as dt
 import faulthandler
 import RPi.GPIO as GPIO
 import time
@@ -33,7 +33,7 @@ try:
     
     time.sleep (1)
     LCD_display.display ("Main starting","","" ,"",clear=True, backlight_status=True) 
-    write_log(6, datetime.datetime.now())
+    write_log(6, dt.datetime.now())
     time.sleep (1)
     
     

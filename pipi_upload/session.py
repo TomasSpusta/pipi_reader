@@ -1,8 +1,8 @@
-#@reboot python3 /home/pi/RFID/client_pokus_RFID.py
+#@reboot python3 /home/pi/RFID/client_pLCD_displayokus_RFID.py
 #sudo killall python3
 
 
-import datetime
+from datetime import datetime
 import time
 import RPi.GPIO as GPIO
 import LCD_display
@@ -83,7 +83,7 @@ def session_recording (refresh_rate = 5):
                 LCD_display.about_to_end_w ()  
         else :
             web_requests.booking_stop_reservation ()
-            write_log(11, datetime.datetime.now(), "Ended by time")
+            write_log(11, datetime.now(), "Ended by time")
         
   
 def session_end ():

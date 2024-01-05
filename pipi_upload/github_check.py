@@ -2,7 +2,7 @@
 #https://linuxconfig.org/how-to-manage-git-repositories-with-python
 
 #import gitpython
-import datetime
+from datetime import datetime
 import git
 import LCD_display
 import web_requests
@@ -23,7 +23,7 @@ def github_check (branch):
     try:
         #cloned_repo = 
         git.Repo.clone_from (github_repo, local_repo, branch=branch)
-        write_log(4, datetime.datetime.now(), "Repo cloned")
+        write_log(4, datetime.now(), "Repo cloned")
         print("Repo cloned")
     except Exception as github_e:
         #if the repository is already cloned, the folder is present on RPi,
@@ -35,11 +35,11 @@ def github_check (branch):
             repo.git.reset('--hard')
             repo.remotes.origin.pull()
             print("Update finished")
-            write_log(4, datetime.datetime.now(), "Update finished")
+            write_log(4, datetime.now(), "Update finished")
         except Exception as repo_e:
             print ("Problem s repository na disku")
             print (repo_e)
-            write_log(4, repo_e,datetime.datetime.now())
+            write_log(4, repo_e,datetime.now())
     web_requests.git_version ()        
     LCD_display.version()
 
