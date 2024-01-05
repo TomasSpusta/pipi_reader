@@ -7,6 +7,7 @@ import git
 import LCD_display
 import web_requests
 from log import write_log
+import config
 
 def github_check (branch):
     LCD_display.display ("Repo check","","" ,"",clear=True, backlight_status=True, sleep=2) 
@@ -35,12 +36,13 @@ def github_check (branch):
             repo.git.reset('--hard')
             repo.remotes.origin.pull()
             print("Update finished")
-            write_log(4, datetime.now(), "Update finished")
+            web_requests.git_version ()
+            write_log(4, datetime.now(), "Update finished, version: " + config.git_release )
         except Exception as repo_e:
             print ("Problem s repository na disku")
             print (repo_e)
-            write_log(4, repo_e,datetime.now())
-    web_requests.git_version ()        
+            write_log(4, repo_e, datetime.now())
+            
     LCD_display.version()
 
 
