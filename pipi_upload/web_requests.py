@@ -305,4 +305,4 @@ def checkToken():
         LCD_display.display("Check Token E", str(check_token_e),"","",True,True,2)
         write_log(9, datetime.now(), check_token_e)
 
-loadTokenData()
+#loadTokenData()

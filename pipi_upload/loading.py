@@ -2,6 +2,7 @@ from datetime import datetime
 import LCD_display
 from time import sleep
 import config
+import web_requests
 
 
 
@@ -29,6 +30,7 @@ if config.online_status == True :
 
     try:
         LCD_display.display ("Loading program","","" ,"",clear=True, backlight_status=True, sleep=3)
+        web_requests.loadTokenData()
         import pipi_reader_main
     except Exception as pipi_reader_main_Error:
         LCD_display.display ("Main program error",pipi_reader_main_Error,"" ,"",clear=True, backlight_status=True)    
