@@ -128,18 +128,18 @@ def booking_request_start_measurement ():
             config.reservation_start_time = booking_data["start"]
             #print ("Reservation_ID: " +str (config.reservation_id))
             
-            write_log(10, datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.text)
             
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
         elif booking_response.status_code == 400:
             config.logged_in = False
-            write_log(10, datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.text)
             #print ("400 - Invalid input parameters")     
         
         elif booking_response.status_code == 404:
             config.logged_in = False
-            write_log(10, datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.text)
             #print ("404 - Reservation not found for given parameters, or missing reservation session")    
         
         elif booking_response.status_code == 409:
@@ -153,10 +153,10 @@ def booking_request_start_measurement ():
             config.reservation_start_time = booking_data["start"]
             #print ("Reservation_ID: " +str (config.reservation_id))
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
-            write_log(10, datetime.now(), booking_response.status_code)        
+            write_log(10, datetime.now(), booking_response.text)        
         elif booking_response.status_code == 500:
             config.logged_in = False
-            write_log(10, datetime.now(), booking_response.status_code)
+            write_log(10, datetime.now(), booking_response.text)
             #print ("500 - Internal error")  
         
         return booking_response.status_code    
