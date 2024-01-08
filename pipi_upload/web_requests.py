@@ -261,7 +261,7 @@ def getToken ():
         token = token_request.json()["accessToken"]
         
         print ("New token created")
-        write_log(9, datetime.now(), "New token created")
+        write_log(9, datetime.now(), token_request.text)
         print ("Saving token data")
         
         file = token_address
