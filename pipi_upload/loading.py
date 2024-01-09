@@ -12,7 +12,8 @@ from network_check import network_check
 
 #Check internet connection, acquire IP address and MAC address
 try:
-    network_check ()
+    network_check ()  
+    
 except Exception as network_error:
     LCD_display.display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
 

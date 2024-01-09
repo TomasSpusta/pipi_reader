@@ -2,7 +2,6 @@
 
 import gspread
 import config
-from datetime import datetime
 import LCD_display
 
 
@@ -10,7 +9,7 @@ import LCD_display
 gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
 #spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
-sh_name = config.mac_address
+#sh_name = config.mac_address
 
 def open_sh(sh_name):
     try:
@@ -52,6 +51,10 @@ def prepare_headers (ws):
   
 def write_log(column, log_msg, log_note=None):
     '''
+    col 1 ACCESS
+    col 2 LAN IP
+    col 3 WLAN IP
+    col 4 GITHUB
     col 5 MAC address
     '''
     try:
