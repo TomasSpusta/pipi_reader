@@ -26,7 +26,7 @@ def flashing (interval, number):
         time.sleep(interval)
         lcd.backlight_enabled = False
         
-def display (line1, line2, line3, line4, clear = True, backlight_status = True, sleep = 1):
+def display (line1, line2=None, line3=None, line4=None, clear = True, backlight_status = True, sleep = 1):
     # display ("Your VUT card is not", "in database yet.", "Let's change that.","", clear = True)
     lcd.backlight_enabled = backlight_status
     if clear == True:

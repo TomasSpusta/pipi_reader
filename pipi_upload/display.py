@@ -4,6 +4,9 @@ from time import sleep
 
 
 
+display("Checking network", True, True, 2)
+
+
 try:
     ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
     print (ip_eth0)
