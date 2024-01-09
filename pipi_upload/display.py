@@ -5,11 +5,13 @@ import netifaces as ni
 
 try:
     ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
+    print (ip_eth0)
 except Exception as ip_e_eth0:
     print (ip_e_eth0)
 
 try:
-    ip_wlan0 = ni.ifaddresses ("wlan0")[ni.AF_INET][0]["addr"]       
+    ip_wlan0 = ni.ifaddresses ("wlan0")[ni.AF_INET][0]["addr"]      
+    print (ip_wlan0) 
 except Exception as ip_e_wlan0:
     print (ip_e_wlan0)
 
