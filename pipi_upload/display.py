@@ -1,8 +1,7 @@
-import LCD_display
-
-LCD_display.display(
-    "Pokus",
-    "",
-    "",
-    ""
-)
+from LCD_display import display
+try:
+    display(        "Pokus",        " ",        " ",        " ", True, True, 2
+    )
+except Exception as e:
+    display(        str(e),        " ",        " ",        " ", True, True, 2
+    )
