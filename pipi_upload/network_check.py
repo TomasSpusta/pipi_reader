@@ -65,6 +65,11 @@ def network_check ():
                 config.mac_address = gma() # get MAC address
                 print("My MAC adress is: {}".format(config.mac_address))
                 
+               
+               
+                # Send request to CRM to obtain equipment info according to MAC address
+                web_requests.crm_request_mac()
+                
                 try:
                     open_sh(config.mac_address)
                     write_log(1,datetime.now())
@@ -73,9 +78,6 @@ def network_check ():
                 except Exception as sh_log_error:
                     print ("sh_log_error: " + str(sh_log_error))
                     LCD_display.display ("Log sh error", sh_log_error,"" ,"",clear=True, backlight_status=True,sleep=2) 
-               
-                # Send request to CRM to obtain equipment info according to MAC address
-                web_requests.crm_request_mac()
                
                     
             except Exception as mac_e:
