@@ -39,7 +39,6 @@ try:
         try:
             #initial waiting screen
             LCD_display.LCD_waiting()
-            LCD_display.display("Please scan card","","","",True,True,2)
             
             #Wait for the card swipe 
             card_reader ()
