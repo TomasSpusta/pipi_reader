@@ -35,14 +35,28 @@ def github_check (branch):
             repo = git.Repo(local_repo)
             repo.git.reset('--hard')
             repo.remotes.origin.pull()
-            print("Update finished")
-            web_requests.git_version ()
-            write_log(4, datetime.now(), "Update finished, version: " + config.git_release )
+            print("Update finished")          
+            
         except Exception as repo_e:
             print ("Problem s repository na disku")
             print (repo_e)
             write_log(4, repo_e, datetime.now())
             
-    LCD_display.version()
+    web_requests.git_version ()      
+    try:
+        tree = repo.tree()
+        for blob in tree:
+            commit = next(repo.iter_commits(paths=blob.path, max_count=1))
+            date = datetime.fromtimestamp(commit.committed_date)
+            if blob.path == "pipi_upload":
+                last_edit_date = date
+                print(blob.path, date)
+    except Exception as repo_last_e:
+        print ("Problem s repository na disku")
+        print (repo_e)
+        write_log(4, repo_last_e, datetime.now())
+    write_log(4, datetime.now(), "Update finished, version: " + config.git_release )
+    
+    LCD_display.display ("Version:",config.git_release,"Last edit:",last_edit_date,clear=True, backlight_status=True)()
 
 
