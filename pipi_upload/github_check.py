@@ -9,7 +9,7 @@ import LCD_display
 from log import write_log
 
 
-def github_check (branch):
+def ghub_check (branch):
     LCD_display.display ("Repo check","","" ,"",clear=True, backlight_status=True, sleep=1) 
     
     #location of the local folder where the github repository will be downloaded (pulled)
