@@ -17,17 +17,13 @@ from log import write_log
 #sys.path.append('/home/bluebox')
 #import equipment_id
 #token_address = "pipi_upload/tokenData.txt"
-token_address = "/home/bluebox/pipi_reader/pipi_upload/tokenData.txt"
+#token_address = "/home/bluebox/pipi_reader/pipi_upload/tokenData.txt"
 
 
 #token_address = "tokenData.txt"
 
 
-def git_version ():
-   # https://api.github.com/repos/{owner}/{repo}/releases/latest
-    response = requests.get("https://api.github.com/repos/TomasSpusta/pipi_reader/releases/latest")
-    config.git_release = response.json()["name"]
-    print (config.git_release)
+
 
 
 def crm_request_mac ():
@@ -236,8 +232,8 @@ def booking_stop_reservation ():
 def loadTokenData ():
     print("Loading token data")
     try:
-        file = token_address
-        f = open (file, "r").readlines()
+        
+        f = open (config.token_address, "r").readlines()
         expiration = f[0][:-1]
         tokenString = f[1]
         config.token_expiration = expiration
@@ -264,8 +260,8 @@ def getToken ():
         write_log(9, datetime.now(), token_expiration)
         print ("Saving token data")
         
-        file = token_address
-        f = open (file, "w")
+        
+        f = open (config.token_address, "w")
         f.writelines([token_expiration + "\n", token])
         f.close()  
       
