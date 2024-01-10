@@ -6,12 +6,13 @@ import LCD_display
 
 
 
-gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
+
 #spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
 #sh_name = config.mac_address
 
 def open_sh(sh_name):
+    gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
     try:
         print ("Opening SH")
         sh = gc.open(sh_name)
