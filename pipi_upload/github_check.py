@@ -35,7 +35,7 @@ def ghub_check (branch):
     current_version = git_version ()
 
     LCD_display.display ("Repo check","Repo updated", current_version ,last_change,clear=True, backlight_status=True, sleep=2) 
-    log_note = "Update finished. \nVersion: %s \nLast change: %s" % current_version, last_change
+    log_note = "Update finished. \nVersion: %s \nLast change: %s" % (current_version, last_change)
     write_log(4, datetime.now(), log_note)
 
 def git_version ():
