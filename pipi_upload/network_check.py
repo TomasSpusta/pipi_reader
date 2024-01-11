@@ -9,12 +9,11 @@ from log import write_log, open_sh
 
 
 def connection_check(): 
-
+    get_ip()
+    
     get_mac_address()
     
-    open_sh(config.mac_address)
-    
-    get_ip()
+    open_sh(config.mac_address)   
     
     write_log(1, datetime.now())
     write_log(2, config.ip_eth0, datetime.now())

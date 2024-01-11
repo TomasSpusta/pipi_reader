@@ -9,7 +9,7 @@ from github_check import ghub_check
 
 
 
-display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=5)
+display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=2)
 
 #Check internet connection, acquire IP address and MAC address
 try:
