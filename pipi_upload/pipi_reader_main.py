@@ -30,7 +30,7 @@ def main ():
         write_log(6, dt.datetime.now())
         time.sleep (1)
         
-        while 1:
+        while True:
             try:
                 #initial waiting screen
                 waiting ()
@@ -53,13 +53,13 @@ def main ():
                 session.session_end ()
                 
             
-            except Exception as main_while_error:
-                print("Error in main while code: " + str(main_while_error))
-                display("Main while error", str(main_while_error),"","",True,True,2)
+            except Exception as main_loop_e:
+                print("Error in main while code: " + str(main_loop_e))
+                display("Main while error", str(main_loop_e),"","",True,True,2)
 
-    except Exception as main_code_error:
-        print("Error in main code: " + str(main_code_error))
-        display("Main code error", str(main_code_error), "", "", True,True,2)
+    except Exception as main_code_e:
+        print("Error in main code: " + str(main_code_e))
+        display("Main code error", str(main_code_e), "", "", True,True,2)
 
     except KeyboardInterrupt:
         print("CTRL + V pressed, script ended in pipi_reader script")
