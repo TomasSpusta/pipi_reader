@@ -1,7 +1,7 @@
-#https://www.devdungeon.com/content/working-git-repositories-python
-#https://linuxconfig.org/how-to-manage-git-repositories-with-python
+# https://www.devdungeon.com/content/working-git-repositories-python
+# https://linuxconfig.org/how-to-manage-git-repositories-with-python
 
-#import gitpython
+
 from datetime import datetime
 import requests
 import git
@@ -9,59 +9,92 @@ import LCD_display
 from log import write_log
 
 
-def ghub_check (branch):
-    LCD_display.display ("Repo check","","" ,"",clear=True, backlight_status=True, sleep=1) 
-    
-    #location of the local folder where the github repository will be downloaded (pulled)
+def ghub_check(branch):
+    LCD_display.display(
+        "Repo check", "", "", "", clear=True, backlight_status=True, sleep=1
+    )
+
+    # location of the local folder where the github repository will be downloaded (pulled)
     local_repo = "/home/bluebox/pipi_reader"
-    
-    #location/address of the remote github repository
+
+    # location/address of the remote github repository
     github_repo = "https://github.com/TomasSpusta/pipi_reader.git"
 
-    #try to clone remote repository from github
+    # try to clone remote repository from github
     try:
-        git.Repo.clone_from (github_repo, local_repo, branch=branch)
+        git.Repo.clone_from(github_repo, local_repo, branch=branch)
         write_log(4, datetime.now(), "Repo cloned")
         print("Repo cloned")
-        
-    except Exception as github_e:
-        #if the repository is already cloned, the folder is present on RPi,
-        #error will happen, then we will try to use pull command
-        #print(error)
-        git_update (local_repo)
-        write_log(4, datetime.now(), "Repo updated")
-    
-    last_change = git_last_change (local_repo)
-    current_version = git_version ()
 
-    LCD_display.display ("Repo check","Repo updated", current_version ,last_change,clear=True, backlight_status=True, sleep=2) 
-    log_note = "Update finished. \nVersion: %s \nLast change: %s" % (current_version, last_change)
+    except Exception as github_e:
+        # if the repository is already cloned, the folder is present on RPi,
+        # error will happen, then we will try to use pull command
+        # print(error)
+        git_update(local_repo)
+        write_log(4, datetime.now(), "Repo updated")
+
+    last_change = git_last_change(local_repo)
+    current_version = git_version()
+
+    LCD_display.display(
+        "Repo check",
+        "Repo updated",
+        current_version,
+        last_change,
+        clear=True,
+        backlight_status=True,
+        sleep=2,
+    )
+    log_note = "Update finished. \nVersion: %s \nLast change: %s" % (
+        current_version,
+        last_change,
+    )
     write_log(4, datetime.now(), log_note)
 
-def git_version ():
-   # https://api.github.com/repos/{owner}/{repo}/releases/latest
-    response = requests.get("https://api.github.com/repos/TomasSpusta/pipi_reader/releases/latest")
+
+def git_version():
+    # https://api.github.com/repos/{owner}/{repo}/releases/latest
+    response = requests.get(
+        "https://api.github.com/repos/TomasSpusta/pipi_reader/releases/latest"
+    )
     git_version = response.json()["name"]
-    print (git_version)
+    print(git_version)
     return str(git_version)
 
-def git_update (local_repo):
+
+def git_update(local_repo):
     try:
-        #initialize local repository
+        # initialize local repository
         repo = git.Repo(local_repo)
-        repo.git.reset('--hard')
+        repo.git.reset("--hard")
         repo.remotes.origin.pull()
-        LCD_display.display ("Repo check","Repo updated","" ,"",clear=True, backlight_status=True, sleep=1) 
-        print("Update finished")          
-            
+        LCD_display.display(
+            "Repo check",
+            "Repo updated",
+            "",
+            "",
+            clear=True,
+            backlight_status=True,
+            sleep=1,
+        )
+        print("Update finished")
+
     except Exception as repo_e:
-        print ("Problem s repository na disku")
-        print (repo_e)
+        print("Problem s repository na disku")
+        print(repo_e)
         write_log(4, repo_e, datetime.now())
-        LCD_display.display ("Repo check","Repo Update ERROR", repo_e ,"",clear=True, backlight_status=True, sleep=1)
+        LCD_display.display(
+            "Repo check",
+            "Repo Update ERROR",
+            repo_e,
+            "",
+            clear=True,
+            backlight_status=True,
+            sleep=1,
+        )
 
 
-def git_last_change (local_repo):
+def git_last_change(local_repo):
     try:
         repo = git.Repo(local_repo)
         tree = repo.tree()
@@ -73,7 +106,6 @@ def git_last_change (local_repo):
                 print(blob.path, last_edit_date)
                 return str(last_edit_date)
     except Exception as repo_last_e:
-        print ("Problem s repository na disku")
-        print (repo_last_e)
+        print("Problem s repository na disku")
+        print(repo_last_e)
         write_log(4, repo_last_e, datetime.now())
-    

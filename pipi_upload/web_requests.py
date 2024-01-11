@@ -26,10 +26,10 @@ from log import write_log
 
 
 
-def crm_request_mac ():
-    #mac_address = str (mac_address)
-    payload = {"mac_address":config.mac_address}
+def crm_request_name_by_mac ():
+   
     try:
+        payload = {"mac_address":config.mac_address}
         crm_response = requests.post ("https://crm.api.ceitec.cz/get-equipment-by-mac-address", json = payload)
         crm_data = crm_response.json()
         #print (crm_data)
@@ -47,7 +47,6 @@ def crm_request_mac ():
             #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             
     except Exception as crm_mac_e:
-        
         print("Error in crm_request_mac: " + str(crm_mac_e))
         write_log(5,crm_mac_e,datetime.now())
         LCD_display.display("crm_request_mac E", str(crm_mac_e),"","",True,True,2)

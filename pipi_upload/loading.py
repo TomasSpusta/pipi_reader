@@ -8,11 +8,11 @@ import web_requests
 
 LCD_display.display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=5)
 
-from network_check import network_check
+from connection_check import connection_check
 
 #Check internet connection, acquire IP address and MAC address
 try:
-    network_check ()  
+    connection_check ()  
     
 except Exception as network_error:
     LCD_display.display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 

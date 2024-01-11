@@ -1,74 +1,82 @@
 import gspread
 import config
-import LCD_display
+from LCD_display import display
 
-#spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
+# spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
-#sh_name = config.mac_address
+# sh_name = config.mac_address
+
 
 def open_sh(sh_name):
-    gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
     try:
-        print ("Opening SH")
-        sh = gc.open(sh_name)
-        print ("SH Opened")
-  
-    except Exception as e:
-        print (e)
-        print ("Creating SH")
-        #if spreadsheet does not exist, create one
-        sh = gc.create(sh_name)
-        print ("SH Created")
-        sh.share('n4norfid@gmail.com', perm_type='user', role='writer', notify=True)
-        print ("SH Shared")
-        sh = gc.open(sh_name)
-        print ("SH Opened")
-        
-    ws = sh.sheet1
-    if len (ws.col_values(1)) == 0:
-        prepare_headers(ws)
-    config.log_row = len (ws.col_values(1)) + 1
-    config.sh = sh
+        gc = gspread.service_account(
+            filename="/home/bluebox/pipi_reader/service_account.json"
+        )
+        try:
+            print("Opening SH")
+            sh = gc.open(sh_name)
+            print("SH Opened")
 
-def prepare_headers (ws):
-    print ("Preparing header")
-    ws.update_cell(1,1, "ACCESS")  #message: time stamp, note: none
-    ws.update_cell(1,2, "LAN IP ADDRESS")       #message: ip address, note: timestamp
-    ws.update_cell(1,3, "WLAN IP ADDRESS")      #message: ip address, note: timestamp
-    ws.update_cell(1,4, "GITHUB")               #message: version, note: none
-    ws.update_cell(1,5, "INSTRUMENT")           #message: instrument name, note: timestamp
-    ws.update_cell(1,6, "MAIN SCRIPT")          #message: time stamp, note: none
-    ws.update_cell(1,7, "CARD SWIPE")           #message: time stamp, note: card ID
-    ws.update_cell(1,8, "USER INFO")            #message: time stamp, note: user name + user ID 
-    ws.update_cell(1,9, "TOKEN")                #message: time stamp, note: token OK, token created, ERROR
-    ws.update_cell(1,10, "RECORDING START")     #message: time stamp, note: recording OK, or NOK
-    ws.update_cell(1,11, "RECORDING END")       #message: time stamp, note: recording ended by user
-    print ("Headers prepared")
-  
+        except Exception as e:
+            print(e)
+            print("Creating SH")
+            # if spreadsheet does not exist, create one
+            sh = gc.create(sh_name)
+            print("SH Created")
+            sh.share("n4norfid@gmail.com", perm_type="user", role="writer", notify=True)
+            print("SH Shared")
+            sh = gc.open(sh_name)
+            print("SH Opened")
+
+        ws = sh.sheet1
+        if len(ws.col_values(1)) == 0:
+            prepare_headers(ws)
+        config.log_row = len(ws.col_values(1)) + 1
+        config.sh = sh
+    except Exception as sh_open_e:
+        display("LOG Error", str(sh_open_e), "", "", True, True, 2)
+
+
+def prepare_headers(ws):
+    print("Preparing header")
+    ws.update_cell(1, 1, "ACCESS")  # message: time stamp, note: none
+    ws.update_cell(1, 2, "LAN IP ADDRESS")  # message: ip address, note: timestamp
+    ws.update_cell(1, 3, "WLAN IP ADDRESS")  # message: ip address, note: timestamp
+    ws.update_cell(1, 4, "GITHUB")  # message: version, note: none
+    ws.update_cell(1, 5, "INSTRUMENT")  # message: instrument name, note: timestamp
+    ws.update_cell(1, 6, "MAIN SCRIPT")  # message: time stamp, note: none
+    ws.update_cell(1, 7, "CARD SWIPE")  # message: time stamp, note: card ID
+    ws.update_cell(1, 8, "USER INFO")  # message: time stamp, note: user name + user ID
+    ws.update_cell(1, 9, "TOKEN")  # message: time stamp, note: token OK, token created, ERROR
+    ws.update_cell(1, 10, "RECORDING START")  # message: time stamp, note: recording OK, or NOK
+    ws.update_cell(1, 11, "RECORDING END")  # message: time stamp, note: recording ended by users
+    print("Headers prepared")
+
+
 def write_log(column, log_msg, log_note=None):
-    '''
+    """
     col 1 ACCESS
     col 2 LAN IP
     col 3 WLAN IP
     col 4 GITHUB
     col 5 MAC address
-    '''
+    """
     try:
         ws = config.sh.sheet1
-        print('Writing to SH at column no.' + str (column) )
+        print("Writing to SH at column no." + str(column))
         ws.update_cell(config.log_row, column, str(log_msg))
         if log_note != None:
             note_A1_coordinates = gspread.utils.rowcol_to_a1(config.log_row, column)
-            ws.update_note (note_A1_coordinates,str(log_note))
-        #print('Closing SH')
-       # ws.client.session.close()
-        
-    except Exception as log_error:
-        print (log_error)
-        LCD_display.display ("LOG Error",str(log_error),"" ,"" ,True, True, 2)
+            ws.update_note(note_A1_coordinates, str(log_note))
+        # print('Closing SH')
+    # ws.client.session.close()
 
-    
-'''
+    except Exception as log_error:
+        print(log_error)
+        display("LOG Error", str(log_error), "", "", True, True, 2)
+
+
+"""
 def makeLog (log_info):
     print (log_info)
     sh = open_sh(sheet_name)
@@ -118,4 +126,4 @@ def makeLog (log_info):
     
     print('Closing SH')
     sh.client.session.close()    
-'''  
+"""
