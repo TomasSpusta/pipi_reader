@@ -1,7 +1,7 @@
 from datetime import datetime
 import RPi.GPIO as GPIO
 import time
-import LCD_display
+import lcd_display
 import config
 from web_requests import booking_stop_reservation
 from log import write_log
@@ -28,20 +28,20 @@ def button_callback (button_pin):
     if GPIO.input (button_pin) == GPIO.HIGH:
         print("Button released")
         i = 0   
-        LCD_display.backlight (False)
+        lcd_display.backlight (False)
        
     else:
         print("Button Pressed")
              
         while GPIO.input (button_pin) == GPIO.LOW:
-            LCD_display.backlight(True)
+            lcd_display.backlight(True)
             i += 1
             #LCD_display.write (i*symbol,2)
             button_hold_time = 1.5 #hold time in seconds
             time.sleep (button_hold_time/18)
             if i > 19:
                
-                LCD_display.display ('Session ended','by user',"","", clear=True, backlight_status=True)
+                lcd_display.display ('Session ended','by user',"","", clear=True, backlight_status=True)
                                                      
                 booking_stop_reservation()
                 write_log(11, datetime.now(), "Ended by user")

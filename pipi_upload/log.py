@@ -1,6 +1,6 @@
 import gspread
 import config
-from LCD_display import display
+from lcd_display import display
 
 # spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
@@ -55,11 +55,12 @@ def prepare_headers(ws):
 
 def write_log(column, log_msg, log_note=None):
     """
-    col 1 ACCESS
-    col 2 LAN IP
-    col 3 WLAN IP
-    col 4 GITHUB
-    col 5 MAC address
+    col 1 ACCESS \n
+    col 2 LAN IP \n
+    col 3 WLAN IP \n
+    col 4 GITHUB \n
+    col 5 MAC address \n
+    col 6 Main script start
     """
     try:
         ws = config.sh.sheet1
@@ -75,55 +76,3 @@ def write_log(column, log_msg, log_note=None):
         print(log_error)
         display("LOG Error", str(log_error), "", "", True, True, 2)
 
-
-"""
-def makeLog (log_info):
-    print (log_info)
-    sh = open_sh(sheet_name)
-    #sh = gc.open_by_key(spredsheet_id)
-    #gc = gspread.service_account()
-    
-    now = datetime.datetime.now()
-    
-    try:
-        ws = sh.worksheet(config.mac_address)
-    
-    except Exception as e:
-        print (e)
-        sh.add_worksheet(title=config.mac_address, rows=100, cols=20)
-        ws = sh.worksheet(config.mac_address)
-        ws.update_cell(1,1, "Time stamp" )
-        ws.update_cell(1,2, "IP address" ) 
-        ws.update_cell(1,3, "Equipment"  )
-        ws.update_cell(1,4, "User info" )
-        ws.update_cell(1,5, "User log in" )
-        ws.update_cell(1,6, "User log off" )
-              
-
-    number_of_entries = len (ws.col_values(1))
-    entry_row = number_of_entries + 1 
-    time_col = 1
-    ip_col = 2
-    equip_col = 3
-    user_info_col = 4
-    user_in = 5
-    user_off = 6
-    api_crm_col = 5
-    api_booking_col = 6    
-
-    ws.update_cell(entry_row,time_col, str(now) )
-    ws.update_cell(entry_row,ip_col, str(config.ip_eth0 + " " + config.ip_wlan0))
-    ws.update_cell(entry_row,equip_col, config.equipment_name)
-    
-    
-    if config.in_session == True:
-        ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
-        ws.update_cell(entry_row,user_in, "Logged in")
-        
-    if config.logged_in and (config.in_session == False or config.ended_by_user == True):
-        ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
-        ws.update_cell(entry_row,user_off, "Logged off")
-    
-    print('Closing SH')
-    sh.client.session.close()    
-"""

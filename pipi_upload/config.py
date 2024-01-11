@@ -29,10 +29,11 @@ remaining_time = 0
 files = 0
 warning_sent = False
 
-in_database = False
+in_crm = False
 logged_in = False
 in_session = False
 ended_by_user = False
+#recording_started = ""
 
 status_code = 0
 

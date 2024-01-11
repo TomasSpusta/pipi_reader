@@ -1,11 +1,9 @@
 from datetime import datetime
 import config
-from requests import get
 from getmac import get_mac_address as gma  # module for mac adress
-from LCD_display import display
+from lcd_display import display
 import web_requests
-import time
-import RPi.GPIO as GPIO
+
 import netifaces as ni
 from log import write_log, open_sh
 

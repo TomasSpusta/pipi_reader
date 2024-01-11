@@ -1,12 +1,12 @@
 from datetime import datetime
-import LCD_display
+import lcd_display
 from time import sleep
 import config
 import web_requests
 
 
 
-LCD_display.display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=5)
+lcd_display.display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=5)
 
 from connection_check import connection_check
 
@@ -15,7 +15,7 @@ try:
     connection_check ()  
     
 except Exception as network_error:
-    LCD_display.display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
+    lcd_display.display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
 
 if config.online_status == True :
 
@@ -26,16 +26,16 @@ if config.online_status == True :
         github_check (branch = "develop_logs")    
     except Exception as github_error:
         print (github_error)
-        LCD_display.display ("Repository error", github_error,"" ,"",clear=True, backlight_status=True,sleep=2) 
+        lcd_display.display ("Repository error", github_error,"" ,"",clear=True, backlight_status=True,sleep=2) 
     sleep(3)
 
     try:
-        LCD_display.display ("Loading program","","" ,"",clear=True, backlight_status=True, sleep=3)
+        lcd_display.display ("Loading program","","" ,"",clear=True, backlight_status=True, sleep=3)
         web_requests.loadTokenData()
         import pipi_reader_main
     except Exception as pipi_reader_main_Error:
-        LCD_display.display ("Main program error",pipi_reader_main_Error,"" ,"",clear=True, backlight_status=True)    
+        lcd_display.display ("Main program error",pipi_reader_main_Error,"" ,"",clear=True, backlight_status=True)    
         print (pipi_reader_main_Error)
         
 else:
-    LCD_display.display ("No internet"," connection.","Please check cable" ,"Please check wifi" ,True, True, 2) 
+    lcd_display.display ("No internet"," connection.","Please check cable" ,"Please check wifi" ,True, True, 2) 

@@ -1,4 +1,4 @@
-from LCD_display import display, clear
+from lcd_display import display, clear
 import netifaces as ni
 from time import sleep
 

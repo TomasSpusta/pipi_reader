@@ -1,4 +1,3 @@
-# Main Pipi reader file
 '''
 1. Check internet connection, obtain IP and MAC address => internet module
 2. Check and obtain equipment_id and equipment_name from CRM via MAC address
@@ -15,36 +14,31 @@
 
 '''
 
-
-#Import section
 import datetime as dt
-import faulthandler
 import RPi.GPIO as GPIO
 import time
-import LCD_display
+from lcd_display import display, waiting
 from log import write_log
-
+from rfid_reader import card_reader
+import session
+import config
 
 try:
-    faulthandler.enable ()
-    from card_reader import card_reader
-    import session
-    
-    time.sleep (1)
-    LCD_display.display ("Main starting","","" ,"",clear=True, backlight_status=True) 
+
+    display ("Main starting","","" ,"") 
     write_log(6, dt.datetime.now())
     time.sleep (1)
        
     while 1:
         try:
             #initial waiting screen
-            LCD_display.LCD_waiting()
+            waiting ()
             
             #Wait for the card swipe 
             card_reader ()
-            LCD_display.display("Card Scanned","","","",True,True,2)
+            display("Card Scanned","","","")
             
-            #check if user is in the RFID database
+            #check if user is in the CRM database
             session.user_check ()
                        
             #check if the user has reservation on the equipment

@@ -5,7 +5,7 @@
 from datetime import datetime
 import time
 import RPi.GPIO as GPIO
-import LCD_display
+from lcd_display import display
 import web_requests
 import config
 import button
@@ -14,50 +14,45 @@ from log import write_log
 
 def user_check ():
 
-    LCD_display.display ("User check","","" ,"",True, True, sleep=2) 
-
-    web_requests.crm_request_rfid()
-    if config.in_database == False:
-        # If card ID is not it the internal database, LCD displays the error 
-        LCD_display.not_in_database() 
-    else:
-
-        LCD_display.display ("User check.","User in database.","" ,"",True, True, sleep=2)
-        print ('User in RFID CRM database')
-        
+    display ("User check","","" ,"") 
+    web_requests.crm_request_user_by_rfid()
+    
+   
     
 def reservation_check ():
 
-    LCD_display.display ("Reservation check","","" ,"",True, True, sleep=2) 
+    display ("Reservation check","","" ,"",True, True, sleep=2) 
 
-    if config.in_database == True:
-        config.status_code = web_requests.booking_request_start_measurement()
-        print ("Status code from booking: " + str(config.status_code))  
+    if config.in_crm == True:
+        status_code = web_requests.booking_request_start_recording()
+        print ("Status code from booking: " + str(status_code))  
         
         if config.logged_in == False:
         # Display error notifications, when booking error occures
-            if config.status_code == 400:
+            if status_code == 400:
                 LCD_display.booking_400 ()
-            elif config.status_code == 404:
+            elif status_code == 404:
                 LCD_display.booking_404 ()
-            elif config.status_code == 500:
+            elif status_code == 500:
                 LCD_display.booking_500 ()  
             
         #User has reservation on the machine in appropriate time window
         else:   
         #after succesfull login display will show ("you are logged in as _user name_")
-            if config.status_code == 200:
+            if status_code == 200:
                 #LCD_display.booking_200 ()
                 print ("Recording started")
                 LCD_display.booking_409_init ()
-            elif config.status_code == 409:
+            elif status_code == 409:
                 LCD_display.booking_409_init ()
             print("Recording ID: " + str(config.recording_id))
             print("Reservation ID: " + str(config.reservation_id))
+    else:
+        
 
 def session_recording (refresh_rate = 5):
     
-    if config.in_database == True and config.logged_in == True:
+    if config.in_crm == True and config.logged_in == True:
         
           
         button.ending_reservation() #start the script which will monitor "STOP SESSION" button

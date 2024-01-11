@@ -48,6 +48,7 @@ def write (text, row):
 def version ():
     display ("","Version:",config.git_release,"",clear=True, backlight_status=True)
 
+'''
 def LCD_init (ip, mac):
     lcd.backlight_enabled = True
     lcd.clear() #clear the display
@@ -59,8 +60,10 @@ def LCD_init (ip, mac):
         write (ip, 2) # otherwise display IP adress
     write ("MAC adress:",3) # display MAC adress
     write (mac,4)
+'''
     
-def LCD_waiting ():
+    
+def waiting ():
     config.logged_in = False
     display ("Welcome on ", config.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
     
@@ -69,7 +72,7 @@ def not_in_database ():
     #user card is not in internal database, need to contact user office
     display ("Your card","is not in database.","Please register it","in booking system.",clear=True, backlight_status=True)
     time.sleep (5)
-    LCD_waiting()
+    waiting()
     
 def booking_200 ():
     display ("Hi",config.user_name,"Recording started","Happy hunting!",clear=True, backlight_status=True)
@@ -89,19 +92,19 @@ def booking_409_recording ():
 def booking_400 ():
     display ("Hi",str(config.user_name),"Invalid booking","parameters.",clear=True,backlight_status=True)
     time.sleep (5)
-    LCD_waiting()
+    waiting()
 
 def booking_404 ():
     #display ("Hi",str(config.user_name),"No future bookings.","Please make one.",clear=True,backlight_status=True)
     #display("No future bookings", "of yours", "in next 30 minutes.", "Please make one.", clear=True, backlight_status=True)
     display("You have no", "future bookings", "in next 30 minutes.", "Please make one.", clear=True, backlight_status=True)
     time.sleep (5)
-    LCD_waiting() 
+    waiting() 
     
 def booking_500 ():
     display ("Hi",str(config.user_name),"Internal ERROR.","Try to log in again.",clear=True,backlight_status=True)
     time.sleep (5)
-    LCD_waiting()
+    waiting()
     
 def in_database ():
     #user card is in internal database
