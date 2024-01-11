@@ -5,15 +5,17 @@ import config
 #initialize the LCD display, (expander chip, port)
 lcd = CharLCD('PCF8574', 0x27)
 
-#write to display:
-    #lcd.write_string('Hello\r\n  World!')
-    #lcd.write_string('Raspberry Pi HD44780')
-    #lcd.cursor_pos = (2, 0) => (row, column)
-    #lcd.write_string('https://github.com/\n\rdbrgn/RPLCD')
-#Backlight control:
-    #lcd.backlight_enabled = True/False
-#Clear display:
-    #lcd.clear()
+'''
+write to display:
+    lcd.write_string('Hello\r\n  World!')
+    lcd.write_string('Raspberry Pi HD44780')
+    lcd.cursor_pos = (2, 0) => (row, column)
+    lcd.write_string('https://github.com/\n\rdbrgn/RPLCD')
+Backlight control:
+    lcd.backlight_enabled = True/False
+Clear display:
+    lcd.clear()
+'''
 
 def backlight (status=True):
     lcd.backlight_enabled = status
@@ -45,8 +47,7 @@ def write (text, row):
     lcd.cursor_pos = (row-1, 0)
     lcd.write_string (text)
 
-def version ():
-    display ("","Version:",config.git_release,"",clear=True, backlight_status=True)
+
 
 '''
 def LCD_init (ip, mac):
@@ -64,30 +65,34 @@ def LCD_init (ip, mac):
     
     
 def waiting ():
-    config.logged_in = False
+    config.recording_started = False
     display ("Welcome on ", config.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
     
+'''  
+def version ():
+    display ("","Version:",config.git_release,"",clear=True, backlight_status=True)
+
 
 def not_in_database ():
     #user card is not in internal database, need to contact user office
     display ("Your card","is not in database.","Please register it","in booking system.",clear=True, backlight_status=True)
     time.sleep (5)
     waiting()
-    
+
+
 def booking_200 ():
     display ("Hi",config.user_name,"Recording started","Happy hunting!",clear=True, backlight_status=True)
     #time.sleep(5)
     
-
+ 
 def booking_409_init ():
     display ("Recording is running", "To stop it", "hold the button","for 3 seconds", clear=True, backlight_status=True)
     #time.sleep (5)
     #lcd.clear()
-    
-
+      
 def booking_409_recording (): 
     display("Remaining time:", str(config.remaining_time) + " min", "Number of files:", str(config.files) + " files", clear=True, backlight_status=False)
-    
+ 
 
 def booking_400 ():
     display ("Hi",str(config.user_name),"Invalid booking","parameters.",clear=True,backlight_status=True)
@@ -101,11 +106,12 @@ def booking_404 ():
     time.sleep (5)
     waiting() 
     
+
 def booking_500 ():
     display ("Hi",str(config.user_name),"Internal ERROR.","Try to log in again.",clear=True,backlight_status=True)
     time.sleep (5)
     waiting()
-    
+
 def in_database ():
     #user card is in internal database
     display ("Hi",str(config.user_name),"Recording started.","Happy hunting!",clear=True,backlight_status=True)   
@@ -117,3 +123,4 @@ def about_to_end_w (): ### Dodelat, aby ukazoval session is about to end a blika
 
 def session_ended ():
     display ("Hi",str(config.user_name),"Your session ended.","See you next time.",clear=True,backlight_status=True)  
+'''

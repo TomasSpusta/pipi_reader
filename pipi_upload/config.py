@@ -30,7 +30,7 @@ files = 0
 warning_sent = False
 
 in_crm = False
-logged_in = False
+recording_started = False
 in_session = False
 ended_by_user = False
 #recording_started = ""

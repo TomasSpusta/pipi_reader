@@ -5,7 +5,7 @@
 from datetime import datetime
 import time
 import RPi.GPIO as GPIO
-from lcd_display import display
+from lcd_display import display, waiting, flashing
 import web_requests
 import config
 import button
@@ -19,7 +19,7 @@ def user_check ():
     
    
     
-def reservation_check ():
+def start_recording ():
 
     display ("Reservation check","","" ,"",True, True, sleep=2) 
 
@@ -27,35 +27,40 @@ def reservation_check ():
         status_code = web_requests.booking_request_start_recording()
         print ("Status code from booking: " + str(status_code))  
         
-        if config.logged_in == False:
+        if config.recording_started == False:
         # Display error notifications, when booking error occures
             if status_code == 400:
-                LCD_display.booking_400 ()
+                display ("Hi",str(config.user_name),"Invalid booking","parameters.",True,True,5)
             elif status_code == 404:
-                LCD_display.booking_404 ()
+                display("You have no", "future bookings", "in next 30 minutes.", "Please make one.", True, True,5)
             elif status_code == 500:
-                LCD_display.booking_500 ()  
+                display ("Hi",str(config.user_name),"Internal ERROR.","Try to log in again.",True,True,5)
+        #waiting() !!! uvidime jak to bude fungovat bez tohoto
             
         #User has reservation on the machine in appropriate time window
         else:   
         #after succesfull login display will show ("you are logged in as _user name_")
+            display ("Hi",config.user_name,"Recording started"," or is running",True, True, 2)
+            display ("To stop it", "hold the button","for 3 seconds","", True, True,2)
+            
+            '''
             if status_code == 200:
                 #LCD_display.booking_200 ()
                 print ("Recording started")
                 LCD_display.booking_409_init ()
             elif status_code == 409:
-                LCD_display.booking_409_init ()
+                LCD_display.booking_409_init ()'''
             print("Recording ID: " + str(config.recording_id))
             print("Reservation ID: " + str(config.reservation_id))
-    else:
+    
         
 
 def session_recording (refresh_rate = 5):
     
-    if config.in_crm == True and config.logged_in == True:
+    if config.in_crm == True and config.recording_started == True:
         
           
-        button.ending_reservation() #start the script which will monitor "STOP SESSION" button
+        button.end_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
         
         #Loop checking and updating session information - remaining time, number of files
@@ -69,20 +74,22 @@ def session_recording (refresh_rate = 5):
             #print ("session loop")
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
-            LCD_display.booking_409_recording ()          
+            display("Remaining time:", str(config.remaining_time) + " min", "Number of files:", str(config.files) + " files", clear=True, backlight_status=False)         
      
             #print ("Status code from booking during session: " + str(config.status_code))  
             if (0 < config.remaining_time < 6) and config.warning_sent == False:
                 # Session about to end warning at 5-minute mark 
                 config.warning_sent = True
-                LCD_display.about_to_end_w ()  
+                display (str(config.user_name),"Your session","is about to end","in " + str(config.remaining_time) + " minutes.", clear=True,backlight_status=True)
+                flashing(0.3, 5) 
+                display("Remaining time:", str(config.remaining_time) + " min", "Number of files:", str(config.files) + " files", clear=True, backlight_status=False)
         else :
-            web_requests.booking_stop_reservation ()
-            write_log(11, datetime.now(), "Ended by time")
+            web_requests.booking_stop_recording ()
+            
         
   
 def session_end ():
-    if config.logged_in == True:
+    if config.recording_started == True:
         print ("Ending session")
         config.in_session = False
        
@@ -90,18 +97,16 @@ def session_end ():
         try:
             button.button_deactivated ()
             time.sleep (1)
-        except Exception as button_e:
-            print (button_e)
+        except Exception as button_deactivation_e:
+            print (button_deactivation_e)
             
         
-        LCD_display.session_ended()        
-        time.sleep (3)
+        display ("Hi",str(config.user_name),"Your session ended.","See you next time.",True,True,3)
                     
         print ("Clearing states")     
-        config.ended_by_user = False   
-        
+        config.ended_by_user = False          
         config.warning_sent = False
-        config.logged_in = False
+        config.recording_started = False
         # GPIO.cleanup(config.button_pin) # it is necessary to figure out how the button pin reacts on cleaning
         print ("Recording ended")     
         time.sleep(1)

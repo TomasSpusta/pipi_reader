@@ -1,9 +1,9 @@
 from datetime import datetime
 import RPi.GPIO as GPIO
 import time
-import lcd_display
+from lcd_display import display, backlight
 import config
-from web_requests import booking_stop_reservation
+from web_requests import booking_stop_recording
 from log import write_log
 
 
@@ -11,7 +11,7 @@ from log import write_log
 GPIO.setup(config.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
-def ending_reservation ():
+def end_reservation ():
     #Function dealing with exding the reseravation after button is pushed for 2 seconds
     print ("Button activated")  
     GPIO.add_event_detect(config.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
@@ -28,26 +28,24 @@ def button_callback (button_pin):
     if GPIO.input (button_pin) == GPIO.HIGH:
         print("Button released")
         i = 0   
-        lcd_display.backlight (False)
+        backlight (False)
        
     else:
         print("Button Pressed")
              
         while GPIO.input (button_pin) == GPIO.LOW:
-            lcd_display.backlight(True)
+            backlight(True)
             i += 1
-            #LCD_display.write (i*symbol,2)
+
             button_hold_time = 1.5 #hold time in seconds
             time.sleep (button_hold_time/18)
             if i > 19:
                
-                lcd_display.display ('Session ended','by user',"","", clear=True, backlight_status=True)
+                display ('Session ended','by user',"","", clear=True, backlight_status=True)
                                                      
-                booking_stop_reservation()
+                booking_stop_recording()
                 write_log(11, datetime.now(), "Ended by user")
                 config.ended_by_user = True
                 time.sleep (2)
-                #button_deactivated ()
-                #time.sleep (2)
-                #LCD_display.session_ended ()
+
                 

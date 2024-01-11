@@ -17,7 +17,7 @@
 import datetime as dt
 import RPi.GPIO as GPIO
 import time
-from lcd_display import display, waiting
+from lcd_display import display, waiting, backlight, clear
 from log import write_log
 from rfid_reader import card_reader
 import session
@@ -43,7 +43,7 @@ try:
                        
             #check if the user has reservation on the equipment
             #in appropriate time window and start recording
-            session.reservation_check ()
+            session.start_recording ()
             
             #every X seconds check the remaining time of session and number of acquired files
             session.session_recording (refresh_rate= 5)
@@ -54,16 +54,16 @@ try:
         
         except Exception as main_while_error:
             print("Error in main while code: " + str(main_while_error))
-            LCD_display.display("Main while error", str(main_while_error),"","",True,True,2)
+            display("Main while error", str(main_while_error),"","",True,True,2)
 
 except Exception as main_code_error:
     print("Error in main code: " + str(main_code_error))
-    LCD_display.display("Main code error", str(main_code_error), "", "", True,True,2)
+    display("Main code error", str(main_code_error), "", "", True,True,2)
 
 except KeyboardInterrupt:
     print("CTRL + V pressed, script ended in pipi_reader script")
     time.sleep (0.5)
-    LCD_display.backlight (False)
-    LCD_display.clear ()        
+    backlight (False)
+    clear ()        
     GPIO.cleanup ()
     

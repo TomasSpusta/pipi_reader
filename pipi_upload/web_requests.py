@@ -84,7 +84,7 @@ def booking_request_start_recording ():
         print(booking_response.text)
                
         if booking_response.status_code == 200:
-            config.logged_in = True
+            config.recording_started = True
             config.in_session = True
            
             booking_data = booking_response.json()
@@ -98,7 +98,7 @@ def booking_request_start_recording ():
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
         elif booking_response.status_code == 400 or 404 or 500:
-            config.logged_in = False
+            config.recording_started = False
             write_log(10, datetime.now(), booking_response.text)
             #print ("400 - Invalid input parameters")     
                 
@@ -133,7 +133,7 @@ def booking_request_files ():
         booking_response = requests.get ("https://booking.ceitec.cz/api/recording/" + str(config.recording_id) + "/file-info", headers = headers)
      
         #print (booking_response.status_code)
-        if booking_response.status_code == 200 or 409:
+        if booking_response.status_code == 200:
             booking_data = booking_response.json()
             #print (booking_data)
             #print ("Number of data files: " + str(booking_data["count"]))
@@ -167,33 +167,22 @@ def booking_reservation_info ():
         
         
 
-def booking_stop_reservation ():
+def booking_stop_recording ():
     payload = {"serviceAppointmentId":config.reservation_id, "equipmentId":config.equipment_id}
     headers = {"Authorization" : "Bearer " + config.token}
-    try:
-        
-        #requests.get ("https://booking.ceitec.cz/api-public/recording/stop-by-reservation-equipment/?reservation={}&equipment={}". format (str(config.reservation_id),str(config.equipment_id)))  
-        
+    try:      
         booking_response = requests.post ("https://booking.ceitec.cz/api/recording/stop",json=payload,headers=headers)  
-    
         print (booking_response.status_code)
-        
-        #booking_data = booking_response.json()
-        #print (booking_data)
-        #print ("409 - Recording is running")
-        #config.remaining_time = int (booking_data["timetoend"])
-        #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
+        write_log(11, datetime.now(), "Ended by time")
         
     except Exception as stop_res_e:
         print("Error in booking_stop_reservation: " + str(stop_res_e))
-        
         display("stop_res E", str(stop_res_e),"","",True,True,2)
         write_log(11, datetime.now(), stop_res_e)
          
 def loadTokenData ():
     print("Loading token data")
     try:
-        
         f = open (config.token_address, "r").readlines()
         expiration = f[0][:-1]
         tokenString = f[1]
