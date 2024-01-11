@@ -56,9 +56,9 @@ def crm_request_mac ():
 def crm_request_rfid ():
     #scanned_rfid = str (scanned_rfid)
     config.log_row += 1 
-    write_log(1,datetime.now())
     print ("------------------------CARD SWIPE------------------------")
-    
+    write_log(1,datetime.now())
+        
     payload = {"rfid":config.card_id}
     
     try:
@@ -301,4 +301,4 @@ def checkToken():
         LCD_display.display("Check Token E", str(check_token_e),"","",True,True,2)
         write_log(9, datetime.now(), check_token_e)
 
-#loadTokenData()
+

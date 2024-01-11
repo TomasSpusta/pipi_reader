@@ -58,6 +58,7 @@ def git_update (local_repo):
         print ("Problem s repository na disku")
         print (repo_e)
         write_log(4, repo_e, datetime.now())
+        LCD_display.display ("Repo check","Repo Update ERROR", repo_e ,"",clear=True, backlight_status=True, sleep=1)
 
 
 def git_last_change (local_repo):

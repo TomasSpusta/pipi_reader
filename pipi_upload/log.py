@@ -1,11 +1,6 @@
-
-
 import gspread
 import config
 import LCD_display
-
-
-
 
 #spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
