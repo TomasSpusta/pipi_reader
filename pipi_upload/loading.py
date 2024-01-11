@@ -9,7 +9,7 @@ from github_check import ghub_check
 
 
 
-display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=2)
+
 
 #Check internet connection, acquire IP address and MAC address
 try:
@@ -20,8 +20,7 @@ except Exception as network_error:
     display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
 
 
-
-
+display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=2)
 if config.online_status == True :
     ghub_check("develop_cleaning")
     

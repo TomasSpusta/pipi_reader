@@ -207,7 +207,7 @@ def getToken ():
         token = token_request.json()["accessToken"]
         
         print ("New token created")
-        write_log(9, datetime.now(), token_expiration)
+        write_log(9, datetime.now(), "Token will expire: \n" + token_expiration)
         print ("Saving token data")
         
         
