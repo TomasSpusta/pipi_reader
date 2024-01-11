@@ -23,47 +23,48 @@ from rfid_reader import card_reader
 import session
 import config
 
-try:
+def main ():
+    try:
 
-    display ("Main starting","","" ,"") 
-    write_log(6, dt.datetime.now())
-    time.sleep (1)
-       
-    while 1:
-        try:
-            #initial waiting screen
-            waiting ()
-            
-            #Wait for the card swipe 
-            card_reader ()
-            display("Card Scanned","","","")
-            
-            #check if user is in the CRM database
-            session.user_check ()
-                       
-            #check if the user has reservation on the equipment
-            #in appropriate time window and start recording
-            session.start_recording ()
-            
-            #every X seconds check the remaining time of session and number of acquired files
-            session.session_recording (refresh_rate= 5)
-                       
-            # when session ends reset variables for new user
-            session.session_end ()
-            
+        display ("Main starting","","" ,"") 
+        write_log(6, dt.datetime.now())
+        time.sleep (1)
         
-        except Exception as main_while_error:
-            print("Error in main while code: " + str(main_while_error))
-            display("Main while error", str(main_while_error),"","",True,True,2)
+        while 1:
+            try:
+                #initial waiting screen
+                waiting ()
+                
+                #Wait for the card swipe 
+                card_reader ()
+                display("Card Scanned","","","")
+                
+                #check if user is in the CRM database
+                session.user_check ()
+                        
+                #check if the user has reservation on the equipment
+                #in appropriate time window and start recording
+                session.start_recording ()
+                
+                #every X seconds check the remaining time of session and number of acquired files
+                session.session_recording (refresh_rate= 5)
+                        
+                # when session ends reset variables for new user
+                session.session_end ()
+                
+            
+            except Exception as main_while_error:
+                print("Error in main while code: " + str(main_while_error))
+                display("Main while error", str(main_while_error),"","",True,True,2)
 
-except Exception as main_code_error:
-    print("Error in main code: " + str(main_code_error))
-    display("Main code error", str(main_code_error), "", "", True,True,2)
+    except Exception as main_code_error:
+        print("Error in main code: " + str(main_code_error))
+        display("Main code error", str(main_code_error), "", "", True,True,2)
 
-except KeyboardInterrupt:
-    print("CTRL + V pressed, script ended in pipi_reader script")
-    time.sleep (0.5)
-    backlight (False)
-    clear ()        
-    GPIO.cleanup ()
+    except KeyboardInterrupt:
+        print("CTRL + V pressed, script ended in pipi_reader script")
+        time.sleep (0.5)
+        backlight (False)
+        clear ()        
+        GPIO.cleanup ()
     

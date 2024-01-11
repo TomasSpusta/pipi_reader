@@ -5,12 +5,12 @@
 from datetime import datetime
 import requests
 import git
-import lcd_display
+from lcd_display import display
 from log import write_log
 
 
 def ghub_check(branch):
-    lcd_display.display(
+    display(
         "Repo check", "", "", "", clear=True, backlight_status=True, sleep=1
     )
 
@@ -36,7 +36,7 @@ def ghub_check(branch):
     last_change = git_last_change(local_repo)
     current_version = git_version()
 
-    lcd_display.display(
+    display(
         "Repo check",
         "Repo updated",
         current_version,
@@ -68,31 +68,14 @@ def git_update(local_repo):
         repo = git.Repo(local_repo)
         repo.git.reset("--hard")
         repo.remotes.origin.pull()
-        lcd_display.display(
-            "Repo check",
-            "Repo updated",
-            "",
-            "",
-            clear=True,
-            backlight_status=True,
-            sleep=1,
-        )
+        display("Repo check","Repo updated","","",True,True,2)
         print("Update finished")
 
     except Exception as repo_e:
         print("Problem s repository na disku")
         print(repo_e)
         write_log(4, repo_e, datetime.now())
-        lcd_display.display(
-            "Repo check",
-            "Repo Update ERROR",
-            repo_e,
-            "",
-            clear=True,
-            backlight_status=True,
-            sleep=1,
-        )
-
+        display("Repo check","Repo Update ERROR",repo_e,"",True,True,2)
 
 def git_last_change(local_repo):
     try:
