@@ -1,21 +1,24 @@
 from datetime import datetime
-import lcd_display
+from lcd_display import display
 from time import sleep
 import config
 import web_requests
+from network_check import connection_check
 
 
 
-lcd_display.display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=5)
-
-from connection_check import connection_check
+display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=5)
 
 #Check internet connection, acquire IP address and MAC address
 try:
     connection_check ()  
+    config.online_status = True
     
 except Exception as network_error:
-    lcd_display.display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
+    display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
+
+'''
+
 
 if config.online_status == True :
 
@@ -39,3 +42,4 @@ if config.online_status == True :
         
 else:
     lcd_display.display ("No internet"," connection.","Please check cable" ,"Please check wifi" ,True, True, 2) 
+'''
