@@ -22,12 +22,12 @@ def connection_check():
 
     # Send request to CRM to obtain equipment info according to MAC address
     web_requests.crm_request_name_by_mac()
-
+    '''
     if config.ip_eth0 != 0:
         display ("IP:",config.ip_eth0,"MAC:",config.mac_address)
     else:
         display ("IP:",config.ip_wlan0,"MAC:",config.mac_address)
-
+    '''
     print("Equipment name: " + str(config.equipment_name))
     print("Equipment ID: " + str(config.equipment_id))
 
