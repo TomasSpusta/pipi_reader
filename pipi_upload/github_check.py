@@ -36,19 +36,8 @@ def ghub_check(branch):
     last_change = git_last_change(local_repo)
     current_version = git_version()
 
-    display(
-        "Repo check",
-        "Repo updated",
-        current_version,
-        last_change,
-        clear=True,
-        backlight_status=True,
-        sleep=2,
-    )
-    log_note = "Update finished. \nVersion: %s \nLast change: %s" % (
-        current_version,
-        last_change,
-    )
+    display("Repo check","Repo updated",current_version,last_change,clear=True,backlight_status=True,sleep=2,   )
+    log_note = "Update finished. \nVersion: %s \nLast change: %s" % (current_version,last_change,)
     write_log(4, datetime.now(), log_note)
 
 

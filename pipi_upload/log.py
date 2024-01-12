@@ -60,7 +60,10 @@ def write_log(column, log_msg, log_note=None):
     col 3 WLAN IP \n
     col 4 GITHUB \n
     col 5 MAC address \n
-    col 6 Main script start
+    col 6 Main script start \n
+    col 7 CARD SWIPE \n
+    col 8 USER INFO \n
+    col 9 TOKEN \n
     """
     try:
         ws = config.sh.sheet1
