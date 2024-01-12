@@ -189,10 +189,10 @@ def loadTokenData ():
         config.token_expiration = expiration
         config.token = tokenString
         print("Token data loaded")
-        write_log(10,"Token loaded" ,datetime.now())
+        write_log(9,"Token loaded\n Token will expire: \n" + expiration ,datetime.now())
     except Exception as load_token_e:
         display("Load Token E", str(load_token_e),"","",True,True,2)
-        write_log(10, datetime.now(), load_token_e)
+        write_log(9, datetime.now(), load_token_e)
         print (load_token_e)
         
     
