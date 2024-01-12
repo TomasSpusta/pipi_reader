@@ -25,7 +25,7 @@ if config.online_status == True :
     ghub_check("develop_cleaning")
     
     display ("Loading program","","" ,"",True,True, 2)
-    web_requests.loadTokenData()
+    
     main ()
     
     '''

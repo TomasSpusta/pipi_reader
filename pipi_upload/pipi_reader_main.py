@@ -22,10 +22,11 @@ from log import write_log
 from rfid_reader import card_reader
 import session
 import config
+import web_requests
 
 def main ():
     try:
-
+        web_requests.loadTokenData()
         display ("Main starting","","" ,"") 
         write_log(6, dt.datetime.now())
         time.sleep (1)
