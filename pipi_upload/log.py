@@ -67,8 +67,8 @@ def write_log(column, log_msg, log_note=None):
     col 9 TOKEN \n
     """
     try:
-        sh = glob_vars.sh
-        ws = sh.sheet1
+        ws = glob_vars.sh
+        
         print("Writing to SH at column no." + str(column))
         ws.update_cell(glob_vars.log_row, column, str(log_msg))
         if log_note != None:
