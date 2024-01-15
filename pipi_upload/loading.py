@@ -6,7 +6,8 @@ import glob_vars
 from network_check import connection_check
 from pipi_reader_main import main
 
-
+print ("marker1")
+from log import open_sh, write_log
 
 
 
@@ -22,8 +23,7 @@ except Exception as network_error:
 
 display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=2)
 if glob_vars.online_status == True :
-    print ("marker1")
-    from log import open_sh, write_log
+    
     display ("Loading program","","" ,"",True,True, 2)
     
     print ("marker2")
