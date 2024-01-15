@@ -5,7 +5,7 @@ from lcd_display import display
 import web_requests
 
 import netifaces as ni
-from log import write_log, open_sh
+#from log import write_log, open_sh
 from log_temp import write_log_temp
 
 
