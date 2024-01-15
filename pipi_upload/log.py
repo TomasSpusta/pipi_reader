@@ -32,7 +32,7 @@ def open_sh(sh_name):
             prepare_headers(ws)
         glob_vars.log_row = len(ws.col_values(1)) + 1
         glob_vars.sh = sh
-        print (type(sh))
+        #print (type(sh))
     except Exception as sh_open_e:
         print("Open SH LOG Error: " + str(sh_open_e))
         display("LOG Error", str(sh_open_e), "", "", True, True, 2)

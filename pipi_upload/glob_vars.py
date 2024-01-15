@@ -1,3 +1,5 @@
+import gspread
+
 token_expiration = ""
 token = ""
 token_address = "/home/bluebox/pipi_reader/pipi_upload/tokenData.txt"
@@ -5,7 +7,7 @@ token_address = "/home/bluebox/pipi_reader/pipi_upload/tokenData.txt"
 
 #headers = {"Authorization" : "Bearer " + token}
 
-sh = ""
+sh : gspread.spreadsheet.Spreadsheet = ""
 log_row = 0
 
 online_status = False
