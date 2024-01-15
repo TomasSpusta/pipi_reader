@@ -1,7 +1,7 @@
 import gspread
 import glob_vars
 from lcd_display import display
-import os
+
 
 # spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 

@@ -1,11 +1,12 @@
 from datetime import datetime
 from lcd_display import display
-from time import sleep
+
 import glob_vars
-import web_requests
+
 from network_check import connection_check
 from pipi_reader_main import main
-from github_check import ghub_check
+
+print ("marker1")
 from log import open_sh, write_log
 
 
@@ -24,6 +25,7 @@ display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_statu
 if glob_vars.online_status == True :
     display ("Loading program","","" ,"",True,True, 2)
     
+    print ("marker2")
     open_sh(glob_vars.mac_address)   
     write_log(1, datetime.now())
     write_log(2, glob_vars.ip_eth0, datetime.now())
