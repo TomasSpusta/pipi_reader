@@ -10,7 +10,7 @@ log_row = 0
 
 online_status = False
 
-mac_address = " "
+mac_address = ""
 
 git_release = ""
 

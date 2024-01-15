@@ -62,11 +62,12 @@ def get_ip():
 
 def get_mac_address ():
     try:
-        glob_vars.mac_address = gma()  # get MAC address
-        print("My MAC adress is: {}".format(glob_vars.mac_address))
-        write_log_temp ("MAC address: " + glob_vars.mac_address)
+        mac_address = gma()  # get MAC address
+        print("My MAC adress is: {}".format(mac_address))
+        write_log_temp ("MAC address: " + mac_address)
+        return mac_address
+
     
     except Exception as mac_e:
         write_log_temp ("Get MAC error: " + str(mac_e))
-        print(mac_e)
-        print("Problem with MAC address")
+        print("Get MAC error: " + str(mac_e))
