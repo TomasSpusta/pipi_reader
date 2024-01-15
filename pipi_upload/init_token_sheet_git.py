@@ -12,11 +12,11 @@ import os
 #config = ConfigParser()
 
 git_update ("/home/bluebox/pipi_reader")
-sleep (1)
+#sleep (1)
 get_mac_address ()
-sleep (1)
+#sleep (1)
 get_token ()
-sleep (1)
+#sleep (1)
 
 
 print (os.environ["MAC_ADDRESS"])
