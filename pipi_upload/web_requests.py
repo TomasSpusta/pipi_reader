@@ -1,5 +1,5 @@
 import requests
-import config
+import globals
 import unidecode
 from datetime import datetime
 from lcd_display import display
@@ -10,7 +10,7 @@ from log_temp import write_log_temp
 def crm_request_name_by_mac ():
    
     try:
-        payload = {"mac_address":config.mac_address}
+        payload = {"mac_address":globals.mac_address}
         crm_response = requests.post ("https://crm.api.ceitec.cz/get-equipment-by-mac-address", json = payload)
         crm_data = crm_response.json()
         #print (crm_data)
@@ -21,9 +21,9 @@ def crm_request_name_by_mac ():
             #if len(data) == 0 that means that something is wrong with mac address or equipment
             
         else:          
-            config.equipment_name = crm_data[0]["alias"]
-            config.equipment_id = crm_data[0]["equipmentid"]
-            write_log(5,config.equipment_name,datetime.now())
+            globals.equipment_name = crm_data[0]["alias"]
+            globals.equipment_id = crm_data[0]["equipmentid"]
+            write_log(5,globals.equipment_name,datetime.now())
             
             #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             
@@ -35,11 +35,11 @@ def crm_request_name_by_mac ():
         
 def crm_request_user_by_rfid ():
     
-    config.log_row += 1 
+    globals.log_row += 1 
     print ("------------------------CARD SWIPE------------------------")
     write_log(1,datetime.now())
         
-    payload = {"rfid":config.card_id}
+    payload = {"rfid":globals.card_id}
     
     try:
         crm_response = requests.post ("https://crm.api.ceitec.cz/get-contact-by-rfid", json = payload)
@@ -47,19 +47,19 @@ def crm_request_user_by_rfid ():
         
         #if len(data) == 0 that means that rfid number is not in database
         if len (crm_data) == 0:
-            config.in_crm = False
+            globals.in_crm = False
             print ("Problem with ID card, not in database")
-            write_log(8,datetime.now(), config.card_id)
+            write_log(8,datetime.now(), globals.card_id)
             display ("Your card","is not in database.","Please register it","in booking system.",True, True,5)
             
         else:          
-            config.in_crm = True
+            globals.in_crm = True
             user_name = crm_data[0]["firstname"]
             #config.user_full_name = crm_data[0]["full_name"]
-            config.user_name = unidecode.unidecode (user_name)
-            config.user_id = crm_data[0]["contactid"]
-            write_log(8,config.user_name +" "+  config.user_id,datetime.now())
-            print ("User ID is {} and User's first name is {}" .format(config.user_id, config.user_name))
+            globals.user_name = unidecode.unidecode (user_name)
+            globals.user_id = crm_data[0]["contactid"]
+            write_log(8,globals.user_name +" "+  globals.user_id,datetime.now())
+            print ("User ID is {} and User's first name is {}" .format(globals.user_id, globals.user_name))
             display ("User check.","User in database.","" ,"",True, True, 2)
              
     except Exception as crm_request_e:
@@ -71,13 +71,13 @@ def crm_request_user_by_rfid ():
 def booking_request_start_recording ():
 #API request from Booking system - inputs are user_ID, instrument_ID, outputs are remaining_time, number_of_files
     
-    payload = {"contactId":config.user_id, "equipmentId":config.equipment_id}
+    payload = {"contactId":globals.user_id, "equipmentId":globals.equipment_id}
     #payload = {"contact":config.user_id, "equipment":config.equipment_id}
     
     check_token()
     print ("check token in request start")
     
-    headers = {"Authorization" : "Bearer " + config.token}
+    headers = {"Authorization" : "Bearer " + globals.token}
     
     try:
         booking_response = requests.post ("https://booking.ceitec.cz/api/recording/start/",  json= payload, headers = headers)
@@ -86,21 +86,20 @@ def booking_request_start_recording ():
         print(booking_response.text)
                
         if booking_response.status_code == 200:
-            config.recording_started = True
-            config.in_session = True
+            globals.recording_started = True
+            globals.in_session = True
            
             booking_data = booking_response.json()
-            config.remaining_time = int(booking_data["timetoend"])
-            config.recording_id = booking_data["recording"]
-            config.reservation_id = booking_data ["reservation"]
-            config.reservation_start_time = booking_data["start"]
-                        
+            globals.remaining_time = int(booking_data["timetoend"])
+            globals.recording_id = booking_data["recording"]
+            globals.reservation_id = booking_data ["reservation"]
+                                  
             write_log(10, datetime.now(), booking_response.text)
             
             #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
             
         elif booking_response.status_code == 400 or 404 or 500:
-            config.recording_started = False
+            globals.recording_started = False
             write_log(10, datetime.now(), booking_response.text)
             #print ("400 - Invalid input parameters")     
                 
@@ -128,18 +127,18 @@ def booking_request_start_recording ():
     
 def booking_request_files ():
     #payload = {"recording":recording_id}
-    headers = {"Authorization" : "Bearer " + config.token}
+    headers = {"Authorization" : "Bearer " + globals.token}
     
     try:
         #booking_response = requests.get ("https://booking.ceitec.cz/api-public/recording/" + str(config.recording_id) + "/raw-data-info")
-        booking_response = requests.get ("https://booking.ceitec.cz/api/recording/" + str(config.recording_id) + "/file-info", headers = headers)
+        booking_response = requests.get ("https://booking.ceitec.cz/api/recording/" + str(globals.recording_id) + "/file-info", headers = headers)
      
         #print (booking_response.status_code)
         if booking_response.status_code == 200:
             booking_data = booking_response.json()
             #print (booking_data)
             #print ("Number of data files: " + str(booking_data["count"]))
-            config.files = booking_data["count"]            
+            globals.files = booking_data["count"]            
         else:
             print ("nejaky problemek s datama")
     except Exception as request_files_e:
@@ -148,19 +147,19 @@ def booking_request_files ():
         
 def booking_reservation_info ():
     #checkToken()
-    headers = {"Authorization" : "Bearer " + config.token}
+    headers = {"Authorization" : "Bearer " + globals.token}
     
     
     try:
         #booking_response = requests.get ("https://booking.ceitec.cz/api-public/service-appointment/" + str(config.reservation_id) + "/")
-        booking_response = requests.get ("https://booking.ceitec.cz/api/service-appointment/" + str(config.reservation_id) + "/raspberry", headers=headers)
+        booking_response = requests.get ("https://booking.ceitec.cz/api/service-appointment/" + str(globals.reservation_id) + "/raspberry", headers=headers)
 
         
         #print (booking_response.status_code)
         booking_data = booking_response.json()
         #print (booking_data)
         #print ("409 - Recording is running")
-        config.remaining_time = int (booking_data["timetoend"])
+        globals.remaining_time = int (booking_data["timetoend"])
         #print ("Remaining time of reservation is {} minutes and recording id is {}" .format(config.remaining_time, config.recording_id))
         
     except Exception as res_info_e:
@@ -170,8 +169,8 @@ def booking_reservation_info ():
         
 
 def booking_stop_recording ():
-    payload = {"serviceAppointmentId":config.reservation_id, "equipmentId":config.equipment_id}
-    headers = {"Authorization" : "Bearer " + config.token}
+    payload = {"serviceAppointmentId":globals.reservation_id, "equipmentId":globals.equipment_id}
+    headers = {"Authorization" : "Bearer " + globals.token}
     try:      
         booking_response = requests.post ("https://booking.ceitec.cz/api/recording/stop",json=payload,headers=headers)  
         print (booking_response.status_code)
@@ -185,11 +184,11 @@ def booking_stop_recording ():
 def load_token_data ():
     print("Loading token data")
     try:
-        f = open (config.token_address, "r").readlines()
+        f = open (globals.token_address, "r").readlines()
         expiration = f[0][:-1]
         tokenString = f[1]
-        config.token_expiration = expiration
-        config.token = tokenString
+        globals.token_expiration = expiration
+        globals.token = tokenString
         print("Token data loaded")
         write_log(9,"Token loaded\n Token will expire: \n" + expiration ,datetime.now())
     except Exception as load_token_e:
@@ -213,7 +212,7 @@ def get_token ():
         #write_log(9, datetime.now(), "Token will expire: \n" + token_expiration)
         print ("Saving token data")      
         
-        f = open (config.token_address, "w")
+        f = open (globals.token_address, "w")
         f.writelines([token_expiration + "\n", token])
         f.close()  
       
@@ -229,7 +228,7 @@ def check_token():
 
         time_now = datetime.now().isoformat(timespec="seconds")      
         timeNow = datetime.strptime(time_now,"%Y-%m-%dT%H:%M:%S")
-        tokenExpiration = datetime.strptime(config.token_expiration,"%Y-%m-%dT%H:%M:%S")
+        tokenExpiration = datetime.strptime(globals.token_expiration,"%Y-%m-%dT%H:%M:%S")
 
         
         if tokenExpiration <= timeNow:

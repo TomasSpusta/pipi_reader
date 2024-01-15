@@ -1,7 +1,7 @@
 from datetime import datetime
 from lcd_display import display
 from time import sleep
-import config
+import globals
 import web_requests
 from network_check import connection_check
 from pipi_reader_main import main
@@ -14,14 +14,14 @@ from github_check import ghub_check
 #Check internet connection, acquire IP address and MAC address
 try:
     connection_check ()  
-    config.online_status = True
+    globals.online_status = True
     
 except Exception as network_error:
     display ("Network Error",str(network_error),"" ,"" ,True, True, 2) 
 
 
 display ("Loading packages.","Please wait.", "" ,"" ,clear=True, backlight_status=True, sleep=2)
-if config.online_status == True :
+if globals.online_status == True :
     ghub_check("develop_cleaning")
     
     display ("Loading program","","" ,"",True,True, 2)

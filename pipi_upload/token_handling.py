@@ -1,3 +1,3 @@
-import config
+import globals
 
-print (config.mac_address)
+print (globals.mac_address)
