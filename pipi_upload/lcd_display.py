@@ -1,6 +1,6 @@
 import time
 from RPLCD.i2c import CharLCD
-import globals
+import glob_vars
 
 #initialize the LCD display, (expander chip, port)
 lcd = CharLCD('PCF8574', 0x27)
@@ -65,8 +65,8 @@ def LCD_init (ip, mac):
     
     
 def waiting ():
-    globals.recording_started = False
-    display ("Welcome on ", globals.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
+    glob_vars.recording_started = False
+    display ("Welcome on ", glob_vars.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
     
 '''  
 def version ():

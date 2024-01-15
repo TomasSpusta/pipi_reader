@@ -1,3 +1,3 @@
-import globals
+import glob_vars
 
-print (globals.mac_address)
+print (glob_vars.mac_address)

@@ -2,24 +2,24 @@ from datetime import datetime
 import RPi.GPIO as GPIO
 import time
 from lcd_display import display, backlight
-import globals
+import glob_vars
 from web_requests import booking_stop_recording
 from log import write_log
 
 
 #Setup a GPIO pin on RPi
-GPIO.setup(globals.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(glob_vars.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 def end_reservation ():
     #Function dealing with exding the reseravation after button is pushed for 2 seconds
     print ("Button activated")  
-    GPIO.add_event_detect(globals.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
+    GPIO.add_event_detect(glob_vars.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
     
     
 def button_deactivated ():
     #Deactivate button, so it cannot be pressed outside the running session
-    GPIO.remove_event_detect(globals.button_pin)
+    GPIO.remove_event_detect(glob_vars.button_pin)
     print("button deactivated")
     
 def button_callback (button_pin):
@@ -45,7 +45,7 @@ def button_callback (button_pin):
                                                      
                 booking_stop_recording()
                 write_log(11, datetime.now(), "Ended by user")
-                globals.ended_by_user = True
+                glob_vars.ended_by_user = True
                 time.sleep (2)
 
                 

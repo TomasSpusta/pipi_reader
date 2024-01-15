@@ -1,5 +1,5 @@
 from datetime import datetime
-import globals
+import glob_vars
 from getmac import get_mac_address as gma  # module for mac adress
 from lcd_display import display
 import web_requests
@@ -14,24 +14,24 @@ def connection_check():
     
     get_mac_address()
     
-    open_sh(globals.mac_address)   
+    open_sh(glob_vars.mac_address)   
     
     get_ip()
     
     write_log(1, datetime.now())
-    write_log(2, globals.ip_eth0, datetime.now())
-    write_log(3, globals.ip_wlan0, datetime.now())
+    write_log(2, glob_vars.ip_eth0, datetime.now())
+    write_log(3, glob_vars.ip_wlan0, datetime.now())
 
     # Send request to CRM to obtain equipment info according to MAC address
     web_requests.crm_request_name_by_mac()
     
-    if globals.ip_eth0 != 0:
-        display ("IP:",globals.ip_eth0,"MAC:",globals.mac_address)
+    if glob_vars.ip_eth0 != 0:
+        display ("IP:",glob_vars.ip_eth0,"MAC:",glob_vars.mac_address)
     else:
-        display ("IP:",globals.ip_wlan0,"MAC:",globals.mac_address)
+        display ("IP:",glob_vars.ip_wlan0,"MAC:",glob_vars.mac_address)
     
-    print("Equipment name: " + str(globals.equipment_name))
-    print("Equipment ID: " + str(globals.equipment_id))
+    print("Equipment name: " + str(glob_vars.equipment_name))
+    print("Equipment ID: " + str(glob_vars.equipment_id))
 
 def check_lan():
     try:
@@ -56,15 +56,15 @@ def get_ip():
     ip_lan = check_lan ()
     ip_wifi = check_wifi ()
     if ip_lan != 0:
-        globals.ip_eth0 = ip_lan
+        glob_vars.ip_eth0 = ip_lan
     if ip_wifi != 0:
-        globals.ip_wlan0 = ip_wifi
+        glob_vars.ip_wlan0 = ip_wifi
 
 def get_mac_address ():
     try:
-        globals.mac_address = gma()  # get MAC address
-        print("My MAC adress is: {}".format(globals.mac_address))
-        write_log_temp ("MAC address: " + globals.mac_address)
+        glob_vars.mac_address = gma()  # get MAC address
+        print("My MAC adress is: {}".format(glob_vars.mac_address))
+        write_log_temp ("MAC address: " + glob_vars.mac_address)
     
     except Exception as mac_e:
         write_log_temp ("Get MAC error: " + str(mac_e))

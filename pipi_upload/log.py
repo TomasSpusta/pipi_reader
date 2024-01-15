@@ -1,5 +1,5 @@
 import gspread
-import globals
+import glob_vars
 from lcd_display import display
 import os
 
@@ -30,8 +30,8 @@ def open_sh(sh_name):
         ws = sh.sheet1
         if len(ws.col_values(1)) == 0:
             prepare_headers(ws)
-        globals.log_row = len(ws.col_values(1)) + 1
-        globals.sh = sh
+        glob_vars.log_row = len(ws.col_values(1)) + 1
+        glob_vars.sh = sh
     except Exception as sh_open_e:
         display("LOG Error", str(sh_open_e), "", "", True, True, 2)
 
@@ -65,11 +65,11 @@ def write_log(column, log_msg, log_note=None):
     col 9 TOKEN \n
     """
     try:
-        ws = globals.sh.sheet1
+        ws = glob_vars.sh.sheet1
         print("Writing to SH at column no." + str(column))
-        ws.update_cell(globals.log_row, column, str(log_msg))
+        ws.update_cell(glob_vars.log_row, column, str(log_msg))
         if log_note != None:
-            note_A1_coordinates = gspread.utils.rowcol_to_a1(globals.log_row, column)
+            note_A1_coordinates = gspread.utils.rowcol_to_a1(glob_vars.log_row, column)
             ws.update_note(note_A1_coordinates, str(log_note))
         # print('Closing SH')
         #ws.client.session.close()
