@@ -62,7 +62,6 @@ def get_ip():
 
 def get_mac_address ():
     try:
-        os.environ["MAC_ADDRESS"] = gma ()
         globals.mac_address = gma()  # get MAC address
         print("My MAC adress is: {}".format(globals.mac_address))
         write_log_temp ("MAC address: " + globals.mac_address)
