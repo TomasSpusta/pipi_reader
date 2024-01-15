@@ -4,6 +4,8 @@ import unidecode
 from datetime import datetime
 from lcd_display import display
 from log import write_log
+from log_temp import write_log_temp
+
 
 def crm_request_name_by_mac ():
    
@@ -72,7 +74,7 @@ def booking_request_start_recording ():
     payload = {"contactId":config.user_id, "equipmentId":config.equipment_id}
     #payload = {"contact":config.user_id, "equipment":config.equipment_id}
     
-    checkToken()
+    check_token()
     print ("check token in request start")
     
     headers = {"Authorization" : "Bearer " + config.token}
@@ -180,7 +182,7 @@ def booking_stop_recording ():
         display("stop_res E", str(stop_res_e),"","",True,True,2)
         write_log(11, datetime.now(), stop_res_e)
          
-def loadTokenData ():
+def load_token_data ():
     print("Loading token data")
     try:
         f = open (config.token_address, "r").readlines()
@@ -197,34 +199,32 @@ def loadTokenData ():
         
     
     
-def getToken ():
-    
-    API_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
-    payload = {"apiKey":API_key}  
-       
+def get_token ():
     try: 
+        API_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
+        payload = {"apiKey":API_key}
         print("Requesting token")
         token_request = requests.post ("https://booking.ceitec.cz/api/login",json=payload)
         token_expiration = token_request.json()["expiresAt"] 
         token = token_request.json()["accessToken"]
         
         print ("New token created")
-        write_log(9, datetime.now(), "Token will expire: \n" + token_expiration)
-        print ("Saving token data")
-        
+        write_log_temp ("New token created")
+        #write_log(9, datetime.now(), "Token will expire: \n" + token_expiration)
+        print ("Saving token data")      
         
         f = open (config.token_address, "w")
         f.writelines([token_expiration + "\n", token])
         f.close()  
       
     except Exception as get_token_e :
-
+        write_log_temp ("Get_token_e: " + str(get_token_e))
         print ("Error in get_token: " + get_token_e)
         display("Get Token E", str(get_token_e),"","",True,True,2)
-        write_log(9, datetime.now(), get_token_e)
+        #write_log(9, datetime.now(), get_token_e)
 
 
-def checkToken():
+def check_token():
     try:
 
         time_now = datetime.now().isoformat(timespec="seconds")      
@@ -235,10 +235,10 @@ def checkToken():
         if tokenExpiration <= timeNow:
             print("Token is old, requesting new token")
            
-            getToken()
+            get_token()
             print("New token created")
            
-            loadTokenData ()
+            load_token_data ()
             print("New token loaded")
            
         else:

@@ -7,12 +7,11 @@ import requests
 import git
 from lcd_display import display
 from log import write_log
+from log_temp import write_log_temp
 
 
 def ghub_check(branch):
-    display(
-        "Repo check", "", "", "", clear=True, backlight_status=True, sleep=1
-    )
+    display("Repo check", "", "", "", clear=True, backlight_status=True, sleep=1)
 
     # location of the local folder where the github repository will be downloaded (pulled)
     local_repo = "/home/bluebox/pipi_reader"
@@ -58,12 +57,13 @@ def git_update(local_repo):
         repo.git.reset("--hard")
         repo.remotes.origin.pull()
         display("Repo check","Repo updated","","",True,True,2)
+        write_log_temp ("Repo update finished")
         print("Update finished")
 
     except Exception as repo_e:
         print("Problem s repository na disku")
         print(repo_e)
-        write_log(4, repo_e, datetime.now())
+        write_log_temp ("Repo update error: " + str(repo_e))
         display("Repo check","Repo Update ERROR",repo_e,"",True,True,2)
 
 def git_last_change(local_repo):

@@ -9,9 +9,7 @@ from lcd_display import display
 
 def open_sh(sh_name):
     try:
-        gc = gspread.service_account(
-            filename="/home/bluebox/pipi_reader/service_account.json"
-        )
+        gc = gspread.service_account(filename="/home/bluebox/pipi_reader/service_account.json")
         try:
             print("Opening SH")
             sh = gc.open(sh_name)

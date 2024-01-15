@@ -21,12 +21,11 @@ from lcd_display import display, waiting, backlight, clear
 from log import write_log
 from rfid_reader import card_reader
 import session
-import config
 import web_requests
 
 def main ():
     try:
-        web_requests.loadTokenData()
+        web_requests.load_token_data()
         display ("Main starting","","" ,"") 
         write_log(6, dt.datetime.now())
         time.sleep (1)

@@ -6,6 +6,7 @@ import web_requests
 
 import netifaces as ni
 from log import write_log, open_sh
+from log_temp import write_log_temp
 
 
 def connection_check(): 
@@ -64,5 +65,6 @@ def get_mac_address ():
         print("My MAC adress is: {}".format(config.mac_address))
     
     except Exception as mac_e:
+        write_log_temp ("Get MAC error: " + str(mac_e))
         print(mac_e)
         print("Problem with MAC address")
