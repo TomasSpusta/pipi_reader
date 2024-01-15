@@ -19,4 +19,4 @@ get_token ()
 sleep (1)
 
 
-print (os.environ["MAC ADDRESS"])
+print (os.environ["MAC_ADDRESS"])
