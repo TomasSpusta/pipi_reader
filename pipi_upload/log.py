@@ -17,8 +17,8 @@ def open_sh(sh_name):
             os.environ ["SH"] = gc.open(sh_name)
             print("SH Opened")
 
-        except Exception as e:
-            print(e)
+        except Exception as sh_open_e:
+            print("sh open error: " + str(sh_open_e))
             print("Creating SH")
             # if spreadsheet does not exist, create one
             sh = gc.create(sh_name)
