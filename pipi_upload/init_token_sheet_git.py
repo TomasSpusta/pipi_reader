@@ -20,4 +20,4 @@ get_token ()
 #sleep (1)
 
 
-open_sh (os.environ["MAC_ADDRESS"])
+print (type(os.environ["MAC_ADDRESS"]))
