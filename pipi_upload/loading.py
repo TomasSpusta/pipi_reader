@@ -1,20 +1,20 @@
 
 from log import open_sh, write_log
-print ("marker1")
+
 
 
 from datetime import datetime
-print ("marker2")
+
 from lcd_display import display
-print ("marker3")
+
 
 import glob_vars
-print ("marker4")
+
 
 from network_check import connection_check
-print ("marker5")
+
 from pipi_reader_main import main
-print ("marker6")
+
 
 
 

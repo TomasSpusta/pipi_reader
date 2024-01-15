@@ -33,7 +33,7 @@ def open_sh(sh_name):
         glob_vars.log_row = len(ws.col_values(1)) + 1
         glob_vars.sh = sh
     except Exception as sh_open_e:
-        print("LOG Error: " + str(sh_open_e))
+        print("Open SH LOG Error: " + str(sh_open_e))
         display("LOG Error", str(sh_open_e), "", "", True, True, 2)
 
 
@@ -77,6 +77,6 @@ def write_log(column, log_msg, log_note=None):
     
 
     except Exception as log_error:
-        print("LOG Error: " + str(log_error))
+        print("Write LOG Error: " + str(log_error))
         display("LOG Error", str(log_error), "", "", True, True, 2)
 
