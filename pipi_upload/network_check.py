@@ -63,7 +63,7 @@ def get_mac_address ():
     try:
         config.mac_address = gma()  # get MAC address
         print("My MAC adress is: {}".format(config.mac_address))
-        write_log_temp (" MAC address: " + config.mac_address)
+        write_log_temp ("MAC address: " + config.mac_address)
     
     except Exception as mac_e:
         write_log_temp ("Get MAC error: " + str(mac_e))
