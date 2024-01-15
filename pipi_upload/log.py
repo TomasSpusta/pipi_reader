@@ -67,6 +67,7 @@ def write_log(column, log_msg, log_note=None):
     col 9 TOKEN \n
     """
     try:
+        print ("marker1")
         ws = glob_vars.sh.sheet1
         
         print("Writing to SH at column no." + str(column))
