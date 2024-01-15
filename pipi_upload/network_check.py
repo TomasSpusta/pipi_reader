@@ -11,19 +11,12 @@ import os
 
 
 def connection_check(): 
-    
-    get_mac_address()
-    
-    open_sh(glob_vars.mac_address)   
-    
-    get_ip()
-    
-    write_log(1, datetime.now())
-    write_log(2, glob_vars.ip_eth0, datetime.now())
-    write_log(3, glob_vars.ip_wlan0, datetime.now())
 
+    get_ip()
+    load_mac_address ()
+    
     # Send request to CRM to obtain equipment info according to MAC address
-    web_requests.crm_request_name_by_mac()
+    web_requests.crm_request_equipment_by_mac()
     
     if glob_vars.ip_eth0 != 0:
         display ("IP:",glob_vars.ip_eth0,"MAC:",glob_vars.mac_address)
@@ -71,3 +64,10 @@ def get_mac_address ():
     except Exception as mac_e:
         write_log_temp ("Get MAC error: " + str(mac_e))
         print("Get MAC error: " + str(mac_e))
+
+def load_mac_address ():
+    mac_address_file = "/home/bluebox/pipi_reader/pipi_upload/mac_address.txt"
+    f = open (mac_address_file, "r")
+    glob_vars.mac_address = f.read ()
+    f.close() 
+    

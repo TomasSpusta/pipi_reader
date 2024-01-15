@@ -7,7 +7,7 @@ from log import write_log
 from log_temp import write_log_temp
 
 
-def crm_request_name_by_mac ():
+def crm_request_equipment_by_mac ():
    
     try:
         payload = {"mac_address":glob_vars.mac_address}
