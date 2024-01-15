@@ -8,6 +8,7 @@ from web_requests import get_token
 from time import sleep
 from configparser import ConfigParser
 import os
+from log import open_sh
 
 #config = ConfigParser()
 
@@ -19,4 +20,4 @@ get_token ()
 #sleep (1)
 
 
-print (os.environ["MAC_ADDRESS"])
+open_sh (os.environ["MAC_ADDRESS"])

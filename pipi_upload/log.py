@@ -1,6 +1,7 @@
 import gspread
 import globals
 from lcd_display import display
+import os
 
 # spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
@@ -13,6 +14,7 @@ def open_sh(sh_name):
         try:
             print("Opening SH")
             sh = gc.open(sh_name)
+            os.environ ["SH"] = gc.open(sh_name)
             print("SH Opened")
 
         except Exception as e:
@@ -24,13 +26,14 @@ def open_sh(sh_name):
             sh.share("n4norfid@gmail.com", perm_type="user", role="writer", notify=True)
             print("SH Shared")
             sh = gc.open(sh_name)
+            os.environ ["SH"] = gc.open(sh_name)
             print("SH Opened")
 
         ws = sh.sheet1
         if len(ws.col_values(1)) == 0:
             prepare_headers(ws)
         globals.log_row = len(ws.col_values(1)) + 1
-        globals.sh = sh
+        #globals.sh = sh
     except Exception as sh_open_e:
         display("LOG Error", str(sh_open_e), "", "", True, True, 2)
 
@@ -64,7 +67,7 @@ def write_log(column, log_msg, log_note=None):
     col 9 TOKEN \n
     """
     try:
-        ws = globals.sh.sheet1
+        ws = os.environ ["SH"].sheet1 #globals.sh.sheet1
         print("Writing to SH at column no." + str(column))
         ws.update_cell(globals.log_row, column, str(log_msg))
         if log_note != None:
