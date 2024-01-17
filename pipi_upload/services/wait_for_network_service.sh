@@ -18,9 +18,9 @@ After=network-online.target
 Type=oneshot
 User=bluebox
 WorkingDirectory=/home/bluebox/pipi_reader/pipi_upload
-ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/github_update.py
-ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/get_mac_address.py
-ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/get_token.py
+ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload//after_start/get_github_update.py
+ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload//after_start/get_mac_address.py
+ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload//after_start/get_token.py
 ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/loading.py
 
 [Install]

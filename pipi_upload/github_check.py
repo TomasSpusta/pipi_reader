@@ -9,7 +9,7 @@ from lcd_display import display
 from log import write_log
 from log_temp import write_log_temp
 
-
+'''
 def ghub_check(branch):
     display("Repo check", "", "", "", clear=True, backlight_status=True, sleep=1)
 
@@ -38,7 +38,7 @@ def ghub_check(branch):
     display("Repo check","Repo updated",current_version,last_change,clear=True,backlight_status=True,sleep=2,   )
     log_note = "Update finished. \nVersion: %s \nLast change: %s" % (current_version,last_change,)
     write_log(4, datetime.now(), log_note)
-
+'''
 
 def git_version():
     # https://api.github.com/repos/{owner}/{repo}/releases/latest

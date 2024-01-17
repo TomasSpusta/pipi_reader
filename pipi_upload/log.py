@@ -1,6 +1,7 @@
 import gspread
 import glob_vars
 #from lcd_display import display
+from datetime import datetime
 
 
 # spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
@@ -8,23 +9,23 @@ import glob_vars
 # sh_name = config.mac_address
 
 
-def open_sh(sh_name):
+def open_sh():
     try:
         gc = gspread.service_account(filename="/home/bluebox/pipi_reader/service_account.json")
         try:
             print("Opening SH")
-            sh = gc.open(sh_name)
+            sh = gc.open(glob_vars.mac_address)
             print("SH Opened")
 
         except Exception as sh_open_e:
             print("sh open error: " + str(sh_open_e))
             print("Creating SH")
             # if spreadsheet does not exist, create one
-            sh = gc.create(sh_name)
+            sh = gc.create(glob_vars.mac_address)
             print("SH Created")
             sh.share("n4norfid@gmail.com", perm_type="user", role="writer", notify=True)
             print("SH Shared")
-            sh = gc.open(sh_name)
+            sh = gc.open(glob_vars.mac_address)
             print("SH Opened")
 
         ws = sh.sheet1
@@ -85,3 +86,12 @@ def write_log(column, log_msg, log_note=None):
         print("Write LOG Error: " + str(write_log_error))
         #display("LOG Error", str(write_log_error), "", "", True, True, 2)
 
+def write_log_temp (log_message):
+    temp_log_address = "/home/bluebox/log_temp.txt"
+    #temp_log_address = "pipi_upload/temp_log.txt"
+    f = open (temp_log_address, "a")
+    f.write (str(datetime.now()))
+    f.write ("\n")
+    f.write (log_message)
+    f.write ("\n")
+    f.close()  

@@ -1,25 +1,10 @@
 
 from log import open_sh, write_log
-
-
-
 from datetime import datetime
-
 from lcd_display import display
-
-
 import glob_vars
-
-
 from network_check import connection_check
-
 from pipi_reader_main import main
-
-
-
-
-
-
 
 #Check internet connection, acquire IP address and MAC address
 try:
@@ -36,7 +21,7 @@ if glob_vars.online_status == True :
     display ("Loading program","","" ,"",True,True, 2)
     
     
-    open_sh(glob_vars.mac_address)   
+    open_sh()   
     write_log(1, datetime.now())
     write_log(2, glob_vars.ip_eth0, datetime.now())
     write_log(3, glob_vars.ip_wlan0, datetime.now())

@@ -8,14 +8,6 @@
 from log import open_sh, write_log
 import glob_vars
 
-
-
-
-
-
-
-
-
 open_sh (glob_vars.mac_address)
 write_log (1,"pokus","pokus")
 

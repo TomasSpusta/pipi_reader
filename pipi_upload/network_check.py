@@ -6,14 +6,14 @@ import web_requests
 
 import netifaces as ni
 #from log import write_log, open_sh
-from log_temp import write_log_temp
+from log import write_log_temp
 
 
 
 def connection_check(): 
-
-    get_ip()
     load_mac_address ()
+    get_ip()
+    
     
     # Send request to CRM to obtain equipment info according to MAC address
     web_requests.crm_request_equipment_by_mac()
