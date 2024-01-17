@@ -3,8 +3,8 @@ import glob_vars
 import unidecode
 from datetime import datetime
 from lcd_display import display
-from log import write_log
-from log_temp import write_log_temp
+from log import write_log, write_log_temp
+
 
 
 def crm_request_equipment_by_mac ():
