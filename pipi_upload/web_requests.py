@@ -217,6 +217,7 @@ def get_token ():
         f = open (glob_vars.token_address, "w")
         f.writelines([token_expiration + "\n", token])
         f.close()  
+        display ("Token created","","","",True,True,2)
       
     except Exception as get_token_e :
         write_log_temp ("Get_token_e: " + str(get_token_e))
