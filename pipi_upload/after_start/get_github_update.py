@@ -1,5 +1,5 @@
 import sys
-sys.path.append('pipi_upload')
+sys.path.append('/home/bluebox/pipi_reader/pipi_upload')
 
 
 from github_check import git_update
