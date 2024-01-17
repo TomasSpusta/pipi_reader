@@ -17,7 +17,7 @@ def crm_request_equipment_by_mac ():
         
         if len (crm_data) == 0:
             print ("Problem with mac address")
-            write_log(5, crm_data,datetime.now())
+            write_log(5, "CRM data: \n" + crm_data,datetime.now())
             #if len(data) == 0 that means that something is wrong with mac address or equipment
             
         else:          
@@ -29,7 +29,7 @@ def crm_request_equipment_by_mac ():
             
     except Exception as crm_mac_e:
         print("Error in crm_request_mac: " + str(crm_mac_e))
-        write_log(5,crm_mac_e,datetime.now())
+        write_log(5,"Error Mac address: \n" + crm_mac_e,datetime.now())
         display("crm_request_mac E", str(crm_mac_e),"","",True,True,2)
     
         
