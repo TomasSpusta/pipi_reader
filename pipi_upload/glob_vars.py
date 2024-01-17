@@ -2,7 +2,7 @@ import gspread
 
 token_expiration = ""
 token = ""
-token_address = "/home/bluebox/pipi_reader/pipi_upload/tokenData.txt"
+token_address = "/home/bluebox/token_data.txt"
 #headers = {"Authorization" : "Bearer " + token}
 
 #headers = {"Authorization" : "Bearer " + token}

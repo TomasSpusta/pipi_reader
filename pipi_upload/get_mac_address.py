@@ -3,7 +3,7 @@ from time import sleep
 
 mac_address = get_mac_address ()
 
-mac_address_file = "/home/bluebox/pipi_reader/pipi_upload/mac_address.txt"
+mac_address_file = "/home/bluebox/mac_address.txt"
 
 f = open (mac_address_file, "w")
 f.write (mac_address)

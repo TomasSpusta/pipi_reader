@@ -1,6 +1,6 @@
 import gspread
 import glob_vars
-from lcd_display import display
+#from lcd_display import display
 
 
 # spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
@@ -35,7 +35,7 @@ def open_sh(sh_name):
         #print (type(sh))
     except Exception as sh_open_e:
         print("Open SH LOG Error: " + str(sh_open_e))
-        display("LOG Error", str(sh_open_e), "", "", True, True, 2)
+        #display("LOG Error", str(sh_open_e), "", "", True, True, 2)
 
 
 def prepare_headers(ws):
@@ -65,6 +65,8 @@ def write_log(column, log_msg, log_note=None):
     col 7 CARD SWIPE \n
     col 8 USER INFO \n
     col 9 TOKEN \n
+    col 10 RECORDING START \n
+    col 11 RECORDING END \n
     """
     try:
         print ("marker1")
@@ -81,5 +83,5 @@ def write_log(column, log_msg, log_note=None):
 
     except Exception as write_log_error:
         print("Write LOG Error: " + str(write_log_error))
-        display("LOG Error", str(write_log_error), "", "", True, True, 2)
+        #display("LOG Error", str(write_log_error), "", "", True, True, 2)
 

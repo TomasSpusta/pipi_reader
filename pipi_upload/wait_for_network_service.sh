@@ -15,9 +15,12 @@ Description=Wait for Network Service
 After=network-online.target
 
 [Service]
-Type=simple
+Type=oneshot
 User=bluebox
 WorkingDirectory=/home/bluebox/pipi_reader/pipi_upload
+ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/github_update.py
+ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/get_mac_address.py
+ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/get_token.py
 ExecStart=/usr/bin/python3 /home/bluebox/pipi_reader/pipi_upload/loading.py
 
 [Install]

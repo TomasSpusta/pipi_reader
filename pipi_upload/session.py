@@ -10,14 +10,6 @@ import web_requests
 import glob_vars
 import button
 from log import write_log
-
-
-def user_check ():
-
-    display ("User check","","" ,"") 
-    web_requests.crm_request_user_by_rfid()
-    
-   
     
 def start_recording ():
 

@@ -35,6 +35,7 @@ def crm_request_equipment_by_mac ():
         
 def crm_request_user_by_rfid ():
     
+    display ("User check","","" ,"")
     glob_vars.log_row += 1 
     print ("------------------------CARD SWIPE------------------------")
     write_log(1,datetime.now())
@@ -200,6 +201,7 @@ def load_token_data ():
     
 def get_token ():
     try: 
+        display ("Requesting token","","","",True,True,2)
         API_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
         payload = {"apiKey":API_key}
         print("Requesting token")

@@ -52,13 +52,15 @@ def git_version():
 
 def git_update(local_repo):
     try:
+        display("Checking software","","","",True,True,2)
         # initialize local repository
         repo = git.Repo(local_repo)
         repo.git.reset("--hard")
         repo.remotes.origin.pull()
-        display("Repo check","Repo updated","","",True,True,2)
+        
         write_log_temp ("Repo update finished")
         print("Update finished")
+        display("Software updated","","","",True,True,2)
 
     except Exception as repo_e:
         print("Problem s repository na disku")

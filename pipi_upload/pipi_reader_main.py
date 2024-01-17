@@ -40,7 +40,8 @@ def main ():
                 display("Card Scanned","","","")
                 
                 #check if user is in the CRM database
-                session.user_check ()
+                web_requests.crm_request_user_by_rfid()
+                #session.user_check ()
                         
                 #check if the user has reservation on the equipment
                 #in appropriate time window and start recording
