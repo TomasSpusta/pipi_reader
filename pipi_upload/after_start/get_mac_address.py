@@ -1,3 +1,6 @@
+import sys
+sys.path.append('pipi_upload')
+
 from network_check import get_mac_address
 from time import sleep
 
