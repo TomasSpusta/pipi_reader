@@ -15,6 +15,7 @@ def open_sh():
         try:
             print("Opening SH")
             sh = gc.open(glob_vars.mac_address)
+            write_log_temp("SH opened")
             print("SH Opened")
 
         except Exception as sh_open_e:
@@ -27,6 +28,7 @@ def open_sh():
             print("SH Shared")
             sh = gc.open(glob_vars.mac_address)
             print("SH Opened")
+            write_log_temp("SH opened")
 
         ws = sh.sheet1
         if len(ws.col_values(1)) == 0:
@@ -36,6 +38,7 @@ def open_sh():
         #print (type(sh))
     except Exception as sh_open_e:
         print("Open SH LOG Error: " + str(sh_open_e))
+        write_log_temp("Open SH LOG Error: " + str(sh_open_e))
         #display("LOG Error", str(sh_open_e), "", "", True, True, 2)
 
 
