@@ -24,6 +24,7 @@ def crm_request_equipment_by_mac ():
             glob_vars.equipment_name = crm_data[0]["alias"]
             glob_vars.equipment_id = crm_data[0]["equipmentid"]
             write_log(5,crm_data[0]["alias"],datetime.now())
+            write_log_temp (glob_vars.mac_address)
             
             #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
             

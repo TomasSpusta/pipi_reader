@@ -24,6 +24,7 @@ def open_sh():
             # if spreadsheet does not exist, create one
             sh = gc.create(glob_vars.mac_address)
             print("SH Created")
+            write_log_temp("SH Created")
             sh.share("n4norfid@gmail.com", perm_type="user", role="writer", notify=True)
             print("SH Shared")
             sh = gc.open(glob_vars.mac_address)
