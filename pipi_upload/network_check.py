@@ -60,7 +60,6 @@ def get_mac_address ():
         write_log_temp ("MAC address: " + mac_address)
         return mac_address
 
-    
     except Exception as mac_e:
         write_log_temp ("Get MAC error: " + str(mac_e))
         print("Get MAC error: " + str(mac_e))
