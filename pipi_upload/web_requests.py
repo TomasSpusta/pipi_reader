@@ -23,10 +23,10 @@ def crm_request_equipment_by_mac ():
         else:          
             glob_vars.equipment_name = crm_data[0]["alias"]
             glob_vars.equipment_id = crm_data[0]["equipmentid"]
-            write_log(5,crm_data[0]["alias"],datetime.now())
+            write_log(5, crm_data[0]["alias"], datetime.now())
             write_log_temp ("global mac address: " + glob_vars.mac_address)
             
-            #print ("Equipment ID is {} a Equipment Name is {}" .format(config.equipment_id, config.equipment_name))
+            print ("Equipment ID is {} a Equipment Name is {}" .format(glob_vars.equipment_id, glob_vars.equipment_name))
             
     except Exception as crm_mac_e:
         print("Error in crm_request_mac: " + str(crm_mac_e))
