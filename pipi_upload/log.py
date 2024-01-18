@@ -2,7 +2,7 @@ import gspread
 import glob_vars
 #from lcd_display import display
 from datetime import datetime
-
+from log import write_log_temp
 
 # spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
@@ -12,6 +12,7 @@ from datetime import datetime
 def open_sh():
     try:
         gc = gspread.service_account(filename="/home/bluebox/pipi_reader/service_account.json")
+        write_log_temp("gspread service: " +str(gc))
         try:
             print("Opening SH")
             sh = gc.open(glob_vars.mac_address)
@@ -64,7 +65,7 @@ def write_log(column, log_msg, log_note=None):
     col 2 LAN IP \n
     col 3 WLAN IP \n
     col 4 GITHUB \n
-    col 5 MAC address \n
+    col 5 INSTRUMENT \n
     col 6 Main script start \n
     col 7 CARD SWIPE \n
     col 8 USER INFO \n
@@ -73,7 +74,7 @@ def write_log(column, log_msg, log_note=None):
     col 11 RECORDING END \n
     """
     try:
-        print ("marker1")
+        #print ("marker1")
         ws = glob_vars.sh.sheet1
         
         print("Writing to SH at column no." + str(column))
