@@ -62,7 +62,7 @@ def LCD_init (ip, mac):
     
 def LCD_waiting ():
     config.logged_in = False
-    display ("Welcome on ", config.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
+    display ("Welcome to ", config.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
     
 
 def not_in_database ():
