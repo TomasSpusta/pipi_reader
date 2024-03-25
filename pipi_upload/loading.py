@@ -30,5 +30,7 @@ if glob_vars.online_status == True :
     
     main ()
 
+   
+
 else:
     display ("No internet"," connection.","Please check cable" ,"Please check wifi" ,True, True, 2) 

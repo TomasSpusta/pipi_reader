@@ -8,6 +8,7 @@ from datetime import datetime
 # sh_name = config.mac_address
 
 
+
 def open_sh():
     try:
         gc = gspread.service_account(filename="/home/bluebox/pipi_reader/service_account.json")
@@ -41,6 +42,7 @@ def open_sh():
         print("Open SH LOG Error: " + str(sh_open_e))
         write_log_temp("Open SH LOG Error: " + str(sh_open_e))
         #display("LOG Error", str(sh_open_e), "", "", True, True, 2)
+
 
 
 def prepare_headers(ws):
@@ -97,3 +99,5 @@ def write_log_temp (log_message):
     f.write (str(datetime.now()) + "\t" + log_message)
     f.write ("\n")
     f.close()  
+
+  
