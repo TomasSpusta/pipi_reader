@@ -1,12 +1,18 @@
-token_expiration = "2023-11-11T13:32:44"
+import gspread
+
+token_expiration = ""
 token = ""
+token_address = "/home/bluebox/token_data.txt"
 #headers = {"Authorization" : "Bearer " + token}
 
 #headers = {"Authorization" : "Bearer " + token}
+
+sh : gspread.spreadsheet.Spreadsheet = ""
+log_row = 0
 
 online_status = False
 
-mac_address = ""
+mac_address = "mac address"
 
 git_release = ""
 
@@ -25,10 +31,11 @@ remaining_time = 0
 files = 0
 warning_sent = False
 
-in_database = False
-logged_in = False
+in_crm = False
+recording_started = False
 in_session = False
 ended_by_user = False
+#recording_started = ""
 
 status_code = 0
 

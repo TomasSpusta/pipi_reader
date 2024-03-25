@@ -1,90 +1,103 @@
-
 import gspread
-import config
-import datetime
+import glob_vars
+#from lcd_display import display
+from datetime import datetime
+
+# spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
+
+# sh_name = config.mac_address
 
 
-gc = gspread.service_account(filename='/home/bluebox/pipi_reader/service_account.json')
-#spredsheet_id = "1c2YquF11Lj2q4WzIapxBK5Q2SdJkwUUzT9qWL3lBwLA"
 
-sheet_name = config.mac_address
-
-def verify_spreadsheet(sheet_name):
+def open_sh():
     try:
-        print ("Opening SH")
-        sh = gc.open(sheet_name)
-        print ("Sh:" + str(sh))
-       
-     
-    except Exception as e:
-        print (e)
-        print ("Creating SH")
-        #if spreadsheet does not exist, create one
-        sh = gc.create(sheet_name)
-        sh.share('n4norfid@gmail.com', perm_type='user', role='writer', notify=True)
-        sh = gc.open(sheet_name)
-        print ("Sh:" + str(sh))
-    return sh
+        gc = gspread.service_account(filename="/home/bluebox/pipi_reader/service_account.json")
+        write_log_temp("gspread service: " +str(gc))
+        try:
+            print("Opening SH")
+            sh = gc.open(glob_vars.mac_address)
+            write_log_temp("SH opened")
+            print("SH Opened")
+
+        except Exception as sh_open_e:
+            print("sh open error: " + str(sh_open_e))
+            print("Creating SH")
+            # if spreadsheet does not exist, create one
+            sh = gc.create(glob_vars.mac_address)
+            print("SH Created")
+            write_log_temp("SH Created")
+            sh.share("n4norfid@gmail.com", perm_type="user", role="writer", notify=True)
+            print("SH Shared")
+            sh = gc.open(glob_vars.mac_address)
+            print("SH Opened")
+            write_log_temp("SH opened")
+
+        ws = sh.sheet1
+        if len(ws.col_values(1)) == 0:
+            prepare_headers(ws)
+        glob_vars.log_row = len(ws.col_values(1)) + 1
+        glob_vars.sh = sh
+        #print (type(sh))
+    except Exception as sh_open_e:
+        print("Open SH LOG Error: " + str(sh_open_e))
+        write_log_temp("Open SH LOG Error: " + str(sh_open_e))
+        #display("LOG Error", str(sh_open_e), "", "", True, True, 2)
 
 
-def makeLog (log_info):
-    print (log_info)
 
-    sh = verify_spreadsheet(sheet_name)
+def prepare_headers(ws):
+    print("Preparing header")
+    ws.update_cell(1, 1, "ACCESS")  # message: time stamp, note: none
+    ws.update_cell(1, 2, "LAN IP ADDRESS")  # message: ip address, note: timestamp
+    ws.update_cell(1, 3, "WLAN IP ADDRESS")  # message: ip address, note: timestamp
+    ws.update_cell(1, 4, "GITHUB")  # message: version, note: none
+    ws.update_cell(1, 5, "INSTRUMENT")  # message: instrument name, note: timestamp
+    ws.update_cell(1, 6, "MAIN SCRIPT")  # message: time stamp, note: none
+    ws.update_cell(1, 7, "CARD SWIPE")  # message: time stamp, note: card ID
+    ws.update_cell(1, 8, "USER INFO")  # message: time stamp, note: user name + user ID
+    ws.update_cell(1, 9, "TOKEN")  # message: time stamp, note: token OK, token created, ERROR
+    ws.update_cell(1, 10, "RECORDING START")  # message: time stamp, note: recording OK, or NOK
+    ws.update_cell(1, 11, "RECORDING END")  # message: time stamp, note: recording ended by users
+    print("Headers prepared")
 
 
-    
-    now = datetime.datetime.now()
-    
+def write_log(column, log_msg, log_note=None):
+    """
+    col 1 ACCESS \n
+    col 2 LAN IP \n
+    col 3 WLAN IP \n
+    col 4 GITHUB \n
+    col 5 INSTRUMENT \n
+    col 6 Main script start \n
+    col 7 CARD SWIPE \n
+    col 8 USER INFO \n
+    col 9 TOKEN \n
+    col 10 RECORDING START \n
+    col 11 RECORDING END \n
+    """
     try:
-        ws = sh.worksheet(config.mac_address)
-    
-    except Exception as e:
-        print (e)
-        sh.add_worksheet(title=config.mac_address, rows=100, cols=20)
-        ws = sh.worksheet(config.mac_address)
-        ws.update_cell(1,1, "Time stamp" )
-        ws.update_cell(1,2, "IP address" ) 
-        ws.update_cell(1,3, "Equipment"  )
-        ws.update_cell(1,4, "User info" )
-        ws.update_cell(1,5, "User log in" )
-        ws.update_cell(1,6, "User log off" )
-              
-
-    number_of_entries = len (ws.col_values(1))
-    entry_row = number_of_entries + 1 
-    time_col = 1
-    ip_col = 2
-    equip_col = 3
-    user_info_col = 4
-    user_in = 5
-    user_off = 6
-    api_crm_col = 5
-    api_booking_col = 6    
-
-    ws.update_cell(entry_row,time_col, str(now) )
-    ws.update_cell(entry_row,ip_col, str(config.ip_eth0 + " " + config.ip_wlan0))
-    ws.update_cell(entry_row,equip_col, config.equipment_name)
-    
-    
-    if config.in_session == True:
-        ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
-        ws.update_cell(entry_row,user_in, "Logged in")
+        #print ("marker1")
+        ws = glob_vars.sh.sheet1
         
-    if config.logged_in and (config.in_session == False or config.ended_by_user == True):
-        ws.update_cell(entry_row,user_info_col, (config.user_name + " " + config.user_id))
-        ws.update_cell(entry_row,user_off, "Logged off")
-
-    ws.client.session.close()
+        print("Writing to SH at column no." + str(column))
+        ws.update_cell(glob_vars.log_row, column, str(log_msg))
+        if log_note != None:
+            note_A1_coordinates = gspread.utils.rowcol_to_a1(glob_vars.log_row, column)
+            ws.update_note(note_A1_coordinates, str(log_note))
+        # print('Closing SH')
+        #ws.client.session.close()
     
 
+    except Exception as write_log_error:
+        print("Write LOG Error: " + str(write_log_error))
+        #display("LOG Error", str(write_log_error), "", "", True, True, 2)
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+def write_log_temp (log_message):
+    temp_log_address = "/home/bluebox/log_temp.txt"
+    #temp_log_address = "pipi_upload/temp_log.txt"
+    f = open (temp_log_address, "a")
+    f.write (str(datetime.now()) + "\t" + log_message)
+    f.write ("\n")
+    f.close()  
+
+  

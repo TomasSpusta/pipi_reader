@@ -1,4 +1,3 @@
-# Main Pipi reader file
 '''
 1. Check internet connection, obtain IP and MAC address => internet module
 2. Check and obtain equipment_id and equipment_name from CRM via MAC address
@@ -15,62 +14,58 @@
 
 '''
 
-
-#Import section
-import faulthandler
+import datetime as dt
 import RPi.GPIO as GPIO
 import time
-import LCD_display
+from lcd_display import display, waiting, backlight, clear
+from log import write_log
+from rfid_reader import card_reader
+import session
+import web_requests
 
-
-try:
-    faulthandler.enable ()
-    from card_reader import card_reader
-    import session
-    from log import makeLog
-    
-    time.sleep (1)
-    LCD_display.display ("Main starting","","" ,"",clear=True, backlight_status=True) 
-    time.sleep (1)
-    
-    makeLog("startup LOG") 
-    
-
-    while 1:
-        try:
-            #initial waiting screen
-            LCD_display.LCD_waiting()
-            
-            #Wait for the card swipe 
-            card_reader ()
-            LCD_display.display("Card Scanned","","","",True,True,2)
-            
-            #check if user is in the RFID database
-            session.user_check ()
-                       
-            #check if the user has reservation on the equipment
-            #in appropriate time window and start recording
-            session.reservation_check ()
-            
-            #every X seconds check the remaining time of session and number of acquired files
-            session.session_recording (refresh_rate= 5)
-                       
-            # when session ends reset variables for new user
-            session.session_end ()
-            
+def main ():
+    try:
+        web_requests.load_token_data()
+        display ("Main starting","","" ,"") 
+        write_log(6, dt.datetime.now())
+        time.sleep (1)
         
-        except Exception as main_while_error:
-            print("Error in main while code: " + str(main_while_error))
-            LCD_display.display("Main while error", str(main_while_error),"","",True,True,2)
+        while True:
+            try:
+                #initial waiting screen
+                waiting ()
+                
+                #Wait for the card swipe 
+                card_reader ()
+                display("Card Scanned","","","")
+                
+                #check if user is in the CRM database
+                web_requests.crm_request_user_by_rfid()
+                #session.user_check ()
+                        
+                #check if the user has reservation on the equipment
+                #in appropriate time window and start recording
+                session.start_recording ()
+                
+                #every X seconds check the remaining time of session and number of acquired files
+                session.session_recording (refresh_rate= 5)
+                        
+                # when session ends reset variables for new user
+                session.session_end ()
+                
+            
+            except Exception as main_loop_e:
+                print("Error in main while code: " + str(main_loop_e))
+                display("Main while error", str(main_loop_e),"","",True,True,2)
 
-except Exception as main_code_error:
-    print("Error in main code: " + str(main_code_error))
-    LCD_display.display("Main code error", str(main_code_error), "", "", True,True,2)
+    except Exception as main_code_e:
+        print("Error in main code: " + str(main_code_e))
+        display("Main code error", str(main_code_e), "", "", True,True,2)
 
-except KeyboardInterrupt:
-    print("CTRL + V pressed, script ended in pipi_reader script")
-    time.sleep (0.5)
-    LCD_display.backlight (False)
-    LCD_display.clear ()        
-    GPIO.cleanup ()
+    except KeyboardInterrupt:
+        print("CTRL + V pressed, script ended in pipi_reader script")
+        time.sleep (0.5)
+        backlight (False)
+        clear ()        
+        GPIO.cleanup ()
     

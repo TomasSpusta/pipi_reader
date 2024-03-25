@@ -1,81 +1,72 @@
-# This script will run as the first script - initialization, on RPi start-up
-#1: Need to check internet connection => 
-    #Display IP adress, 
-    #if not connected, display "Not connected"
-#2: Check and display the Mac adress of the RPi
-#3: download new firmware
-#4: Run "pipi_reader.py"
-
-import config
-from requests import get
-from getmac import get_mac_address as gma #module for mac adress
-import LCD_display
+from datetime import datetime
+import glob_vars
+from getmac import get_mac_address as gma  # module for mac adress
+from lcd_display import display
 import web_requests
-import time
-import RPi.GPIO as GPIO
+
 import netifaces as ni
-
-def network_check (): 
-    config.online_status = False
-    # try to acquire IP adress, therefore check connection to the internet
-      
-    while config.online_status == False:
-        LCD_display.display ("Network check","","" ,"",clear=True, backlight_status=True, sleep=2) 
-        try:
-            ip_eth0 = ni.ifaddresses ("eth0")[ni.AF_INET][0]["addr"]         
-        except Exception as ip_e_eth0:
-            #print (ip_e_eth0)
-            ip_eth0 = 0
-        print('My local eth0 IP address is: {}'.format(ip_eth0))     
-        
-        try:
-            ip_wlan0 = ni.ifaddresses ("wlan0")[ni.AF_INET][0]["addr"]       
-        except Exception as ip_e_wlan0:
-            #print (ip_e_wlan0)
-            ip_wlan0 = 0
-        print('My local wlan0 IP address is: {}'.format(ip_wlan0))
-        #print('My public IP address is: {}'.format(ip))    
-        
-        if ip_eth0 or ip_wlan0 != 0:
-            
-            if ip_eth0 !=0:
-                config.ip_eth0 = ip_eth0
-                
-            if ip_wlan0 !=0:
-                config.ip_wlan0 = ip_wlan0
-                
-            if ip_eth0 !=0:
-                ip = ip_eth0
-            else:
-                ip = ip_wlan0
-            
-            config.online_status = True
-            try:   
-                config.mac_address = gma() # get MAC address
-                print("My MAC adress is: {}".format(config.mac_address))
-                
-                try:
-                    # Send request to CRM to obtain equipment info according to MAC address
-                    web_requests.crm_request_mac()
-                except Exception as  e_CRM:
-                    print (e_CRM)
-                    print ("CRM has problem with MAC address")
-                    
-            except Exception as mac_e:
-                config.mac_address = " "
-                print (mac_e)
-                print ("Problem with MAC address")
-        else:
-            LCD_display.LCD_init (ip, config.mac_address)
-            time.sleep (3)        
-
-    print ("Equipment name: " + str (config.equipment_name))
-    print ("Equipment ID: " + str (config.equipment_id))
-       
-    LCD_display.LCD_init (ip, config.mac_address)
+#from log import write_log, open_sh
+from log import write_log_temp
 
 
 
+def connection_check(): 
+    load_mac_address ()
+    get_ip()
+    
+    
+    # Send request to CRM to obtain equipment info according to MAC address
+    web_requests.crm_request_equipment_by_mac()
+    
+    if glob_vars.ip_eth0 != 0:
+        display ("IP:",glob_vars.ip_eth0,"MAC:",glob_vars.mac_address)
+    else:
+        display ("IP:",glob_vars.ip_wlan0,"MAC:",glob_vars.mac_address)
+    
+    print("Equipment name: " + str(glob_vars.equipment_name))
+    print("Equipment ID: " + str(glob_vars.equipment_id))
+
+def check_lan():
+    try:
+        ip_eth0 = ni.ifaddresses("eth0")[ni.AF_INET][0]["addr"]
+    except Exception as ip_e_eth0:
+        print(ip_e_eth0)
+        ip_eth0 = 0
+
+    return ip_eth0
 
 
+def check_wifi():
+    try:
+        ip_wlan0 = ni.ifaddresses("wlan0")[ni.AF_INET][0]["addr"]
+    except Exception as ip_e_wlan0:
+        print(ip_e_wlan0)
+        ip_wlan0 = 0
+    
+    return ip_wlan0
+    
+def get_ip():
+    ip_lan = check_lan ()
+    ip_wifi = check_wifi ()
+    if ip_lan != 0:
+        glob_vars.ip_eth0 = ip_lan
+    if ip_wifi != 0:
+        glob_vars.ip_wlan0 = ip_wifi
+
+def get_mac_address ():
+    try:
+        mac_address = gma()  # get MAC address
+        print("My MAC adress is: {}".format(mac_address))
+        write_log_temp ("MAC address: " + mac_address)
+        return mac_address
+
+    except Exception as mac_e:
+        write_log_temp ("Get MAC error: " + str(mac_e))
+        print("Get MAC error: " + str(mac_e))
+
+def load_mac_address ():
+    mac_address_file = "/home/bluebox/mac_address.txt"
+    f = open (mac_address_file, "r")
+    glob_vars.mac_address = f.read ()
+    f.close() 
     

@@ -1,5 +1,5 @@
 from mfrc522 import SimpleMFRC522
-import config
+import glob_vars
 
 #create RFID reader instance
 reader = SimpleMFRC522() 
@@ -24,9 +24,9 @@ def card_reader():
     #print (converted_altered_hex_num)
     
     if len (converted_altered_hex_num) == 9:
-        config.card_id = str ("0" + converted_altered_hex_num)      
+        glob_vars.card_id = str ("0" + converted_altered_hex_num)      
     else :   
-        config.card_id = converted_altered_hex_num
+        glob_vars.card_id = converted_altered_hex_num
     
     #print (config.card_id)
     #print (len (config.card_id))
