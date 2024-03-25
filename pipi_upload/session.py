@@ -66,7 +66,8 @@ def session_recording (refresh_rate = 5):
             #print ("session loop")
             web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
-            display("Remaining time:", str(glob_vars.remaining_time) + " min", "Number of files:", str(glob_vars.files) + " files", clear=True, backlight_status=False)         
+            display("Remaining time:", str(glob_vars.remaining_time) + " min", "","", clear=True, backlight_status=False)         
+            #display("Remaining time:", str(glob_vars.remaining_time) + " min", "Number of files:", str(glob_vars.files) + " files", clear=True, backlight_status=False)         
      
             #print ("Status code from booking during session: " + str(config.status_code))  
             if (0 < glob_vars.remaining_time < 6) and glob_vars.warning_sent == False:
