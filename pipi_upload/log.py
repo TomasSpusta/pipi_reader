@@ -10,12 +10,13 @@ from datetime import datetime
 
 
 def open_sh():
+    sh_name = glob_vars.mac_address + "_" + glob_vars.equipment_name
     try:
         gc = gspread.service_account(filename="/home/bluebox/pipi_reader/service_account.json")
         write_log_temp("gspread service: " +str(gc))
         try:
             print("Opening SH")
-            sh = gc.open(glob_vars.mac_address)
+            sh = gc.open(sh_name)
             write_log_temp("SH opened")
             print("SH Opened")
 
@@ -23,12 +24,12 @@ def open_sh():
             print("sh open error: " + str(sh_open_e))
             print("Creating SH")
             # if spreadsheet does not exist, create one
-            sh = gc.create(glob_vars.mac_address)
+            sh = gc.create(sh_name)
             print("SH Created")
             write_log_temp("SH Created")
             sh.share("n4norfid@gmail.com", perm_type="user", role="writer", notify=True)
             print("SH Shared")
-            sh = gc.open(glob_vars.mac_address)
+            sh = gc.open(sh_name)
             print("SH Opened")
             write_log_temp("SH opened")
 
