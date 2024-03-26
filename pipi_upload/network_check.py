@@ -30,6 +30,7 @@ def check_lan():
     try:
         ip_eth0 = ni.ifaddresses("eth0")[ni.AF_INET][0]["addr"]
     except Exception as ip_e_eth0:
+        write_log_temp ("Eth error: " + str(ip_e_eth0))
         print(ip_e_eth0)
         ip_eth0 = 0
 
@@ -40,6 +41,7 @@ def check_wifi():
     try:
         ip_wlan0 = ni.ifaddresses("wlan0")[ni.AF_INET][0]["addr"]
     except Exception as ip_e_wlan0:
+        write_log_temp ("WLan error: " + str(ip_e_wlan0))
         print(ip_e_wlan0)
         ip_wlan0 = 0
     
