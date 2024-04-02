@@ -75,7 +75,7 @@ def session_recording (refresh_rate = 5):
                 glob_vars.warning_sent = True
                 display (str(glob_vars.user_name),"Your session","is about to end","in " + str(glob_vars.remaining_time) + " minutes.", clear=True,backlight_status=True)
                 flashing(0.3, 5) 
-                display("Remaining time:", str(glob_vars.remaining_time) + " min", "Number of files:", str(glob_vars.files) + " files", clear=True, backlight_status=False)
+                #display("Remaining time:", str(glob_vars.remaining_time) + " min", "Number of files:", str(glob_vars.files) + " files", clear=True, backlight_status=False)
         else :
             web_requests.booking_stop_recording ()
             
