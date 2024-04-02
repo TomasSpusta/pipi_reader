@@ -1,5 +1,6 @@
 from datetime import datetime
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
+import RPi as GPIO
 import time
 from lcd_display import display, backlight
 import glob_vars
