@@ -64,7 +64,7 @@ def session_recording (refresh_rate = 5):
                 break  
             
             #print ("session loop")
-            web_requests.booking_request_files ()
+            #web_requests.booking_request_files ()
             web_requests.booking_reservation_info ()
             display("Remaining time:", str(glob_vars.remaining_time) + " min", "","", clear=True, backlight_status=False)         
             #display("Remaining time:", str(glob_vars.remaining_time) + " min", "Number of files:", str(glob_vars.files) + " files", clear=True, backlight_status=False)         
