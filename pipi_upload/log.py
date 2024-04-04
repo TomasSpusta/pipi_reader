@@ -10,6 +10,7 @@ from datetime import datetime
 
 
 def open_sh():
+    print("Opening SH method")
     sh_name = glob_vars.mac_address + "_" + glob_vars.equipment_name
     try:
         gc = gspread.service_account(filename="/home/bluebox/pipi_reader/service_account.json")
