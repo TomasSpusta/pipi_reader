@@ -4,11 +4,12 @@
 
 from datetime import datetime
 import time
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
+import gpiozero
 from lcd_display import display, waiting, flashing
 import web_requests
 import glob_vars
-import button
+import button_gpiozero
 from log import write_log
     
 def start_recording ():
@@ -52,7 +53,7 @@ def session_recording (refresh_rate = 5):
     if glob_vars.in_crm == True and glob_vars.recording_started == True:
         
           
-        button.end_reservation() #start the script which will monitor "STOP SESSION" button
+        button_gpiozero.end_reservation() #start the script which will monitor "STOP SESSION" button
         print ("Recording is running")
         
         #Loop checking and updating session information - remaining time, number of files
@@ -88,7 +89,7 @@ def session_end ():
        
         #when session is ended by time out, or by pressing the button    
         try:
-            button.button_deactivated ()
+            button_gpiozero.button_deactivated ()
             time.sleep (1)
         except Exception as button_deactivation_e:
             print (button_deactivation_e)
