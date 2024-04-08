@@ -41,7 +41,7 @@ status_code = 0
 
 reservation_start_time = "" 
 
-button_pin = 40
+button_pin = 21
 
 ip_eth0 = ""
 ip_wlan0 = ""
