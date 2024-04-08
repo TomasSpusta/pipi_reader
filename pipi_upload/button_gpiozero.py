@@ -6,7 +6,7 @@ from web_requests import booking_stop_recording
 from log import write_log
 from gpiozero import Button
 
-button = Button(40)
+button = Button(21)
 
 def end_reservation ():
     #Function dealing with exding the reseravation after button is pushed for 2 seconds

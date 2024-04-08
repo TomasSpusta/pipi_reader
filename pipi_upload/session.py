@@ -5,7 +5,7 @@
 from datetime import datetime
 import time
 #import RPi.GPIO as GPIO
-import gpiozero
+#import gpiozero
 from lcd_display import display, waiting, flashing
 import web_requests
 import glob_vars
