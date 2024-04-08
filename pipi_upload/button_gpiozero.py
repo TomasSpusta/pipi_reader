@@ -6,11 +6,16 @@ from web_requests import booking_stop_recording
 from log import write_log
 from gpiozero import Button
 
-button = Button(21)
+button = Button(21)    
+if button.closed == True:
+    print ("Btn was closed, creating new button")
+    button = Button(21)
+else:
+    print ("Btn is open")
+    pass    
 
 def end_reservation ():
     #Function dealing with exding the reseravation after button is pushed for 2 seconds
-    button.active_state = True
     print ("Button activated")  
     button.hold_time = 1.5
     button.when_held = button_callback
@@ -18,8 +23,8 @@ def end_reservation ():
     
 def button_deactivated ():
     #Deactivate button, so it cannot be pressed outside the running session
-    button.active_state = False
-    #button.close ()
+    #button.active_state = False
+    button.close ()
     #GPIO.remove_event_detect(glob_vars.button_pin)
     print("button deactivated")
     
