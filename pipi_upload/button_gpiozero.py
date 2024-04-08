@@ -20,6 +20,7 @@ def activate_button ():
 def end_reservation (button):
     #Function dealing with exding the reseravation after button is pushed for 2 seconds
     print ("Button activated")  
+    button.when_activated = backlight (True)
     button.hold_time = 1.5
     button.when_held = button_callback
     #GPIO.add_event_detect(glob_vars.button_pin, GPIO.BOTH, callback = button_callback, bouncetime = 50)
@@ -38,3 +39,4 @@ def button_callback ():
     write_log(11, datetime.now(), "Ended by user")
     glob_vars.ended_by_user = True
     time.sleep (2)
+    
