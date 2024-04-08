@@ -58,7 +58,7 @@ def git_update(local_repo):
         repo.remotes.origin.pull()
         
         write_log_temp ("Repo update finished")
-        print("Update finished")
+        print("Update finished - Branch Main")
         display("Software updated","","","",True,True,2)
 
     except Exception as repo_e:
