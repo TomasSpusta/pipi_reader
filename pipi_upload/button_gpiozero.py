@@ -10,10 +10,7 @@ button = Button(21)
 
 def end_reservation ():
     #Function dealing with exding the reseravation after button is pushed for 2 seconds
-    if button.is_active:
-        pass
-    else: 
-        button = Button(21)
+    button.active_state = True
     print ("Button activated")  
     button.hold_time = 1.5
     button.when_held = button_callback
@@ -21,7 +18,8 @@ def end_reservation ():
     
 def button_deactivated ():
     #Deactivate button, so it cannot be pressed outside the running session
-    button.close ()
+    button.active_state = False
+    #button.close ()
     #GPIO.remove_event_detect(glob_vars.button_pin)
     print("button deactivated")
     
