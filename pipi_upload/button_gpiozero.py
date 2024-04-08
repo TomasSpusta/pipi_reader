@@ -41,4 +41,5 @@ def button_callback ():
     time.sleep (2)
     
 def lights_on ():
+    print ("Button pressed")
     backlight(True)
