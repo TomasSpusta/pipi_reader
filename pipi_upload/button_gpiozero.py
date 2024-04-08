@@ -17,7 +17,7 @@ def end_reservation ():
     
 def button_deactivated ():
     #Deactivate button, so it cannot be pressed outside the running session
-    button.close
+    button.close ()
     #GPIO.remove_event_detect(glob_vars.button_pin)
     print("button deactivated")
     
