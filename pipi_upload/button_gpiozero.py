@@ -5,18 +5,6 @@ import glob_vars
 from web_requests import booking_stop_recording
 from log import write_log
 
-'''
-def activate_button ():
-    
-    button = Button(21)    
-    if button.closed == True:
-        print ("Btn was closed, creating new button")
-        button = Button(21)
-    else:
-        print ("Btn is open")
-    return button
-'''
-
 def end_reservation (button):
     #Function dealing with exding the reseravation after button is pushed for 2 seconds
     print ("Button activated")  

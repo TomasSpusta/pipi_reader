@@ -6,6 +6,7 @@ import glob_vars
 from network_check import connection_check
 from pipi_reader_main import main
 
+print ("Branch: gpio-zero-app")
 #Check internet connection, acquire IP address and MAC address
 try:
     connection_check ()  
