@@ -26,7 +26,7 @@ if glob_vars.online_status == True :
     write_log(2, glob_vars.ip_eth0, datetime.now())
     write_log(3, glob_vars.ip_wlan0, datetime.now())
     write_log(5, glob_vars.equipment_name, datetime.now())
-    
+    write_log(14, "Branch: main")
     
     main ()
 
