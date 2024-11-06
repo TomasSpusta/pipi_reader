@@ -66,7 +66,7 @@ def LCD_init (ip, mac):
     
 def waiting ():
     glob_vars.recording_started = False
-    display ("Welcome on ", glob_vars.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
+    display ("Welcome at ", glob_vars.equipment_name,"Please log in", "with your user card" ,clear=True, backlight_status=True) 
     
 '''  
 def version ():
