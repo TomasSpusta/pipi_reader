@@ -34,7 +34,7 @@ def start_recording ():
         else:   
         #after succesfull login display will show ("you are logged in as _user name_")
             display ("Hi",glob_vars.user_name,"Recording started"," or is running",True, True, 2)
-            display ("To stop it", "hold the button","for 3 seconds","", True, True,2)
+            display ("To stop it,", "hold the button","for 3 seconds.","", True, True,2)
             
             '''
             if status_code == 200:
