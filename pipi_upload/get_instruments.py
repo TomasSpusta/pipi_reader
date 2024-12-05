@@ -1,19 +1,19 @@
 
-import web_requests_class
+import networking
 import json
 
 
-token = web_requests_class.Token("-", "-")
+token = networking.Token("-", "-")
 
 
 def main():
     api_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
     token_path = "token_data.txt"
 
-    is_token_valid = web_requests_class.ApiRequests.validate_token(
+    is_token_valid = networking.ApiRequests.validate_token(
         token, token_path, api_key)
     if is_token_valid is True:
-        instruments = web_requests_class.ApiRequests.fetch_instruments(
+        instruments = networking.ApiRequests.fetch_instruments(
             token).json()
         #print(json.dumps(instruments[0], indent=1))
 
