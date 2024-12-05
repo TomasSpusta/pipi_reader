@@ -1,67 +1,42 @@
-import web_requests_class
+import networking
+import asyncio
+from pathlib import Path
+from token_handler import verify_token, initiate_token
 
 
-def main():
+# TODO: ASYNCIO nastudovat, pouzit na API cally a by na seba cakali.
+# https://medium.com/@moraneus/mastering-pythons-asyncio-a-practical-guide-0a673265cf04
 
-    token = web_requests_class.Token("-", "-")
+
+async def main():
+
     instrument_mac_address = "e4:5f:01:ea:99:17"
     card_id = 1834257108
-    api_key = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  # s"
-    token_path = "token_data.txt"
+    API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  #
+    TOKEN_FILE = Path("token_data.json")
 
-    user = web_requests_class.ApiRequests.fetch_user_data(card_id)
-    print("User: " + user.name)
+    # token = await initiate_token(api_key, TOKEN_FILE)
 
-    instrument = web_requests_class.ApiRequests.fetch_instrument_data(
-        instrument_mac_address)
-    print("Instrument: " + instrument.name)
+    token = await verify_token(TOKEN_FILE, API_KEY)
 
-    is_token_valid = web_requests_class.ApiRequests.validate_token(
-        token, token_path, api_key)
+    instrument = await networking.fetch_instrument_data(instrument_mac_address)
+    user = await networking.fetch_user_data(card_id)
 
-    if is_token_valid is True:
-        web_requests_class.ApiRequests.start_recording(user, instrument, token)
-
-    '''
-    instrument_info = web_requests_class.ApiRequests.fetch_instrument_data(
-        instrument_mac_address)
-    user_data = web_requests_class.ApiRequests.fetch_user_data(card_id)
-    if instrument_info != None:
-        print(instrument_info.name + " " + instrument_info.id)
-    else:
-        print("Box is not in database or box is not assigned to the instrument")
-    print(user_data.name + " " + user_data.id)
-   
-   
-    token_base = web_requests_class.Token("-", "-")
-    print(token_base.expiration + " " + token_base.string)
-
-    token = web_requests_class.ApiRequests.load_token(
-        token_base, token_path)
-
-    is_token_valid = web_requests_class.ApiRequests.check_expiration(token)
-    if is_token_valid is True:
-        print("Token je OK")
-
-    else:
-        token = web_requests_class.ApiRequests.fetch_token(api_key)
-        if token != None:
-            print("Saving token")
-            web_requests_class.ApiRequests.save_token(token)
-            print("reseting token")
-            token = web_requests_class.Token("-", "-")
-            print(token.expiration + " " + token.string)
-            print("loading token")
-
+    if instrument:
+        if user:
+            if token:
+                #print(f"Token: {token.string[-20:]}, Expiration: {token.expiration}")
+                await networking.start_recording(user, instrument, token)
+            else:
+                print("Token is not OK")
         else:
-            print("Problem with get token method, check API")
+            print("User is not in database - please register")
+    else:
+        print("Instrument-mac address pair does not exist. Check settings.")
 
-    #print("Api token")
-    #print(token.expiration + " " + token.string)
-
-    # web_requests_class.ApiRequests.get_token(api_key)
-    '''
+    while True:
+        # display waiting screen
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
