@@ -169,7 +169,7 @@ async def fetch_mac () -> str:
             
 async def fetch_ip () -> str:
         try:
-            ip = check_output(['hostname', '-I']) 
+            ip = check_output(['hostname', '-I'])
             print("My IP adress is: {}".format(ip))
             return ip
 

@@ -16,8 +16,8 @@ from subprocess import check_output
 
 async def main():
     #lcd = LCDDisplay()
-    ip = networking.fetch_ip
-    mac = networking.fetch_mac
+    ip = await networking.fetch_ip()
+    mac = await networking.fetch_mac()
     lcd = CharLCD("PCF8574", 0x27)
     #instrument_mac_address = "e4:5f:01:ea:99:17"
     API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  #
