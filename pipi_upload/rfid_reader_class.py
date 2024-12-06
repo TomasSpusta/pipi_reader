@@ -7,14 +7,26 @@ class RFIDReader:
         self.reader = SimpleMFRC522()
         self.last_card_id = None
 
+    
+
+
+
+
+
     async def read_card(self):
-        try:
-            card_id, _ = await asyncio.to_thread(self.reader.read)
-            corrected_card_id = await self.card_id_correction(card_id)
-            return str(corrected_card_id)
-        except Exception as e:
-            print(f"RFID read error: {e}")
-            return None
+        while True:
+            try:
+                card_id, _ = await asyncio.to_thread(self.reader.read)
+                corrected_card_id = await self.card_id_correction(card_id)
+                if corrected_card_id != self.last_card_id:
+                    self.last_card_id = corrected_card_id
+                await asyncio.sleep (0.1)            
+                return str(corrected_card_id)
+            
+            
+            except Exception as e:
+                print(f"RFID read error: {e}")
+                return None
 
     async def card_id_correction(self, card_id):
         # convert decimal number from RFID reader to hexadecimal number

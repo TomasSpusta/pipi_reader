@@ -5,6 +5,9 @@ import aiohttp
 from model_classes import Instrument, Token, User
 from typing import Optional
 
+from getmac import get_mac_address as gma  # module for mac adress
+from subprocess import check_output #module for ip address
+
 
 async def fetch_instrument_data(mac_address:str) -> Optional[Instrument]:
     print("Fetching instrument data")
@@ -152,3 +155,23 @@ async def fetch_token(api_key: str) -> Optional[Token]:
     except Exception as e:
         print(f"Error in fetch token: {e}")
         return None
+
+
+        
+async def fetch_mac () -> str:
+        try:
+            mac = gma()  
+            print("My MAC adress is: {}".format(mac))
+            return mac
+
+        except Exception as mac_e:
+            print("Get MAC error: " + str(mac_e))
+            
+async def fetch_ip () -> str:
+        try:
+            ip = check_output(['hostname', '-I']) 
+            print("My IP adress is: {}".format(ip))
+            return ip
+
+        except Exception as mac_e:
+            print("fetch ip error: " + str(mac_e))

@@ -4,7 +4,7 @@ from pathlib import Path
 from token_handler import verify_token, initiate_token
 from lcd_display_class import LCDDisplay
 from RPLCD.i2c import CharLCD
-from model_classes import Instrument, Mac_Ip
+from model_classes import Instrument
 from rfid_reader_class import RFIDReader
 from subprocess import check_output
 
@@ -16,10 +16,10 @@ from subprocess import check_output
 
 async def main():
     #lcd = LCDDisplay()
-    #ip = Mac_Ip.fetch_ip
-    #mac = Mac_Ip.fetch_mac
+    ip = networking.fetch_ip
+    mac = networking.fetch_mac
     lcd = CharLCD("PCF8574", 0x27)
-    instrument_mac_address = "e4:5f:01:ea:99:17"
+    #instrument_mac_address = "e4:5f:01:ea:99:17"
     API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  #
     TOKEN_FILE = Path("token_data.json")
     rfid_reader = RFIDReader()
@@ -29,15 +29,20 @@ async def main():
     #lcd.write_string (ip_address)
     
    
-    instrument = await networking.fetch_instrument_data(instrument_mac_address)
+    instrument = await networking.fetch_instrument_data(mac)
         
         
     while True:
+        lcd.write_string("Waiting for card....")
         card_id = await rfid_reader.read_card()
         
         if card_id:
+            lcd.clear()
+            lcd.write_string(f"Card ID: {card_id}")
             print(f"Card ID: {card_id}")
-            asyncio.sleep(1)
+            await asyncio.sleep(1)
+            lcd.clear()
+            
 
                 
          
