@@ -1,16 +1,14 @@
-from RPi import GPIO
+from gpiozero import Button
 from lcd_display import display, backlight
 import time
+import asyncio
 
 
 class ButtonHandler:
-    def __init__(self, pin: int) -> None:
-        self.pin = pin
-        GPIO.setmode(GPIO.BCM)
-        try:
-            GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        except RuntimeError as e:
-            print(f"GPIO setup failed: {e}")
+    def __init__(self, pin: int, backlight_callback, display_callback) -> None:
+        self.button = Button(pin)
+        backlight_callback = backlight_callback
+        display_callback = display_callback
 
     def activate_btn(self):
         print("Button activated")

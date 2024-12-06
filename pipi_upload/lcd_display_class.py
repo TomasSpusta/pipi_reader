@@ -1,7 +1,8 @@
 
 from RPLCD.i2c import CharLCD
 import time
-
+from model_classes import Instrument
+import asyncio
 
 class LCDDisplay:
     def __init__(self, i2c_address=0x27):
@@ -12,9 +13,9 @@ class LCDDisplay:
         self.lcd.cursor_pos = (row-1, 0)
         self.lcd.write_string = (text)
 
-    def message(self, line1, line2, line3, line4, backlight):
+    async def message(self, line1, line2, line3, line4, backlight:bool, clear:bool):
         self.lcd.backlight_enabled = backlight
-        if self.clear == True:
+        if clear is True:
             self.lcd.clear()
         self.write(str(line1), 1)
         self.write(str(line2), 2)
@@ -33,3 +34,16 @@ class LCDDisplay:
             self.lcd.backlight_enabled = True
             time.sleep(interval)
             self.lcd.backlight_enabled = False
+    
+    async def welcome_screen(self, instrument:Instrument):
+        self.message (
+        line1= "Welcome at",
+        line2= instrument.name,
+        line3= "plaease log in" ,
+        line4= "with your card.",
+        backlight=True,
+        clear=True
+        )
+            
+            
+        

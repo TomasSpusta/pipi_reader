@@ -2,6 +2,7 @@ import networking
 import asyncio
 from pathlib import Path
 from token_handler import verify_token, initiate_token
+from lcd_display_class import LCDDisplay
 
 
 # TODO: ASYNCIO nastudovat, pouzit na API cally a by na seba cakali.
@@ -9,7 +10,7 @@ from token_handler import verify_token, initiate_token
 
 
 async def main():
-
+    lcd = LCDDisplay()
     instrument_mac_address = "e4:5f:01:ea:99:17"
     card_id = 1834257108
     API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  #
@@ -35,6 +36,20 @@ async def main():
         print("Instrument-mac address pair does not exist. Check settings.")
 
     while True:
+        # waiting screen
+        await lcd.welcome_screen(instrument=instrument)
+
+        # await the card swipe
+
+        # validate user/reservation start
+        # observe button
+        # observe card swipe to elongate reservation
+        # observe time to end
+        # stop reservation
+        # log out user
+        # make log statements
+
+        pass
         # display waiting screen
 
 
