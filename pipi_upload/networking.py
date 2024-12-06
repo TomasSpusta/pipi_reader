@@ -6,7 +6,7 @@ from model_classes import Instrument, Token, User
 from typing import Optional
 
 
-async def fetch_instrument_data(mac_address) -> Optional[Instrument]:
+async def fetch_instrument_data(mac_address:str) -> Optional[Instrument]:
     print("Fetching instrument data")
     url = "https://crm.api.ceitec.cz/get-equipment-by-mac-address"
 

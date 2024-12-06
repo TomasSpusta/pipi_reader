@@ -5,15 +5,14 @@ from model_classes import Instrument
 import asyncio
 
 class LCDDisplay:
-    def __init__(self, i2c_address=0x27):
-        self.lcd = CharLCD(
-            i2c_expander='PCF8574', address=i2c_address, port=1, cols=20, rows=4, dotsize=8)
+    def __init__(self):
+        self.lcd = CharLCD(            i2c_expander='PCF8574', address=0x27)
 
-    def write(self, text, row):
+    async def write(self, text, row):
         self.lcd.cursor_pos = (row-1, 0)
         self.lcd.write_string = (text)
 
-    async def message(self, line1, line2, line3, line4, backlight:bool, clear:bool):
+    async def message(self, line1:str, line2:None, line3:None, line4:None, backlight:bool, clear:bool):
         self.lcd.backlight_enabled = backlight
         if clear is True:
             self.lcd.clear()
@@ -36,7 +35,7 @@ class LCDDisplay:
             self.lcd.backlight_enabled = False
     
     async def welcome_screen(self, instrument:Instrument):
-        self.message (
+        await self.message (
         line1= "Welcome at",
         line2= instrument.name,
         line3= "plaease log in" ,

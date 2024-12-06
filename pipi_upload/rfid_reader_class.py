@@ -1,20 +1,22 @@
 from mfrc522 import SimpleMFRC522
+import asyncio
 
 
 class RFIDReader:
     def __init__(self) -> None:
         self.reader = SimpleMFRC522()
+        self.last_card_id = None
 
-    def read_card(self):
+    async def read_card(self):
         try:
-            card_id, _ = self.reader.read()
-            corrected_card_id = self.card_id_correction(card_id)
+            card_id, _ = await asyncio.to_thread(self.reader.read)
+            corrected_card_id = await self.card_id_correction(card_id)
             return str(corrected_card_id)
         except Exception as e:
             print(f"RFID read error: {e}")
             return None
 
-    def card_id_correction(self, card_id):
+    async def card_id_correction(self, card_id):
         # convert decimal number from RFID reader to hexadecimal number
         hex_num = hex(card_id)
         # trim the last 2 characters from the hexadecimal number
