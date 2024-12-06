@@ -16,6 +16,7 @@ async def main():
     API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  #
     TOKEN_FILE = Path("token_data.json")
 
+    #pokus synchrnonizace
     # token = await initiate_token(api_key, TOKEN_FILE)
 
     token = await verify_token(TOKEN_FILE, API_KEY)
