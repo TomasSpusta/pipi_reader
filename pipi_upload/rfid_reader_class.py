@@ -6,24 +6,22 @@ class RFIDReader:
     def __init__(self) -> None:
         self.reader = SimpleMFRC522()
         self.last_card_id = None
-
-    
-
-
-
-
+        self._running =True
 
     async def read_card(self):
         while True:
             try:
-                card_id, _ = await asyncio.to_thread(self.reader.read)
+                
+                await asyncio.sleep(0.1)    
+                card_id, _ = await asyncio.wait_for( asyncio.to_thread(self.reader.read), timeout=5)
                 corrected_card_id = await self.card_id_correction(card_id)
                 if corrected_card_id != self.last_card_id:
                     self.last_card_id = corrected_card_id
-                await asyncio.sleep (0.1)            
                 return str(corrected_card_id)
             
-            
+            except asyncio.CancelledError:
+                print ("RFID reading task was cancelled")
+                break
             except Exception as e:
                 print(f"RFID read error: {e}")
                 return None
@@ -42,9 +40,16 @@ class RFIDReader:
         # convert altered hexadecimal number to the new decimal number, which will be the card_id sent to the API
         converted_altered_hex_num = str(int(altered_hex_num, 16))
         #print (converted_altered_hex_num)
-
+        
+        '''
         if len(converted_altered_hex_num) == 9:
             corrected_card_id = str("0" + converted_altered_hex_num)
             return corrected_card_id
         else:
             return converted_altered_hex_num
+        '''     
+        
+        return converted_altered_hex_num.zfill(10)
+
+    async def cleanup(self):
+        self._running = False
