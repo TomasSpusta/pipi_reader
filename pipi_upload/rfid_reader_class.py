@@ -13,7 +13,7 @@ class RFIDReader:
             try:
                 
                 await asyncio.sleep(0.1)    
-                card_id, _ = await asyncio.wait_for( asyncio.to_thread(self.reader.read), timeout=5)
+                card_id, _ = self.reader.read()
                 corrected_card_id = await self.card_id_correction(card_id)
                 if corrected_card_id != self.last_card_id:
                     self.last_card_id = corrected_card_id

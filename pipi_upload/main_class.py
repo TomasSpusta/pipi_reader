@@ -21,6 +21,7 @@ executor = ThreadPoolExecutor()
 shutdown_in_progress  =False
 
 async def main():
+    
     try:
         lcd_controller = LCDController()
         ip = await networking.fetch_ip()
@@ -30,24 +31,33 @@ async def main():
         TOKEN_FILE = Path("token_data.json")
         rfid_reader = RFIDReader()  
     
+        token = await initiate_token(API_KEY, TOKEN_FILE)
         instrument = await networking.fetch_instrument_data(mac)
+        
+        
             
             
         while True:
             try:
-                await lcd_controller.welcome_screen(instrument=instrument)
-                card_id = await asyncio.wait_for(rfid_reader.read_card(),timeout=5)
+                if instrument:
+                    await lcd_controller.welcome_screen(instrument=instrument)
+                    card_id = await asyncio.wait_for(rfid_reader.read_card(),timeout=5)
+                    print (card_id)
+                    if card_id:
+                        user = await networking.fetch_user_data(card_id)
+                        print (user)
+                        if user:
+                            token = await verify_token(TOKEN_FILE, API_KEY)
+                            recording_message = await networking.start_recording(user, instrument, token)
+                            print (recording_message)
+                            #TODO: Dodelat logiku prihlasovani.
+                        
+                        
+                  
                 
-                if card_id:
-                    #lcd.clear()
-                    await lcd_controller.message(line1=(f"Card ID: {card_id}"))
-                    print(f"Card ID: {card_id}")
-                await asyncio.sleep(1)
-                    #lcd.clear()
-                # Schedule both coroutines
-            #lcd_task = asyncio.create_task(update_lcd())
-            #button_task = asyncio.create_task(monitor_button())
-            
+                
+                
+                       
             except asyncio.TimeoutError:
                 print("Timeout while waiting for card read.")
             except asyncio.CancelledError:
@@ -76,11 +86,6 @@ def terminate_thread(thread: threading.Thread):
         ctypes.pythonapi.PyThreadState_SetAsyncExc(thread.ident, None)
         raise SystemError("PyThreadState_SetAsyncExc failed.")
     print(f"Forcefully terminated thread: {thread.name}")
-
-
-
-
-
 
 def log_active_threads():
     print(f"Active threads: {threading.active_count()}")
@@ -159,23 +164,8 @@ if __name__ == "__main__":
             loop.close()
             print("Closed")
     
-            
-        
-        
-   # Run tasks concurrently
-    #await asyncio.gather(lcd_task, button_task)  
-
-                
-         
-            
-          
+ 
     
-    #token = await initiate_token(api_key, TOKEN_FILE)
-
-    #token = await verify_token(TOKEN_FILE, API_KEY)
-
-    #instrument = await networking.fetch_instrument_data(instrument_mac_address)
-    #user = await networking.fetch_user_data(card_id)
     
            
     
