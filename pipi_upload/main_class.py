@@ -1,43 +1,47 @@
-import threading
 import ctypes
 import networking
 import asyncio
 from pathlib import Path
 from token_handler import verify_token, initiate_token
 from lcd_display_class import LCDController
-from model_classes import Instrument
+from model_classes import Instrument, Session
 from rfid_reader_class import RFIDReader
 from subprocess import check_output
-import sys
-from concurrent.futures import ThreadPoolExecutor
-import signal
+from gpiozero import Button
 
 
 
 # TODO: ASYNCIO nastudovat, pouzit na API cally a by na seba cakali.
 # https://medium.com/@moraneus/mastering-pythons-asyncio-a-practical-guide-0a673265cf04
 
-executor = ThreadPoolExecutor()
-shutdown_in_progress  =False
+async def 
+
+
+
+
 
 async def main():
     
     try:
+        button = Button(21)
         lcd_controller = LCDController()
+        rfid_reader = RFIDReader()
+        #session = Session()  
         ip = await networking.fetch_ip()
         mac = await networking.fetch_mac()
         #instrument_mac_address = "e4:5f:01:ea:99:17"
         API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  #
         TOKEN_FILE = Path("token_data.json")
-        rfid_reader = RFIDReader()  
-    
-        token = await initiate_token(API_KEY, TOKEN_FILE)
+        
+        token = await verify_token(TOKEN_FILE, API_KEY) 
+        #token = await initiate_token(API_KEY, TOKEN_FILE)
         instrument = await networking.fetch_instrument_data(mac)
         
         
             
             
         while True:
+            
             try:
                 if instrument:
                     await lcd_controller.welcome_screen(instrument=instrument)
@@ -45,18 +49,44 @@ async def main():
                     print (card_id)
                     if card_id:
                         user = await networking.fetch_user_data(card_id)
-                        print (user)
+                        print (f"User name: {user.name}")
                         if user:
                             token = await verify_token(TOKEN_FILE, API_KEY)
-                            recording_message = await networking.start_recording(user, instrument, token)
-                            print (recording_message)
+                            session = await networking.start_recording(user, instrument, token, session=None)
+                            if session:
+                                await lcd_controller.message("Recording is running")
+                                
+                                while session.remaining_time > 0:
+                                    print (f"session loop... remaining time {session.remaining_time} ")
+                                    async with asyncio.TaskGroup() as tg:
+                                        task1 = tg. create_task (lcd_controller.write (text = f"Remaing session time{session.remaining_time} minutes", row=2))
+                                        task2 = tg. create_task (monitor_button(button, lcd_controller))
+                                        task3 = tg. create_task (networking.fetch_reservation_info (token, session))
+                                    #print (f"Session data in main loop:\n{session}")
+                                    
+                 #                   print ("Fetching reservation info")
+                                    #session = await networking.fetch_reservation_info (token, session)
+                                  
+                                    #print (f"Session data in main loop:\n{session}")
+                                    
+                                  
+                #                    print ("Showing remaining time")
+                                   
+                                                  
+                                    print ("Gathering tasks")
+                                    await asyncio.gather(task1, task2, task3)
+                                    print ("Sleep 5 sec")
+                                    await asyncio.sleep (5)
+                                    
+                                    
+                                else:
+                                    print (f"Session ended")
+                                    await lcd_controller.message(line1="Recording is ended", display_time=5)
+                            
+                            #print (recording_message)
                             #TODO: Dodelat logiku prihlasovani.
                         
-                        
-                  
-                
-                
-                
+                await asyncio.sleep(0.2)       
                        
             except asyncio.TimeoutError:
                 print("Timeout while waiting for card read.")
@@ -66,87 +96,43 @@ async def main():
             except Exception as e:
                 print(f"Unexpected error in main loop: {e}")
     finally:
+        print ("Finally block")
         await rfid_reader.cleanup()
         await lcd_controller.cleanup()
 
 
+async def monitor_button(button:Button, lcd_controller: LCDController):
+    """Coroutine to handle button presses."""
+    hold_time = 0
+    while True:
+        if button.is_pressed:
+            print ("Button pressed")
+                         
+            hold_time += 1
+            if hold_time >= 3:
+                print ("Button held")
+                await lcd_controller.clear()
+                await lcd_controller.message("Session ended by user")
+                await asyncio.sleep(0.5)  # Debounce delay
+                hold_time = 0
+                
+        else:
+            hold_time = 0
+            #break
+        #print ("Button is not pressed")
+        await asyncio.sleep(0.5) # Check button status frequently
+        
+        
+  
 
-def terminate_thread(thread: threading.Thread):
-    """Forcefully terminate a thread."""
-    if not thread.is_alive():
-        return
-    exc = ctypes.py_object(SystemExit)
-    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(
-        ctypes.c_long(thread.ident), exc
-    )
-    if res == 0:
-        raise ValueError("Thread not found.")
-    elif res > 1:
-        # If it modified more than one thread, reset and throw an error
-        ctypes.pythonapi.PyThreadState_SetAsyncExc(thread.ident, None)
-        raise SystemError("PyThreadState_SetAsyncExc failed.")
-    print(f"Forcefully terminated thread: {thread.name}")
 
-def log_active_threads():
-    print(f"Active threads: {threading.active_count()}")
-    for thread in threading.enumerate():
-        print(f"Thread: {thread.name}, Alive: {thread.is_alive()}")
- 
-async def shutdown(loop, signal = None):
-    global shutdown_in_progress
-    if shutdown_in_progress:
-        return
-    shutdown_in_progress = True
-    
-    if signal:
-        print (f"Recieved exit signal: {signal.name}")
-    
-    tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
-    
-    print(f"Cancelling {len(tasks)} task(s)...")
-    
-    for task in tasks:
-        print(f"Pending task during shutdown: {task}")
-        task.cancel()
-    
-    try:
-        await asyncio.gather(*tasks, return_exceptions=True)
-    except Exception as e:
-        print(f"Error during task cancellation: {e}")
-    
-    print("Shutting down thread pool...")
-    try:        
-        executor.shutdown(wait=True)
-    except Exception as e:
-        print(f"Error during thread pool shutdown: {e}")
-    
-    print("Active threads before cleanup:")
-    log_active_threads()
-    
-    # Forcefully stop lingering threads if still active
-    for thread in threading.enumerate():
-        if thread.name.startswith("asyncio") and thread.is_alive():  
-            try:
-                terminate_thread(thread)
-            except Exception as e:
-                print(f"Failed to terminate thread {thread.name}: {e}")
 
-    print("Active threads after cleanup:")
-    log_active_threads()
-    
-    print("Stopping event loop...")
-    loop.stop()
     
 
 if __name__ == "__main__":
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    
-    for sig in (signal.SIGINT, signal.SIGTERM):   
-            loop.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(loop, signal=s)))
     try:
-        loop.run_until_complete(main())
-        #asyncio.run(main())
+        asyncio.run(main())
+        
     except KeyboardInterrupt:
         print("Ended by CTRL + C")
        
@@ -156,14 +142,7 @@ if __name__ == "__main__":
     except Exception as e:
         print (f"Unexpected error: {e}")
            
-    finally:
-        print("Shutting down cleanly...")
-        try:
-            loop.run_until_complete(shutdown(loop))
-        finally:
-            loop.close()
-            print("Closed")
-    
+   
  
     
     
