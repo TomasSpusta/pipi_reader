@@ -18,14 +18,26 @@ class LCDController:
 
     async def message(
         self, 
-        line1: Optional[str], line2:str = None, line3:str =None, line4:str = None, backlight:bool =True, clear:bool=True):
+        line1: Optional[str] = None, 
+        line2:Optional[str]= None, 
+        line3:Optional[str]= None, 
+        line4:Optional[str]= None,
+        backlight:bool =True,
+        clear:bool=True,
+        display_time:int = 1):
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", backlight)
         if clear is True:
             await asyncio.to_thread(self.lcd.clear)
-        await self.write(line1, 1)
-        await self.write(line2 or "", 2)
-        await self.write(line3 or "", 3)
-        await self.write(line4 or "", 4)
+        if line1 is not None:
+            await self.write(line1, 1)
+        if line2 is not None:
+            await self.write(line2, 2)
+        if line3 is not None:
+            await self.write(line3, 3)
+        if line4 is not None:
+            await self.write(line4, 4)
+            
+        await asyncio.sleep (display_time)
 
     async def backlight(self, status:bool):
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", status)
@@ -50,8 +62,9 @@ class LCDController:
         await self.message(*message_template)
     
     async def cleanup(self):
-        await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", False)
         await asyncio.to_thread(self.lcd.clear)
+        await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", False)
+        
         
     
     

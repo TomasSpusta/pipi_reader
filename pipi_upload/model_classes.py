@@ -1,5 +1,5 @@
 
-
+from dataclasses import dataclass
 
 class User:
     def __init__(self, id: str, name: str):
@@ -11,8 +11,12 @@ class Instrument:
     def __init__(self, id: str, name: str):
         self.id = id
         self.name = name
-        
 
+@dataclass
+class Session:
+    remaining_time:int = 0
+    recording_id:str = ""
+    reservation_id:str = ""
 
 
 class Token:

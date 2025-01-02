@@ -2,7 +2,7 @@ import requests
 import unidecode
 import aiohttp
 
-from model_classes import Instrument, Token, User
+from model_classes import Instrument, Token, User, Session
 from typing import Optional
 
 from getmac import get_mac_address as gma  # module for mac adress
@@ -79,14 +79,14 @@ async def fetch_user_data(card_id) -> Optional[User]:
         return None
 
 
-async def start_recording(user: User, instrument: Instrument, token: Token):
+async def start_recording(user: User, instrument: Instrument, token: Token, session:Session) -> Optional[ Session]:
     print("Starting the recording...")
     payload = {"contactId": user.id, "equipmentId": instrument.id}
     headers = {"Authorization": "Bearer " + token.string}
     url = "https://booking.ceitec.cz/api/recording/start/"
     try:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url=url, json=payload, headers=headers) as response:
+        async with aiohttp.ClientSession() as http_session:
+            async with http_session.post(url=url, json=payload, headers=headers) as response:
 
                 if response.status != 200:
                     error_content = await response.json()
@@ -95,15 +95,51 @@ async def start_recording(user: User, instrument: Instrument, token: Token):
                     print(f"Message: {error_message}")
                     return None
                 else:
-                    error_content = await response.json()
-                    #print(f"Error content {error_content}")
-                    error_message = error_content.get("status")
-                    print(f"Message: {error_message}")
-                    return None
+                    response_content = await response.json()
+                    #print(f"response content {response_content}")
+                    status_message = response_content.get("status")
+                    print(f"Message: {status_message}")
+                    
+                    session = Session(
+                        recording_id = response_content["recording"],
+                        reservation_id= response_content["reservation"] ,
+                        remaining_time= int(response_content["timetoend"]) 
+                    )
+                    #print (f"Session data in networking:\n{session}")
+                    return session
+                    
+                    
 
     except aiohttp.ClientError as e:
         print("Error in start_recording: " + e)
 
+async def fetch_reservation_info (token:Token, session:Session) -> Optional[ Session]:
+    print("Fetching recording info...")
+    headers = {"Authorization": "Bearer " + token.string}
+    url = f"https://booking.ceitec.cz/api/service-appointment/{session.reservation_id}/raspberry"
+    try:
+        async with aiohttp.ClientSession() as http_session:
+            async with http_session.get(url=url, headers=headers) as response:
+                print (f"Response status recording info:{response.status}")
+                if response.status != 200:
+                    error_content = await response.json()
+                    #print(f"Error content {error_content}")
+                    error_message = error_content.get("status")
+                    print(f"Message: {error_message}")
+                    #return None
+                else:
+                    
+                    response_content = await response.json()
+                    #print(f"response content {response_content}")
+                    
+                    session.remaining_time= int(response_content["timetoend"]) 
+                    
+                    
+                    return session
+                    
+
+    except aiohttp.ClientError as e:
+        print("Error in start_recording: " + e)
 
 async def fetch_instruments(token: Token):
     headers = {"Authorization": "Bearer " + token.string}
@@ -157,7 +193,7 @@ async def fetch_token(api_key: str) -> Optional[Token]:
         return None
 
 
-        
+             
 async def fetch_mac () -> str:
         try:
             mac = gma()  

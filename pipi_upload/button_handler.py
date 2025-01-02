@@ -9,6 +9,17 @@ class ButtonHandler:
         self.button = Button(pin)
         backlight_callback = backlight_callback
         display_callback = display_callback
+        
+'''        
+        
+    async def monitor_button(self):
+        """Coroutine to handle button presses."""
+        while True:
+            if self.button.is_pressed:
+                lcd.clear()
+                lcd.write_string("Button Pressed!")
+                await asyncio.sleep(0.5)  # Debounce delay
+            await asyncio.sleep(0.1)  # Check button status frequently
 
     def activate_btn(self):
         print("Button activated")
@@ -50,3 +61,5 @@ class ButtonHandler:
                 #write_log(11, datetime.now(), "Ended by user")
                 #glob_vars.ended_by_user = True
                 # time.sleep(2)
+
+'''

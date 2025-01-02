@@ -9,22 +9,22 @@ class RFIDReader:
         self._running =True
 
     async def read_card(self):
-        while True:
+        
             try:
-                
-                await asyncio.sleep(0.1)    
+                print ("Waiting for card...")
+                await asyncio.sleep(0.1)
                 card_id, _ = self.reader.read()
                 corrected_card_id = await self.card_id_correction(card_id)
                 if corrected_card_id != self.last_card_id:
                     self.last_card_id = corrected_card_id
                 return str(corrected_card_id)
-            
+                
             except asyncio.CancelledError:
                 print ("RFID reading task was cancelled")
-                break
             except Exception as e:
                 print(f"RFID read error: {e}")
                 return None
+            
 
     async def card_id_correction(self, card_id):
         # convert decimal number from RFID reader to hexadecimal number
