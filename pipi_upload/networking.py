@@ -107,20 +107,45 @@ async def start_recording(user: User, instrument: Instrument, token: Token, sess
                     )
                     #print (f"Session data in networking:\n{session}")
                     return session
-                    
-                    
 
     except aiohttp.ClientError as e:
         print("Error in start_recording: " + e)
 
+async def stop_recording (session:Session, instrument: Instrument, token:Token):
+    print("Stopping the recording...")
+    
+    payload = {"serviceAppointmentId":session.reservation_id, "equipmentId":instrument.id}
+    headers = {"Authorization" : "Bearer " + token.string}
+    url = "https://booking.ceitec.cz/api/recording/stop"
+    
+    try:
+       async with aiohttp.ClientSession() as http_session:
+           async with http_session.post(url=url, json=payload, headers=headers) as response:
+    
+            if response.status != 200:
+                            error_content = await response.json()
+                            #print(f"Error content {error_content}")
+                            error_message = error_content.get("status")
+                            print(f"Message: {error_message}")
+                            return None
+            else:
+                response_content = await response.json()
+                #print(f"response content {response_content}")
+                status_message = response_content.get("status")
+                print(f"Message: {response_content}")
+                print(f"Message: {status_message}")
+  
+    except aiohttp.ClientError as e:
+        print("Error in stop_recording: " + e)
+
 async def fetch_reservation_info (token:Token, session:Session) -> Optional[ Session]:
-    print("Fetching recording info...")
+    #print("Fetching recording info...")
     headers = {"Authorization": "Bearer " + token.string}
     url = f"https://booking.ceitec.cz/api/service-appointment/{session.reservation_id}/raspberry"
     try:
         async with aiohttp.ClientSession() as http_session:
             async with http_session.get(url=url, headers=headers) as response:
-                print (f"Response status recording info:{response.status}")
+                #print (f"Response status recording info:{response.status}")
                 if response.status != 200:
                     error_content = await response.json()
                     #print(f"Error content {error_content}")
@@ -128,16 +153,11 @@ async def fetch_reservation_info (token:Token, session:Session) -> Optional[ Ses
                     print(f"Message: {error_message}")
                     #return None
                 else:
-                    
                     response_content = await response.json()
                     #print(f"response content {response_content}")
-                    
                     session.remaining_time= int(response_content["timetoend"]) 
-                    
-                    
                     return session
                     
-
     except aiohttp.ClientError as e:
         print("Error in start_recording: " + e)
 

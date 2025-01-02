@@ -1,4 +1,4 @@
-import ctypes
+
 import networking
 import asyncio
 from pathlib import Path
@@ -6,19 +6,12 @@ from token_handler import verify_token, initiate_token
 from lcd_display_class import LCDController
 from model_classes import Instrument, Session
 from rfid_reader_class import RFIDReader
-from subprocess import check_output
 from gpiozero import Button
 
 
 
 # TODO: ASYNCIO nastudovat, pouzit na API cally a by na seba cakali.
 # https://medium.com/@moraneus/mastering-pythons-asyncio-a-practical-guide-0a673265cf04
-
-async def 
-
-
-
-
 
 async def main():
     
