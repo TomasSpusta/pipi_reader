@@ -1,16 +1,53 @@
 from mfrc522 import SimpleMFRC522
 import asyncio
+import threading
 
 
 class RFIDReader:
     def __init__(self) -> None:
         self.reader = SimpleMFRC522()
         self.last_card_id = None
-        self._running =True
-
-    async def read_card(self):
         
-            try:
+        
+    async def _read_card(self):
+        """
+        Reads a card using the RFID reader in a non-blocking way.
+        Runs the blocking `read` method in an executor.
+        """
+        loop = asyncio.get_event_loop()
+        card_id, _ = await loop.run_in_executor(None, self.reader.read)
+        return card_id
+    
+    async def _process_card (self, card_id):
+        """
+        Processes the card ID, applying corrections and checking if it is new.
+        """
+        corrected_card_id = await self.card_id_correction(card_id)
+        if corrected_card_id != self.last_card_id:
+            self.last_card_id = corrected_card_id
+        return str(corrected_card_id)
+        
+    async def read_card(self):
+        """
+        Waits for a card swipe and returns the processed card ID.
+        """
+        try:
+            print("Waiting for card...")
+            while True:
+                await asyncio.sleep(0.1)
+                card_id = await self._read_card()
+                if card_id is not None:
+                    return await self._process_card(card_id)
+        except asyncio.CancelledError:
+            print("RFID reading task was cancelled")
+            raise
+        except Exception as e:
+            print(f"Error in read_card: {e}")
+            return None
+        
+            
+    '''
+        try:
                 print ("Waiting for card...")
                 await asyncio.sleep(0.1)
                 card_id, _ = self.reader.read()
@@ -19,12 +56,12 @@ class RFIDReader:
                     self.last_card_id = corrected_card_id
                 return str(corrected_card_id)
                 
-            except asyncio.CancelledError:
+        except asyncio.CancelledError:
                 print ("RFID reading task was cancelled")
-            except Exception as e:
+        except Exception as e:
                 print(f"RFID read error: {e}")
                 return None
-            
+    '''  
 
     async def card_id_correction(self, card_id):
         # convert decimal number from RFID reader to hexadecimal number
@@ -54,18 +91,20 @@ class RFIDReader:
     async def cleanup(self):
         self._running = False
         
-    async def prolong_reservation(self):
+    async def read_card_in_session(self):
+        """
+        Listens for a card swipe during a session and processes it.
+        """
         try:
-                print ("Waiting for card...")
-                await asyncio.sleep(0.1)
-                card_id, _ = self.reader.read()
-                corrected_card_id = await self.card_id_correction(card_id)
-                if corrected_card_id != self.last_card_id:
-                    self.last_card_id = corrected_card_id
-                return str(corrected_card_id)
-                
+            print("Waiting for prolongation...")
+        
+            await asyncio.sleep(0.1)
+            card_id = await self._read_card()
+            if card_id is not None:
+                return await self._process_card(card_id)
         except asyncio.CancelledError:
-            print ("RFID reading task was cancelled")
+            print("RFID reading task was cancelled")
+            raise
         except Exception as e:
-            print(f"RFID read error: {e}")
+            print(f"Error in read_card_in_session: {e}")
             return None

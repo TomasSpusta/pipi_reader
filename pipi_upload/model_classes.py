@@ -17,6 +17,8 @@ class Session:
     remaining_time:int = 0
     recording_id:str = ""
     reservation_id:str = ""
+    warning_sent = False
+    ended_by_user = False
 
 
 class Token:
