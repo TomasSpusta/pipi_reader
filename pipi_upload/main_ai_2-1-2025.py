@@ -64,7 +64,7 @@ async def handle_user_session(
             logging.error("Failed to start recording session.")
             return
         
-        session_container = {"session": session}
+        session_container = {"session": session, "terminate": False}
         
         await lcd_controller.message("Recording is running")
         
@@ -79,10 +79,10 @@ async def handle_user_session(
             Continuously listen for card swipes in session and prolong the reservation
             if the correct card is swiped.
             """
-            while True:
+            while session_container['session'].remaining_time > 0:
                 try:
+                    
                     new_card_id = await rfid_reader.read_card_in_session()
-                
                     #new_card_id = await asyncio.wait_for(rfid_reader.read_card_in_session(), timeout=5)
                     if new_card_id == card_id:
                         if session_container['session'].remaining_time > 15:
@@ -94,11 +94,19 @@ async def handle_user_session(
                     else: 
                         await lcd_controller.message ("Unauthorized card")
                     await asyncio.sleep (0.5)
+                
+                except asyncio.TimeoutError as e:
+                    print(f"Error in prolongingError in prolong_reservation: {e}")
+                    await asyncio.sleep(1)
+                
                 except Exception as e:
                     print(f"Error in prolong_reservation: {e}")
                     # Optionally handle errors, e.g., reset the reader or notify the user
-                    await asyncio.sleep(1)           
+                    await asyncio.sleep(1) 
                 
+            
+            print("Prolongation loop ended") 
+            
             
 
         async def monitor_and_update():
@@ -134,12 +142,18 @@ async def update_session_time(
     session_container:dict,
     token:Token
     ):
-    refresh_rate = 10 # refresh rate of session info in seconds
+    refresh_rate = 15 # refresh rate of session info in seconds
     while session_container['session'].remaining_time > 0 and  session_container["session"].ended_by_user is False:
+        await networking.fetch_reservation_info(token, session_container['session'])
+        print (f"Update_session_time: {session_container['session'].remaining_time}") 
         
-        if session_container['session'].remaining_time < 5 and session_container['session'].warning_sent is False:
-             await lcd_controller.message ("Your session will end in 5 minutes.", display_time=3 )
-             session_container['session'].warning_sent = True
+        if session_container['session'].remaining_time <= 5 and session_container['session'].warning_sent is False:
+            print("Warning sent")
+            await lcd_controller.message (
+                "Your session will", 
+                f"end in {session_container['session'].remaining_time} minutes.", 
+                display_time = 8 )
+            session_container['session'].warning_sent = True
         
         await lcd_controller.message (
             "Recording is running", 
@@ -147,13 +161,11 @@ async def update_session_time(
             "Prolong -> CARD",
             "End -> BUTTON",
             backlight=False)
-        await networking.fetch_reservation_info(token, session_container['session'])
-        print (f"Update_session_time: {session_container['session'].remaining_time}")
+        
         await asyncio.sleep(refresh_rate)
-        
-        
-        
-    print (f"Update_session_time_outside loop: {session_container['session'].remaining_time}")
+    
+    print ("Session loop ended")
+    session_container["terminate"] = True
 
 async def monitor_button(
     button:Button, 
@@ -165,7 +177,7 @@ async def monitor_button(
     """Monitor button for a 5-second hold and showing that user ends the session"""
     hold_time = 0
     delay = 5
-    while True:
+    while session_container['session'].remaining_time > 0:
         if button.is_pressed:  # Replace with actual button press detection
             if hold_time < 1:
                 await lcd_controller.message (
@@ -191,6 +203,9 @@ async def monitor_button(
             hold_time = 0
         await asyncio.sleep(0.2)
 
+    print ("Button deactivated")
+    session_container["terminate"] = True
+
 async def main_loop():
     try:
         button = Button(21)
@@ -211,6 +226,8 @@ async def main_loop():
             await lcd_controller.welcome_screen(instrument=instrument)
             await handle_user_session(rfid_reader, lcd_controller, instrument, button)
             await asyncio.sleep(1)  # Sleep briefly to prevent tight looping
+           # for task in asyncio.all_tasks():
+            #    print(f"Task: {task}, State: {task.get_stack()}")
             
     finally:
         print ("Finally block")

@@ -99,12 +99,17 @@ class RFIDReader:
             print("Waiting for prolongation...")
         
             await asyncio.sleep(0.1)
+            #card_id = await asyncio.wait_for (self._read_card(), timeout=5)
             card_id = await self._read_card()
             if card_id is not None:
                 return await self._process_card(card_id)
         except asyncio.CancelledError:
             print("RFID reading task was cancelled")
             raise
+        except asyncio.TimeoutError:
+            print ("Timeout error")
+            return None
         except Exception as e:
             print(f"Error in read_card_in_session: {e}")
             return None
+        

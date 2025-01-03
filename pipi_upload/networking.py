@@ -132,8 +132,8 @@ async def stop_recording (session:Session, instrument: Instrument, token:Token):
                 response_content = await response.json()
                 #print(f"response content {response_content}")
                 status_message = response_content.get("status")
-                print(f"Message: {response_content}")
-                print(f"Message: {status_message}")
+                #print(f"Message: {response_content}")
+                print(f"Stop reservation Message: {status_message}")
   
     except aiohttp.ClientError as e:
         print("Error in stop_recording: " + e)

@@ -19,6 +19,7 @@ class Session:
     reservation_id:str = ""
     warning_sent = False
     ended_by_user = False
+    ended_by_time = False
 
 
 class Token:
