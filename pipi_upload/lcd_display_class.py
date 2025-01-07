@@ -1,30 +1,37 @@
-
 from RPLCD.i2c import CharLCD
 import time
 from model_classes import Instrument
 import asyncio
 from typing import Optional
 
-#initialize the LCD display, (expander chip, port)
-class LCDController:
-    def __init__(self, address = 0x27, chip = 'PCF8574'):
-        self.lcd = CharLCD(chip,address)
 
-    async def write(self,text, row):
+# initialize the LCD display, (expander chip, port)
+class LCDController:
+    def __init__(
+        self, address=0x27, chip="PCF8574", default_message: Optional[list[str]] = None
+    ):
+        self.lcd = CharLCD(chip, address)
+        self.message_queue = asyncio.PriorityQueue()
+        self.current_message = None
+        self.default_message = default_message
+
+    async def write(self, text, row):
         if text:
-            #await asyncio.to_thread(self.lcd.cursor_pos.__setattr__,(row-1, 0))
-            await asyncio.to_thread(setattr, self.lcd, "cursor_pos",(row-1, 0))
+            # await asyncio.to_thread(self.lcd.cursor_pos.__setattr__,(row-1, 0))
+            await asyncio.to_thread(setattr, self.lcd, "cursor_pos", (row - 1, 0))
             await asyncio.to_thread(self.lcd.write_string, text)
 
     async def message(
-        self, 
-        line1: Optional[str] = None, 
-        line2:Optional[str]= None, 
-        line3:Optional[str]= None, 
-        line4:Optional[str]= None,
-        backlight:bool =True,
-        clear:bool=True,
-        display_time:int = 1):
+        self,
+        line1: Optional[str] = None,
+        line2: Optional[str] = None,
+        line3: Optional[str] = None,
+        line4: Optional[str] = None,
+        backlight: bool = True,
+        clear: bool = True,
+        display_time: int = 1,
+        blocking: bool = False,
+    ):
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", backlight)
         if clear is True:
             await asyncio.to_thread(self.lcd.clear)
@@ -36,10 +43,14 @@ class LCDController:
             await self.write(line3, 3)
         if line4 is not None:
             await self.write(line4, 4)
-            
-        await asyncio.sleep (display_time)
 
-    async def backlight(self, status:bool):
+        if blocking is True:
+            time.sleep(display_time)
+        else:
+            await asyncio.sleep(display_time)
+        #
+
+    async def backlight(self, status: bool):
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", status)
 
     async def clear(self):
@@ -52,21 +63,53 @@ class LCDController:
             await asyncio.sleep(interval)
             await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", False)
 
-    async def welcome_screen(self, instrument:Instrument):
+    async def welcome_screen(self, instrument: Instrument):
         message_template = [
             "Welcome at",
             f"{instrument.name}",
             "Please log in",
-            "with your card."
-        ]        
+            "with your card.",
+        ]
         await self.message(*message_template)
-    
+
     async def cleanup(self):
         await asyncio.to_thread(self.lcd.clear)
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", False)
-        
-        
-    
-    
-            
-    
+
+    """
+    """
+
+    async def add_message(self, priority: int, lines: list[str], display_time: int = 1):
+        """Add a message to the queue with the given priority."""
+        await self.message_queue.put((priority, lines, display_time))
+        await asyncio.sleep(0)
+
+    async def _display_message(self, lines: list[str], display_time: int):
+        """Display a message on the LCD."""
+        await self.message(*lines, display_time=display_time, blocking=True)
+
+    async def display_loop(self):
+        """Continuously process messages from the queue."""
+        while True:
+            if not self.message_queue.empty():
+                priority, lines, display_time = await self.message_queue.get()
+                print(f"Message:{lines}")
+                self.current_message = lines
+                await self._display_message(lines, display_time)
+                self.message_queue.task_done()
+            else:
+                await self._display_message(self.default_message, display_time=1)
+            await asyncio.sleep(0.1)  # Avoid busy waiting
+
+    async def emergency_message(self, lines: list[str], display_time: int = 2):
+        """Immediately display a high-priority message."""
+        await self._display_message(lines, display_time)
+
+    async def get_queue_contents(self):
+        """Retrieve the current contents of the message queue without removing them."""
+        queue_items = []
+        while not self.message_queue.empty():
+            item = await self.message_queue.get()
+            queue_items.append(item)
+            await self.message_queue.put(item)  # Put the item back into the queue
+        return queue_items

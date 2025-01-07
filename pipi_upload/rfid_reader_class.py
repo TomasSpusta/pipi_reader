@@ -8,7 +8,24 @@ class RFIDReader:
         self.reader = SimpleMFRC522()
         self.last_card_id = None
         
-        
+    async def _read_card(self):
+        try:
+            print("Waiting to read card...")
+            loop = asyncio.get_event_loop()
+            result = await loop.run_in_executor(None, self.reader.read)
+            card_id, _ = result  # Unpack the tuple to get card_id
+            return card_id
+        except asyncio.TimeoutError:
+            print("Timeout while reading card")
+            await asyncio.sleep(0.5)
+            return None
+        except Exception as e:
+            print(f"Error in _read_card: {e}")
+            return None
+    
+    
+    
+    '''    
     async def _read_card(self):
         """
         Reads a card using the RFID reader in a non-blocking way.
@@ -17,6 +34,7 @@ class RFIDReader:
         loop = asyncio.get_event_loop()
         card_id, _ = await loop.run_in_executor(None, self.reader.read)
         return card_id
+    '''
     
     async def _process_card (self, card_id):
         """
@@ -32,7 +50,6 @@ class RFIDReader:
         Waits for a card swipe and returns the processed card ID.
         """
         try:
-            print("Waiting for card...")
             while True:
                 await asyncio.sleep(0.1)
                 card_id = await self._read_card()
@@ -98,18 +115,43 @@ class RFIDReader:
         try:
             print("Waiting for prolongation...")
         
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.5)
             #card_id = await asyncio.wait_for (self._read_card(), timeout=5)
             card_id = await self._read_card()
             if card_id is not None:
                 return await self._process_card(card_id)
         except asyncio.CancelledError:
-            print("RFID reading task was cancelled")
-            raise
+            print("No Card present")
+            #raise
+            return None
         except asyncio.TimeoutError:
             print ("Timeout error")
+            await asyncio.sleep(0.5)
             return None
         except Exception as e:
             print(f"Error in read_card_in_session: {e}")
             return None
         
+    
+    async def card_reader_time_slot(self, timeout: int):
+        """
+        Open a time slot to listen for card swipes.
+        :param timeout: Duration of the time slot in seconds.
+        :param lcd_controller: LCD controller for displaying messages.
+        :return: Card ID if a card is read, None otherwise.
+        """
+        try:
+            print(f"Listening for card swipes for {timeout} seconds...")
+            card_id = await asyncio.wait_for(self.read_card(), timeout = timeout)
+            
+            return card_id
+        
+        except asyncio.TimeoutError:
+            print("Time slot expired without a card swipe.")
+            return None
+        except asyncio.CancelledError:
+            print("Card reader time slot was cancelled.")
+            raise  # Propagate the cancellation
+        except Exception as e:
+            print(f"Error during card reader time slot: {e}")
+            return None
