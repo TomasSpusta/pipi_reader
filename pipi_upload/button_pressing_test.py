@@ -39,10 +39,49 @@ async def monitor_button_test(button: Button, lcd_controller: LCDController):
                 count = 0
                 await lcd_controller.add_message(1, ["Please scan card"], 3)
 
-        """
-        
-        
-        
+
+async def counter():
+    counter = 0
+    while True:
+        counter += 1
+        return counter
+
+
+async def main_loop():
+    try:
+        instrument = "instrument 1"
+        button = Button(21)
+        lcd_controller = LCDController(default_message=[instrument])
+        # asyncio.create_task(lcd_controller.display_loop())
+
+        while True:
+            button_task = monitor_button_test(button, lcd_controller)
+            lcd_task = lcd_controller.display_loop()
+            await asyncio.gather(button_task, lcd_task)
+            await asyncio.sleep(0.2)  # Sleep briefly to prevent tight looping
+        # for task in asyncio.all_tasks():
+        #    print(f"Task: {task}, State: {task.get_stack()}")
+
+    finally:
+        print("Finally block")
+
+
+# Entry point
+if __name__ == "__main__":
+    try:
+        asyncio.run(main_loop())
+
+    except KeyboardInterrupt:
+        print("Ended by CTRL + C")
+
+    except asyncio.CancelledError:
+        print("Program cancelled")
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+
+'''
         time_now = datetime.now()
         if button.is_pressed:
             press_counter = await button_counter.button_pressed()
@@ -176,45 +215,4 @@ async def monitor_button_test(button: Button, lcd_controller: LCDController):
         
         else:
             hold_time = 0
-        """
-
-
-async def counter():
-    counter = 0
-    while True:
-        counter += 1
-        return counter
-
-
-async def main_loop():
-    try:
-        instrument = "instrument 1"
-        button = Button(21)
-        lcd_controller = LCDController(default_message=[instrument])
-        # asyncio.create_task(lcd_controller.display_loop())
-
-        while True:
-            button_task = monitor_button_test(button, lcd_controller)
-            lcd_task = lcd_controller.display_loop()
-            await asyncio.gather(button_task, lcd_task)
-            await asyncio.sleep(0.2)  # Sleep briefly to prevent tight looping
-        # for task in asyncio.all_tasks():
-        #    print(f"Task: {task}, State: {task.get_stack()}")
-
-    finally:
-        print("Finally block")
-
-
-# Entry point
-if __name__ == "__main__":
-    try:
-        asyncio.run(main_loop())
-
-    except KeyboardInterrupt:
-        print("Ended by CTRL + C")
-
-    except asyncio.CancelledError:
-        print("Program cancelled")
-
-    except Exception as e:
-        print(f"Unexpected error: {e}")
+'''

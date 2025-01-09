@@ -6,12 +6,13 @@ from pathlib import Path
 import networking
 from gpiozero import Button
 from lcd_display_class import LCDController
-from model_classes import Instrument, Token, User
+from model_classes import Instrument, Token, User, SessionStatus
 from rfid_reader_class import RFIDReader
 from token_handler import verify_token
 
 from datetime import datetime, timedelta
 import time
+import keys
 
 from button_counter import ButtonCounter
 
@@ -23,7 +24,8 @@ async def handle_user_session(
     rfid_reader: RFIDReader,
     lcd_controller: LCDController,
     instrument: Instrument,
-    button,
+    button: Button,
+    session_status: SessionStatus,
 ):
     API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"
     TOKEN_FILE = Path("token_data.json")
@@ -80,7 +82,11 @@ async def handle_user_session(
             logging.error("Failed to start recording session.")
             return
 
-        session_container = {"session": session, "terminate": False}
+        session_container = {
+            "session": session,
+            "terminate": False,
+            "session_status": session_status,
+        }
 
         await lcd_controller.message("Recording is running")
 
@@ -189,28 +195,29 @@ async def update_session_time(
         session_container["session"].remaining_time > 0
         and session_container["session"].ended_by_user is False
     ):
-        await networking.fetch_reservation_info(token, session_container["session"])
-        print(f"Update_session_time: {session_container['session'].remaining_time}")
+        if not session_container["session_status"].button_menu:
+            await networking.fetch_reservation_info(token, session_container["session"])
+            print(f"Update_session_time: {session_container['session'].remaining_time}")
 
-        if (
-            session_container["session"].remaining_time <= 5
-            and session_container["session"].warning_sent is False
-        ):
-            print("Warning sent")
+            if (
+                session_container["session"].remaining_time <= 5
+                and session_container["session"].warning_sent is False
+            ):
+                print("Warning sent")
+                await lcd_controller.message(
+                    "Your session will",
+                    f"end in {session_container['session'].remaining_time} minutes.",
+                    display_time=8,
+                )
+                session_container["session"].warning_sent = True
+
             await lcd_controller.message(
-                "Your session will",
-                f"end in {session_container['session'].remaining_time} minutes.",
-                display_time=8,
+                "Recording is running",
+                f"Remaining time: {session_container['session'].remaining_time}",
+                "Prolong -> CARD",
+                "End -> BUTTON",
+                backlight=False,
             )
-            session_container["session"].warning_sent = True
-
-        await lcd_controller.message(
-            "Recording is running",
-            f"Remaining time: {session_container['session'].remaining_time}",
-            "Prolong -> CARD",
-            "End -> BUTTON",
-            backlight=False,
-        )
 
         await asyncio.sleep(refresh_rate)
 
@@ -236,6 +243,7 @@ async def monitor_button(
 
     while session_container["session"].remaining_time > 0:
         if button.is_pressed:
+            session_container["session_status"].button_menu = True
             """
             Monitor button press count:
                 when pressed =  Show button menu
@@ -252,17 +260,16 @@ async def monitor_button(
                 await lcd_controller.message(
                     "If you wish to prolong reservation press button.",
                     display_time=3,
-                    blocking=False,
                 )
 
             if press_counter == 2:
                 await lcd_controller.message(
                     "Please scan your card",
                     display_time=5,
-                    blocking=True,
                 )
                 card_read = await rfid_reader.card_reader_time_slot(10)
                 print(card_read)
+                session_container["session_status"].button_menu = False
 
             """
             time_delta = timedelta(seconds=2)
@@ -387,12 +394,13 @@ async def main_loop():
         button = Button(21)
         lcd_controller = LCDController()
         rfid_reader = RFIDReader()
+        session_status = SessionStatus()
         # session = Session()
         await networking.fetch_ip()
         mac = await networking.fetch_mac()
         # instrument_mac_address = "e4:5f:01:ea:99:17"
-        API_KEY = "ude9c6nezyr71i9vf3jdtye18vwdk81s"  #
-        TOKEN_FILE = Path("token_data.json")
+        API_KEY = keys.API_KEY  #
+        TOKEN_FILE = keys.TOKEN_FILE
 
         await verify_token(TOKEN_FILE, API_KEY)
         # token = await initiate_token(API_KEY, TOKEN_FILE)
@@ -400,7 +408,9 @@ async def main_loop():
 
         while True:
             await lcd_controller.welcome_screen(instrument=instrument)
-            await handle_user_session(rfid_reader, lcd_controller, instrument, button)
+            await handle_user_session(
+                rfid_reader, lcd_controller, instrument, button, session_status
+            )
             await asyncio.sleep(1)  # Sleep briefly to prevent tight looping
         # for task in asyncio.all_tasks():
         #    print(f"Task: {task}, State: {task.get_stack()}")

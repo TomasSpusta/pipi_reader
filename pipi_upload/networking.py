@@ -6,10 +6,10 @@ from model_classes import Instrument, Token, User, Session
 from typing import Optional
 
 from getmac import get_mac_address as gma  # module for mac adress
-from subprocess import check_output #module for ip address
+from subprocess import check_output  # module for ip address
 
 
-async def fetch_instrument_data(mac_address:str) -> Optional[Instrument]:
+async def fetch_instrument_data(mac_address: str) -> Optional[Instrument]:
     print("Fetching instrument data")
     url = "https://crm.api.ceitec.cz/get-equipment-by-mac-address"
 
@@ -25,15 +25,14 @@ async def fetch_instrument_data(mac_address:str) -> Optional[Instrument]:
                     return None
 
                 response_json = await response.json()
-                #print(f"Response from instrument: {response_json}")
+                # print(f"Response from instrument: {response_json}")
 
                 if not response_json:
                     print("Empty response from api")
                     return None
 
                 instrument = Instrument(
-                    id=response_json[0]["equipmentid"],
-                    name=response_json[0]["alias"]
+                    id=response_json[0]["equipmentid"], name=response_json[0]["alias"]
                 )
                 print("Instrument's data fetched")
                 return instrument
@@ -59,7 +58,7 @@ async def fetch_user_data(card_id) -> Optional[User]:
                     return None
 
                 response_json = await response.json()
-                #print(f"Response from user: {response_json}")
+                # print(f"Response from user: {response_json}")
 
                 if not response_json:
                     print("Empty response from api")
@@ -68,8 +67,7 @@ async def fetch_user_data(card_id) -> Optional[User]:
                 name = response_json[0]["firstname"]
                 name_non_dia = unidecode.unidecode(name)
                 user = User(
-                    id=response_json[0]["contactid"],
-                    name=name_non_dia
+                    id=response_json[0]["contactid"], name=name_non_dia, card_id=card_id
                 )
             print("User data fetched")
             return user
@@ -79,87 +77,99 @@ async def fetch_user_data(card_id) -> Optional[User]:
         return None
 
 
-async def start_recording(user: User, instrument: Instrument, token: Token, session:Session) -> Optional[ Session]:
+async def start_recording(
+    user: User,
+    instrument: Instrument,
+    token: Token,  # session: Session
+) -> Optional[Session]:
     print("Starting the recording...")
     payload = {"contactId": user.id, "equipmentId": instrument.id}
     headers = {"Authorization": "Bearer " + token.string}
     url = "https://booking.ceitec.cz/api/recording/start/"
     try:
         async with aiohttp.ClientSession() as http_session:
-            async with http_session.post(url=url, json=payload, headers=headers) as response:
-
+            async with http_session.post(
+                url=url, json=payload, headers=headers
+            ) as response:
                 if response.status != 200:
                     error_content = await response.json()
-                    #print(f"Error content {error_content}")
+                    # print(f"Error content {error_content}")
                     error_message = error_content.get("status")
                     print(f"Message: {error_message}")
                     return None
                 else:
                     response_content = await response.json()
-                    #print(f"response content {response_content}")
+                    # print(f"response content {response_content}")
                     status_message = response_content.get("status")
                     print(f"Message: {status_message}")
-                    
+
                     session = Session(
-                        recording_id = response_content["recording"],
-                        reservation_id= response_content["reservation"] ,
-                        remaining_time= int(response_content["timetoend"]) 
+                        recording_id=response_content["recording"],
+                        reservation_id=response_content["reservation"],
+                        remaining_time=int(response_content["timetoend"]),
                     )
-                    #print (f"Session data in networking:\n{session}")
+                    # print (f"Session data in networking:\n{session}")
                     return session
 
     except aiohttp.ClientError as e:
         print("Error in start_recording: " + e)
 
-async def stop_recording (session:Session, instrument: Instrument, token:Token):
+
+async def stop_recording(session: Session, instrument: Instrument, token: Token):
     print("Stopping the recording...")
-    
-    payload = {"serviceAppointmentId":session.reservation_id, "equipmentId":instrument.id}
-    headers = {"Authorization" : "Bearer " + token.string}
+
+    payload = {
+        "serviceAppointmentId": session.reservation_id,
+        "equipmentId": instrument.id,
+    }
+    headers = {"Authorization": "Bearer " + token.string}
     url = "https://booking.ceitec.cz/api/recording/stop"
-    
+
     try:
-       async with aiohttp.ClientSession() as http_session:
-           async with http_session.post(url=url, json=payload, headers=headers) as response:
-    
-            if response.status != 200:
-                            error_content = await response.json()
-                            #print(f"Error content {error_content}")
-                            error_message = error_content.get("status")
-                            print(f"Message: {error_message}")
-                            return None
-            else:
-                response_content = await response.json()
-                #print(f"response content {response_content}")
-                status_message = response_content.get("status")
-                #print(f"Message: {response_content}")
-                print(f"Stop reservation Message: {status_message}")
-  
+        async with aiohttp.ClientSession() as http_session:
+            async with http_session.post(
+                url=url, json=payload, headers=headers
+            ) as response:
+                if response.status != 200:
+                    error_content = await response.json()
+                    # print(f"Error content {error_content}")
+                    error_message = error_content.get("status")
+                    print(f"Message: {error_message}")
+                    return None
+                else:
+                    response_content = await response.json()
+                    # print(f"response content {response_content}")
+                    status_message = response_content.get("status")
+                    # print(f"Message: {response_content}")
+                    print(f"Stop reservation Message: {status_message}")
+
     except aiohttp.ClientError as e:
         print("Error in stop_recording: " + e)
 
-async def fetch_reservation_info (token:Token, session:Session) -> Optional[ Session]:
-    #print("Fetching recording info...")
+
+async def fetch_reservation_info(token: Token, session: Session) -> Optional[Session]:
+    # print("Fetching recording info...")
     headers = {"Authorization": "Bearer " + token.string}
     url = f"https://booking.ceitec.cz/api/service-appointment/{session.reservation_id}/raspberry"
     try:
         async with aiohttp.ClientSession() as http_session:
             async with http_session.get(url=url, headers=headers) as response:
-                #print (f"Response status recording info:{response.status}")
+                # print (f"Response status recording info:{response.status}")
                 if response.status != 200:
                     error_content = await response.json()
-                    #print(f"Error content {error_content}")
+                    # print(f"Error content {error_content}")
                     error_message = error_content.get("status")
                     print(f"Message: {error_message}")
-                    #return None
+                    # return None
                 else:
                     response_content = await response.json()
-                    #print(f"response content {response_content}")
-                    session.remaining_time= int(response_content["timetoend"]) 
+                    # print(f"response content {response_content}")
+                    session.remaining_time = int(response_content["timetoend"])
                     return session
-                    
+
     except aiohttp.ClientError as e:
         print("Error in start_recording: " + e)
+
 
 async def fetch_instruments(token: Token):
     headers = {"Authorization": "Bearer " + token.string}
@@ -168,13 +178,14 @@ async def fetch_instruments(token: Token):
     }
     try:
         response = requests.get(
-            "https://booking.ceitec.cz/api/equipment", headers=headers, params=params)
-        '''
+            "https://booking.ceitec.cz/api/equipment", headers=headers, params=params
+        )
+        """
                 params = {
                     "filters[]": ["Robert", "2024-11-01", "2024-11-30"],  
                     "scope": "activity_parties.partyid"
                 }
-            '''
+            """
         return response
     except requests.exceptions.RequestException as e:
         print(e)
@@ -184,7 +195,6 @@ async def fetch_token(api_key: str) -> Optional[Token]:
     url = "https://booking.ceitec.cz/api/login"
 
     try:
-
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json={"apiKey": api_key}) as response:
                 if response.status != 200:
@@ -203,7 +213,7 @@ async def fetch_token(api_key: str) -> Optional[Token]:
 
                 token = Token(
                     string=response_json["accessToken"],
-                    expiration=response_json["expiresAt"]
+                    expiration=response_json["expiresAt"],
                 )
                 print("New token recieved")
                 return token
@@ -213,21 +223,21 @@ async def fetch_token(api_key: str) -> Optional[Token]:
         return None
 
 
-             
-async def fetch_mac () -> str:
-        try:
-            mac = gma()  
-            print("My MAC adress is: {}".format(mac))
-            return mac
+async def fetch_mac() -> str:
+    try:
+        mac = gma()
+        print("My MAC adress is: {}".format(mac))
+        return mac
 
-        except Exception as mac_e:
-            print("Get MAC error: " + str(mac_e))
-            
-async def fetch_ip () -> str:
-        try:
-            ip = check_output(['hostname', '-I'])
-            print("My IP adress is: {}".format(ip))
-            return ip
+    except Exception as mac_e:
+        print("Get MAC error: " + str(mac_e))
 
-        except Exception as mac_e:
-            print("fetch ip error: " + str(mac_e))
+
+async def fetch_ip() -> str:
+    try:
+        ip = check_output(["hostname", "-I"])
+        print("My IP adress is: {}".format(ip))
+        return ip
+
+    except Exception as mac_e:
+        print("fetch ip error: " + str(mac_e))

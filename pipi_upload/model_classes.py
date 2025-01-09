@@ -1,22 +1,30 @@
-
 from dataclasses import dataclass
 
+
 class User:
-    def __init__(self, id: str, name: str):
+    def __init__(self, id: str, name: str, card_id: str):
         self.id = id
         self.name = name
+        self.card_id = card_id
 
 
+@dataclass
 class Instrument:
-    def __init__(self, id: str, name: str):
-        self.id = id
-        self.name = name
+    id: str = ""
+    name: str = ""
+    mac_address: str = ""
+
+
+@dataclass
+class SessionStatus:
+    button_menu = False
+
 
 @dataclass
 class Session:
-    remaining_time:int = 0
-    recording_id:str = ""
-    reservation_id:str = ""
+    remaining_time: int = 0
+    recording_id: str = ""
+    reservation_id: str = ""
     warning_sent = False
     ended_by_user = False
     ended_by_time = False
@@ -28,8 +36,4 @@ class Token:
         self.expiration = expiration
 
     def to_dict(self):
-        return {
-            "string": self.string,
-            "expiration": self.expiration
-        }
-
+        return {"string": self.string, "expiration": self.expiration}
