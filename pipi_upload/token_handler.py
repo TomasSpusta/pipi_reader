@@ -1,14 +1,18 @@
 from model_classes import Token
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from networking import fetch_token
 import json
 from typing import Optional
+import keys
+
+TOKEN_FILE = keys.TOKEN_FILE
+API_KEY = keys.API_KEY
 
 
-async def initiate_token(api_key: str, TOKEN_FILE: Path) -> Optional[Token]:
+async def initiate_token(API_KEY: str, TOKEN_FILE: Path) -> Optional[Token]:
     try:
-        token = await fetch_token(api_key)
+        token = await fetch_token(API_KEY)
         await save_token(token, TOKEN_FILE)
         return token
 
@@ -33,24 +37,24 @@ async def save_token(token: Token, TOKEN_FILE: Path):
         print("Token saved.")
 
 
-async def verify_token(TOKEN_FILE: Path, api_key: str):
+# async def verify_token(TOKEN_FILE: Path, api_key: str):
+async def verify_token():
     print("Verifying token...")
     token = await load_token(TOKEN_FILE)
 
     if not token:
         print("No token found, fetching new one...")
-        token = await fetch_token(api_key)
+        token = await fetch_token(API_KEY)
         await save_token(token, TOKEN_FILE)
         return token
 
     else:
         print("Token found.")
         print("Checking expiration...")
-        expires_at = datetime.strptime(
-            token.expiration, "%Y-%m-%dT%H:%M:%S")
+        expires_at = datetime.strptime(token.expiration, "%Y-%m-%dT%H:%M:%S")
         if datetime.now() >= expires_at:
             print("Token expired, refreshing...")
-            token = await fetch_token(api_key)
+            token = await fetch_token(API_KEY)
             await save_token(token, TOKEN_FILE)
             return token
         else:
@@ -58,45 +62,23 @@ async def verify_token(TOKEN_FILE: Path, api_key: str):
             return token
 
 
-async def _check_expiration(token: Token) -> bool:
+async def check_expiration(token: Token) -> bool:
     try:
-        time_now = datetime.now().isoformat(timespec="seconds")
-        time_now_formated = datetime.strptime(
-            time_now, "%Y-%m-%dT%H:%M:%S")
-        token_expiration_formated = datetime.strptime(
-            token.expiration, "%Y-%m-%dT%H:%M:%S")
+        time_now_with_buffer = datetime.now() + timedelta(minutes=5)
 
-        if token_expiration_formated < time_now_formated:
+        # time_now_formated = datetime.strptime(time_now, "%Y-%m-%dT%H:%M:%S")
+        # token_expiration_formated = datetime.strptime(
+        #     token.expiration, "%Y-%m-%dT%H:%M:%S"
+        # )
+        token_expiration_formated = datetime.fromisoformat(token.expiration)
+
+        if token_expiration_formated < time_now_with_buffer:
+            print("Token Expired")
             return False
         else:
+            print("Token OK")
             return True
 
     except Exception as e:
         print("Error in checking_token: " + str(e))
         return str(e)
-
-    """ if not token_data:
-        
-    
-    if token_data is None:
-        print("fetching Token")
-        token = fetch_token(api_key)
-        if token is not None:
-            save_token(token)
-            print("Saved token")
-            return True
-        else:
-            print("Problem with get token method, check API")
-            return False
-    else:
-        if check_expiration(token) is True:
-            print("Token is OK")
-            return True
-        else:
-            token = fetch_token(api_key)
-            if token is not None:
-                save_token(token)
-                return True
-            else:
-                print("Problem with get token method, check API")
-                return False """

@@ -17,7 +17,7 @@ class LCDController:
         self.current_message = None
         # self.default_message = default_message
 
-    async def write(self, text, row):
+    async def _write(self, text, row):
         if text:
             # await asyncio.to_thread(self.lcd.cursor_pos.__setattr__,(row-1, 0))
             await asyncio.to_thread(setattr, self.lcd, "cursor_pos", (row - 1, 0))
@@ -31,26 +31,26 @@ class LCDController:
         line4: Optional[str] = None,
         backlight: bool = True,
         clear: bool = True,
-        display_time: int = 1,
+        display_time: int = 2,
     ):
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", backlight)
         if clear is True:
             await asyncio.to_thread(self.lcd.clear)
         if line1 is not None:
-            await self.write(line1, 1)
+            await self._write(line1, 1)
         if line2 is not None:
-            await self.write(line2, 2)
+            await self._write(line2, 2)
         if line3 is not None:
-            await self.write(line3, 3)
+            await self._write(line3, 3)
         if line4 is not None:
-            await self.write(line4, 4)
+            await self._write(line4, 4)
         await asyncio.sleep(display_time)
         #
 
-    async def backlight(self, status: bool):
+    async def _backlight(self, status: bool):
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", status)
 
-    async def clear(self):
+    async def _clear(self):
         await asyncio.to_thread(self.lcd.clear)
 
     async def flashing(self, interval, number_of_flashes):

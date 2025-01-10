@@ -3,10 +3,28 @@ import unidecode
 import aiohttp
 
 from model_classes import Instrument, Token, User, Session
+from screen_manager import Screens
 from typing import Optional
 
 from getmac import get_mac_address as gma  # module for mac adress
 from subprocess import check_output  # module for ip address
+
+
+async def safe_api_call(api_func, screen: Screens, *args, **kwargs):
+    """
+    Safely execute API calls and handle errors by displaying them on the LCD.
+    Stops the main loop if an error occurs.
+
+    :param api_func: The API function to execute.
+    :param screens: Screens object to show errors.
+    :param args: Positional arguments for the API function.
+    :param kwargs: Keyword arguments for the API function.
+    """
+    try:
+        return await api_func(*args, **kwargs)
+    except Exception as e:
+        await screen.error_message(str(e), source_function=api_func.__name__)
+        raise SystemExit("Critical Error. Stopping the program.")
 
 
 async def fetch_instrument_data(mac_address: str) -> Optional[Instrument]:
@@ -39,6 +57,7 @@ async def fetch_instrument_data(mac_address: str) -> Optional[Instrument]:
 
     except Exception as e:
         print(f"Error in fetch instrument: {e}")
+
         return None
 
 

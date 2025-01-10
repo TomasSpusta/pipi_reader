@@ -75,7 +75,9 @@ async def handle_user_session(
         # Step 3: Vewrify token and verify, that user and reservation connection exists
         token = await verify_token(TOKEN_FILE, API_KEY)
         session = await networking.start_recording(
-            user, instrument, token, session=None
+            user,
+            instrument,
+            token,  # session=None
         )
 
         if not session:
