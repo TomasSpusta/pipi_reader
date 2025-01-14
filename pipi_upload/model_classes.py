@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 
 
+@dataclass
 class User:
-    def __init__(self, id: str, name: str, card_id: str):
-        self.id = id
-        self.name = name
-        self.card_id = card_id
+    id: str = ""
+    name: str = ""
+    full_name: str = ""
+    card_id: str = ""
 
 
 @dataclass
@@ -13,6 +14,7 @@ class Instrument:
     id: str = ""
     name: str = ""
     mac_address: str = ""
+    ip: str = ""
 
 
 @dataclass

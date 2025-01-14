@@ -8,6 +8,12 @@ class Screens:
     def __init__(self, lcd_controller: LCDController):
         self.lcd = lcd_controller
 
+    async def starting_screen(self):
+        await self.lcd.message(
+            "Starting...",
+            display_time=0.1,
+        )
+
     async def welcome_screen(self, instrument_name: str):
         await self.lcd.message(
             "Welcome at",
@@ -115,12 +121,12 @@ class Screens:
     # Error
     async def error_message(self, error: str, source_function="Unknown"):
         await self.lcd.message(
+            f"F:{source_function[:18]}",
             error[:20],
-            error[20:32],
-            source_function,
+            error[20:],
             display_time=5,
         )
-        sys.exit("Critical Error. Stopping the program.")
+        # sys.exit("Critical Error. Stopping the program.")
 
     # Button menu
     async def button_menu(

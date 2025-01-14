@@ -5,12 +5,15 @@ import aiohttp
 from model_classes import Instrument, Token, User, Session
 from screen_manager import Screens
 from typing import Optional
+from logger_class import Logger
 
 from getmac import get_mac_address as gma  # module for mac adress
 from subprocess import check_output  # module for ip address
 
 
-async def safe_api_call(api_func, screen: Screens, *args, **kwargs):
+async def safe_api_call(
+    api_func, error_screen: Screens, logger: Logger, *args, **kwargs
+):
     """
     Safely execute API calls and handle errors by displaying them on the LCD.
     Stops the main loop if an error occurs.
@@ -23,11 +26,15 @@ async def safe_api_call(api_func, screen: Screens, *args, **kwargs):
     try:
         return await api_func(*args, **kwargs)
     except Exception as e:
-        await screen.error_message(str(e), source_function=api_func.__name__)
-        raise SystemExit("Critical Error. Stopping the program.")
+        error_message = f"Error in {api_func.__name__}: {e}"
+        print(error_message)
+        await error_screen.error_message(str(e), source_function=api_func.__name__)
+        if logger:
+            await logger.write_log(12, error_message)
+        # raise SystemExit("Critical Error. Stopping the program.")
 
 
-async def fetch_instrument_data(mac_address: str) -> Optional[Instrument]:
+async def fetch_instrument_data(mac_address: str, ip: str) -> Optional[Instrument]:
     print("Fetching instrument data")
     url = "https://crm.api.ceitec.cz/get-equipment-by-mac-address"
 
@@ -50,7 +57,10 @@ async def fetch_instrument_data(mac_address: str) -> Optional[Instrument]:
                     return None
 
                 instrument = Instrument(
-                    id=response_json[0]["equipmentid"], name=response_json[0]["alias"]
+                    id=response_json[0]["equipmentid"],
+                    name=response_json[0]["alias"],
+                    mac_address=mac_address,
+                    ip=ip,
                 )
                 print("Instrument's data fetched")
                 return instrument
@@ -84,9 +94,13 @@ async def fetch_user_data(card_id) -> Optional[User]:
                     return None
 
                 name = response_json[0]["firstname"]
+                full_name = response_json[0]["full_name"]
                 name_non_dia = unidecode.unidecode(name)
                 user = User(
-                    id=response_json[0]["contactid"], name=name_non_dia, card_id=card_id
+                    id=response_json[0]["contactid"],
+                    name=name_non_dia,
+                    card_id=card_id,
+                    full_name=full_name,
                 )
             print("User data fetched")
             return user
@@ -101,7 +115,7 @@ async def start_recording(
     instrument: Instrument,
     token: Token,  # session: Session
 ) -> Optional[Session]:
-    print("Starting the recording...")
+    print("Initiating the recording...")
     payload = {"contactId": user.id, "equipmentId": instrument.id}
     headers = {"Authorization": "Bearer " + token.string}
     url = "https://booking.ceitec.cz/api/recording/start/"
@@ -120,7 +134,8 @@ async def start_recording(
                     response_content = await response.json()
                     # print(f"response content {response_content}")
                     status_message = response_content.get("status")
-                    print(f"Message: {status_message}")
+                    # print(f"Message: {status_message}")
+                    print("Starting the recording...")
 
                     session = Session(
                         recording_id=response_content["recording"],
@@ -254,9 +269,13 @@ async def fetch_mac() -> str:
 
 async def fetch_ip() -> str:
     try:
-        ip = check_output(["hostname", "-I"])
-        print("My IP adress is: {}".format(ip))
-        return ip
+        ip = str(check_output(["hostname", "-I"]))
+
+        trimmed_ip = ip[2:40]
+        # print("My IP adress is: {}".format(ip))
+        # print(ip)
+        # print(f"Lan IP: {lan_ip}\nWifi IP: {wifi_ip}")
+        return trimmed_ip
 
     except Exception as mac_e:
         print("fetch ip error: " + str(mac_e))
