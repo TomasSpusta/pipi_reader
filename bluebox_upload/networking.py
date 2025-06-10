@@ -5,10 +5,11 @@ import aiohttp
 from model_classes import Instrument, Token, User, Session
 from screen_manager import Screens
 from typing import Optional
-from logger_class import Logger
+from logger import Logger
 
 from getmac import get_mac_address as gma  # module for mac adress
 from subprocess import check_output  # module for ip address
+import keys
 
 
 async def safe_api_call(

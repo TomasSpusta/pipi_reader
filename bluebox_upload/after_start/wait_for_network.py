@@ -1,5 +1,5 @@
 import sys
-sys.path.append('pipi_upload')
+sys.path.append('bluebox_upload')
 
 from lcd_display import display
 

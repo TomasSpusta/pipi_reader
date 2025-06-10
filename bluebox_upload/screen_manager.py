@@ -1,4 +1,4 @@
-from lcd_display_class import LCDController
+from lcd_display import LCDController
 import inspect
 import random
 import sys
@@ -117,6 +117,13 @@ class Screens:
             "use BUTTON MENU.",
             # display_time=5,
         )
+        
+    async def session_extended (self):
+        await self.lcd.message(
+            "Your session",
+            "was extended",
+            "by 15 minutes",
+        )    
 
     # Error
     async def error_message(self, error: str, source_function="Unknown"):
