@@ -2,4 +2,4 @@ tests/*
 pipi_log.log
 mock_gpio.py
 pipi_upload/__pycache__/*
-keys.py
+config.py

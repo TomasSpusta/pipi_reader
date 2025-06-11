@@ -1,65 +1,231 @@
+
 from gpiozero import Button
-from lcd_display import display, backlight
-import time
+from model_classes import Instrument, Session, Token, User
+from screen_manager import Screens
 import asyncio
+import networking
 
+async def handle_button_hold (
+    btn:Button,
+    prompt_shown: bool,
+    prompt_func,
+    action_func,
+    hold_time: float = 3.0,  
+    timeout: float = 10.0,
+    on_timeout: callable = None
+) -> bool:
 
-class ButtonHandler:
-    def __init__(self, pin: int, backlight_callback, display_callback) -> None:
-        self.button = Button(pin)
-        backlight_callback = backlight_callback
-        display_callback = display_callback
+    """
+    Handles a hold action with an optional prompt and callback.
+    Returns True if action was triggered, False otherwise.
+    """
+    if btn.is_pressed:
+        if not prompt_shown:
+            await prompt_func()
+            prompt_shown = True
         
-'''        
+        prompt_start = asyncio.get_event_loop().time ()
+                
         
-    async def monitor_button(self):
-        """Coroutine to handle button presses."""
+        
         while True:
-            if self.button.is_pressed:
-                lcd.clear()
-                lcd.write_string("Button Pressed!")
-                await asyncio.sleep(0.5)  # Debounce delay
-            await asyncio.sleep(0.1)  # Check button status frequently
+            now = asyncio.get_event_loop().time()
+            if now - prompt_start >= timeout:
+                if on_timeout:
+                    await on_timeout ()
+                return False        
 
-    def activate_btn(self):
-        print("Button activated")
-        GPIO.add_event_detect(self.pin, GPIO.BOTH,
-                              callback=self.btn_callback, bouncetime=50)
+            if btn.is_pressed:
+                hold_start = asyncio.get_event_loop().time()
+            
+                while btn.is_pressed:
+                    held = asyncio.get_event_loop().time() - hold_start            
+                    if held >= hold_time:
+                        await action_func()
+                        return True
+                await asyncio.sleep (0.1)
 
-    def deactivate_btn(self):
-        GPIO.remove_event_detect(self.pin)  # Remove event listener
-        GPIO.cleanup(self.pin)
+                print ("action cancelled")
+                return False
+            await asyncio.sleep(0.1)
+    return False
 
-    def btn_callback(self, pin: int) -> None:
 
-        if GPIO.input(pin) == GPIO.HIGH:
-            print("Button released")
-            backlight(False)
-            return False
 
+
+
+async def buttons_handling (
+    stop_btn:Button,
+    extend_btn:Button,
+    session:Session,
+    screen:Screens,
+    token:Token,
+    instrument:Instrument,
+    user:User,
+    session_flags,
+    
+):
+    stop_prompt_shown = False
+    extend_prompt_shown = False
+    
+    async def stop_reservation():
+        nonlocal stop_prompt_shown
+        print("stop reservation button pressed")
+        await networking.stop_recording (session, instrument, token)
+        await screen.session_ended_by_user()
+        session.ended_by_user = True
+        session_flags["display_session_info"] = False
+    
+    async def extend_resrvation():
+        nonlocal extend_prompt_shown
+        print("extend reservation button pressed")
+        await networking.start_recording(user, instrument, token)
+        await screen.session_extended()
+        session_flags["display_session_info"] = True
+        extend_prompt_shown = False
+    
+    async def on_stop_timeout():
+        session_flags["display_session_info"] = True
+    
+    while session.remaining_time > 0 and not session.ended_by_user:
+        if stop_btn.is_pressed:
+            session_flags["display_session_info"] = False
+            action_done = await handle_button_hold(
+                stop_btn,
+                stop_prompt_shown,
+                screen.want_to_end_session,
+                stop_reservation,
+                on_timeout=on_stop_timeout
+            )
+            stop_prompt_shown = not action_done
         else:
-            print("Button Pressed")
-            self.handle_btn_hold()
+            stop_prompt_shown = False
+            
+        if extend_btn.is_pressed:
+            session_flags["display_session_info"] = False
+            if session.remaining_time < 15:
+                action_done = await handle_button_hold(
+                    extend_btn,
+                    extend_prompt_shown,
+                    screen.want_to_extend_session,
+                    extend_resrvation,
+                    on_timeout=on_stop_timeout
+                )
+                extend_prompt_shown = not action_done
+            else:
+                await screen.extend_not_yet()
+                session_flags["display_session_info"] = True
+        else:
+            extend_prompt_shown = False
+        
+        await asyncio.sleep(0.1)
+            
+            
+'''
+             
+    
+    scan_card_timeout = 5
+    timer_started = False
+    timer_start_time = None
+    press_detection_time = 3
 
-    def handle_btn_hold(self) -> None:
-        hold_time = 1.5
-        increments = 18
-        counter = 0
+    while session.remaining_time > 0 and not session.ended_by_user:
+        if stop_btn.is_pressed:
+            session_flags["display_session_info"] = False
+            
+            if not timer_started:
+                timer_started = True
+                timer_start_time = asyncio.get_event_loop().time()
+            
+            await screen.want_to_end_session()    
+        elif timer_started:
+            elapsed_time = asyncio.get_event_loop().time() - timer_start_time
+            if elapsed_time >= press_detection_time:
+                print("End selected")
+                await networking.stop_recording(session, instrument, token)
+                await screen.session_ended_by_user()
+                session.ended_by_user = True      
+                timer_started = False
+                session_flags["display_session_info"] = True
+                
+                
+        if extend_btn.is_pressed:
+            session_flags["display_session_info"] = False
+            
+            if session.remaining_time < 15:
+                # Single press: Scan card to prolong
+                
+                if not timer_started:
+                    timer_started = True
+                    timer_start_time = asyncio.get_event_loop().time()
+            
+                    await screen.want_to_extend_session()    
+        
+                elif timer_started:
+                    elapsed_time = asyncio.get_event_loop().time() - timer_start_time
+                    if elapsed_time >= press_detection_time:
 
-        while GPIO.input(self.pin) == GPIO.LOW:
-            backlight(True)
-            counter += 1
+                        await networking.start_recording(user,instrument,token)
+                        await screen.session_extended()
+                        timer_started = False
+                        session_flags["display_session_info"] = True                 
+            else:
+                 await screen.extend_not_yet()
+        await asyncio.sleep(0.1)
 
-            time.sleep(hold_time/increments)
 
-            if counter > increments:
-                display('Session ended', 'by user', "", "",
-                        clear=True, backlight_status=True)
-                return True
-
-                # booking_stop_recording()
-                #write_log(11, datetime.now(), "Ended by user")
-                #glob_vars.ended_by_user = True
-                # time.sleep(2)
-
+async def stop_button (
+    stop_btn:Button,
+    session:Session,
+    screen:Screens,
+    token:Token,
+    instrument:Instrument,
+    #user: User,
+    #session_flags
+):
+    """Handle pressing of stop reservation button"""
+    if stop_btn.is_pressed:
+        await networking.stop_recording(session, instrument, token)
+        await screen.session_ended_by_user()
+        session.ended_by_user = True
+        
+        
+        
+        
+        
+async def extend_button (
+    extend_btn:Button, 
+    session :Session, 
+    screen:Screens, 
+    token:Token, 
+    instrument:Instrument, 
+    user:User,
+    rfid_reader:RFIDReader,
+    
+    ):
+    
+    
+    
+    if extend_btn.is_pressed:
+        if session.remaining_time < 15:
+                            # Single press: Scan card to prolong
+            await screen.button_menu_extend()
+            card_id = await rfid_reader.card_reader_time_slot(
+            scan_card_timeout
+        )
+        if card_id == user.card_id:
+            await networking.start_recording(
+                user=user,
+                instrument=instrument,
+                token=token,
+            )
+            await screen.button_menu_extend_ok()
+            # Maybe log the session extension?
+        elif card_id is None:
+            pass
+        else:
+            await screen.button_menu_extend_bad_card()
+    else:
+        await screen.button_menu_extend_not_yet()
+  
 '''

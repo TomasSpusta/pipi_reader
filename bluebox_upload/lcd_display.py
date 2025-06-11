@@ -60,15 +60,6 @@ class LCDController:
             await asyncio.sleep(interval)
             await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", False)
 
-    async def welcome_screen(self, instrument: Instrument):
-        message_template = [
-            "Welcome at",
-            f"{instrument.name}",
-            "Please log in",
-            "with your card.",
-        ]
-        await self.message(*message_template)
-
     async def cleanup(self):
         await asyncio.to_thread(self.lcd.clear)
         await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", False)

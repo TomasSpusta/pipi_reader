@@ -1,4 +1,4 @@
-class Screens:
+class _Screens:
     WELCOME = ["Welcome at", "{instrument_name}", "Please scan your card."]
     CHECKING_USER = ["Checking user"]
     CHECKING_RESERVATION = ["Checking reservation"]

@@ -21,7 +21,7 @@ import time
 from lcd_display import display, waiting, backlight, clear
 from log import write_log
 from rfid_reader import card_reader
-import session
+import bluebox_upload.delete_session as delete_session
 import web_requests
 from gpiozero import Button
 
@@ -55,13 +55,13 @@ def main ():
                 #check if the user has reservation on the equipment
                 #in appropriate time window and start recording
                 
-                session.start_recording ()
+                delete_session.start_recording ()
                 
                 #every X seconds check the remaining time of session and number of acquired files
-                session.session_recording (button, refresh_rate= 5)
+                delete_session.session_recording (button, refresh_rate= 5)
                         
                 # when session ends reset variables for new user
-                session.session_end (button)
+                delete_session.session_end (button)
                 
             
             except Exception as main_loop_e:

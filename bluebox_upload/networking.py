@@ -9,7 +9,7 @@ from logger import Logger
 
 from getmac import get_mac_address as gma  # module for mac adress
 from subprocess import check_output  # module for ip address
-import keys
+import config
 
 
 async def safe_api_call(
@@ -37,7 +37,7 @@ async def safe_api_call(
 
 async def fetch_instrument_data(mac_address: str, ip: str) -> Optional[Instrument]:
     print("Fetching instrument data")
-    url = "https://crm.api.ceitec.cz/get-equipment-by-mac-address"
+    url = config.EQUIPMENT_BY_MAC #"https://crm.api.ceitec.cz/get-equipment-by-mac-address"
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -74,7 +74,7 @@ async def fetch_instrument_data(mac_address: str, ip: str) -> Optional[Instrumen
 
 async def fetch_user_data(card_id) -> Optional[User]:
     print("Fetching user data")
-    url = "https://crm.api.ceitec.cz/get-contact-by-rfid"
+    url = config.CONTACT_BY_RFID #"https://crm.api.ceitec.cz/get-contact-by-rfid"
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -119,7 +119,7 @@ async def start_recording(
     print("Initiating the recording...")
     payload = {"contactId": user.id, "equipmentId": instrument.id}
     headers = {"Authorization": "Bearer " + token.string}
-    url = "https://booking.ceitec.cz/api/recording/start/"
+    url = config.RECORDING_START #"https://booking.ceitec.cz/api/recording/start/"
     try:
         async with aiohttp.ClientSession() as http_session:
             async with http_session.post(
@@ -158,7 +158,7 @@ async def stop_recording(session: Session, instrument: Instrument, token: Token)
         "equipmentId": instrument.id,
     }
     headers = {"Authorization": "Bearer " + token.string}
-    url = "https://booking.ceitec.cz/api/recording/stop"
+    url = config.RECORDING_STOP #"https://booking.ceitec.cz/api/recording/stop"
 
     try:
         async with aiohttp.ClientSession() as http_session:
@@ -182,10 +182,10 @@ async def stop_recording(session: Session, instrument: Instrument, token: Token)
         print("Error in stop_recording: " + e)
 
 
-async def fetch_reservation_info(token: Token, session: Session) -> Optional[Session]:
+async def fetch_recording_info(token: Token, session: Session) -> Optional[Session]:
     # print("Fetching recording info...")
     headers = {"Authorization": "Bearer " + token.string}
-    url = f"https://booking.ceitec.cz/api/service-appointment/{session.reservation_id}/raspberry"
+    url = config.RECORDING_INFO.format(reservation_id = session.reservation_id)#f"https://booking.ceitec.cz/api/service-appointment/{session.reservation_id}/raspberry"
     try:
         async with aiohttp.ClientSession() as http_session:
             async with http_session.get(url=url, headers=headers) as response:
@@ -227,7 +227,7 @@ async def fetch_instruments(token: Token):
 
 
 async def fetch_token(api_key: str) -> Optional[Token]:
-    url = "https://booking.ceitec.cz/api/login"
+    url = config.FETCH_TOKEN #"https://booking.ceitec.cz/api/login"
 
     try:
         async with aiohttp.ClientSession() as session:

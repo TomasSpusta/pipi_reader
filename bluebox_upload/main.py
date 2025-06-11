@@ -4,7 +4,7 @@ from pathlib import Path
 
 from logger import Logger
 from datetime import datetime
-import keys
+#import bluebox_upload.config as config
 import networking
 from gpiozero import Button
 from lcd_display import LCDController
@@ -12,6 +12,7 @@ from model_classes import Instrument, Session, Token, User
 from rfid_reader import RFIDReader
 from screen_manager import Screens
 from token_handler import verify_token, check_expiration
+from button_handler import buttons_handling
 
 
 async def fetch_instrument():
@@ -61,7 +62,7 @@ async def display_session_info(
             session_flags["display_session_info"]
             and session_container.remaining_time > 0
         ):
-            await networking.fetch_reservation_info(token, session_container)
+            await networking.fetch_recording_info(token, session_container)
             # print(f"Remaining session time: {session_container.remaining_time}")
             await screen.in_session(
                 remaining_session_time=session_container.remaining_time
@@ -76,6 +77,8 @@ async def display_session_info(
                 await screen.session_end_warning(session_container.remaining_time)
                 warning_sent = True
         await asyncio.sleep(0.5)
+
+
 
 
 async def handle_button_menu(
@@ -145,7 +148,7 @@ async def handle_button_menu(
                             else:
                                 await screen.button_menu_extend_bad_card()
                         else:
-                            await screen.button_menu_extend_not_yet()
+                            await screen.extend_not_yet()
 
                     case 3:
                         print("Supervisor selected")
@@ -192,8 +195,8 @@ What columns/data I want to log in:
 
 async def main_loop():
     """Main application loop."""
-    stop_reservation_btn = Button(21)
-    #extend_reservation_btn = Button()
+    stop_btn = Button(21)
+    extend_btn = Button(13)
     lcd_controller = LCDController()
     screens = Screens(lcd_controller=lcd_controller)
     rfid_reader = RFIDReader()
@@ -270,10 +273,10 @@ async def main_loop():
             display_session_info(
                 screens, session_container["session"], session_flags, token
             ),
-            handle_button_menu(
-                stop_reservation_btn=stop_reservation_btn,
-                #extend_reservation_btn = Button()
-                rfid_reader=rfid_reader,
+            buttons_handling(
+                stop_btn=stop_btn,
+                extend_btn=extend_btn,
+                #rfid_reader=rfid_reader,
                 session=session_container["session"],
                 screen=screens,
                 token=token,

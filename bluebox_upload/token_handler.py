@@ -4,10 +4,10 @@ from pathlib import Path
 from networking import fetch_token
 import json
 from typing import Optional
-import keys
+import config
 
-TOKEN_FILE = keys.TOKEN_FILE
-API_KEY = keys.API_KEY
+TOKEN_FILE = config.TOKEN_FILE
+API_KEY = config.API_KEY
 
 
 async def initiate_token(API_KEY: str, TOKEN_FILE: Path) -> Optional[Token]:
