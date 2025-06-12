@@ -4,14 +4,13 @@ from pathlib import Path
 
 from logger import Logger
 from datetime import datetime
-#import bluebox_upload.config as config
 import networking
 from gpiozero import Button
 from lcd_display import LCDController
 from model_classes import Instrument, Session, Token, User
 from rfid_reader import RFIDReader
 from screen_manager import Screens
-from token_handler import verify_token, check_expiration
+from token_handler import verify_token
 from button_handler import buttons_handling
 
 
@@ -80,101 +79,7 @@ async def display_session_info(
 
 
 
-
-async def handle_button_menu(
-    stop_reservation_btn: Button,
-    #extend_reservation_btn = Button,
-    rfid_reader: RFIDReader,
-    session: Session,
-    screen: Screens,
-    token: Token,
-    instrument: Instrument,
-    user: User,
-    session_flags,
-):
-    """Handle interactions in the stop_reservation_btn menu."""
-    #extend_reservation_btn = Button()
-
-    selected_row = 0
-    scan_card_timeout = 5
-    timer_started = False
-    timer_start_time = None
-    press_detection_time = 3
-
-    while session.remaining_time > 0 and not session.ended_by_user:
-        if stop_reservation_btn.is_pressed:
-            #extend_reservation_btn = Button()
-            timer_started = False
-            session_flags["display_session_info"] = False
-            if not timer_started:
-                timer_started = True
-                timer_start_time = asyncio.get_event_loop().time()
-
-            await screen.button_menu(selected_row)
-            # print(f"Selected row: {selected_row + 1}")
-
-            selected_row = (selected_row % 4) + 1
-
-            await asyncio.sleep(0.2)
-
-        elif timer_started:
-            elapsed_time = asyncio.get_event_loop().time() - timer_start_time
-            # print(f"Elapsed time: {elapsed_time}")
-            if elapsed_time >= press_detection_time:
-                match selected_row:
-                    case 1:
-                        print("Back selected")
-                        # Back to session
-                        pass
-
-                    case 2:
-                        print("Extend selected")
-                        if session.remaining_time < 15:
-                            # Single press: Scan card to prolong
-                            await screen.button_menu_extend()
-                            card_id = await rfid_reader.card_reader_time_slot(
-                                scan_card_timeout
-                            )
-                            if card_id == user.card_id:
-                                await networking.start_recording(
-                                    user=user,
-                                    instrument=instrument,
-                                    token=token,
-                                )
-                                await screen.button_menu_extend_ok()
-                                # Maybe log the session extension?
-                            elif card_id is None:
-                                pass
-                            else:
-                                await screen.button_menu_extend_bad_card()
-                        else:
-                            await screen.extend_not_yet()
-
-                    case 3:
-                        print("Supervisor selected")
-                        # Supervisor mode
-                        # for future step in of supervisor.
-                        pass
-
-                    case 4:
-                        print("End selected")
-                        await networking.stop_recording(session, instrument, token)
-                        await screen.session_ended_by_user()
-                        session.ended_by_user = True
-
-                    case _:
-                        # Reset for unexpected press counts
-                        pass
-
-                # Reset press count and timer
-                selected_row = 0
-                timer_started = False
-                # print("Returning to the session")
-                session_flags["display_session_info"] = True
-
-        await asyncio.sleep(0.1)
-
-
+'''
 # TODO: DONE -> Error messages for all functions
 # TODO: DONE -> Loging feature to google disc
 # TODO: What to log:
@@ -191,7 +96,7 @@ What columns/data I want to log in:
 """
 
 # TODO: DONE -> Include card correction, when it has only 9 characters
-
+'''
 
 async def main_loop():
     """Main application loop."""
@@ -200,6 +105,9 @@ async def main_loop():
     lcd_controller = LCDController()
     screens = Screens(lcd_controller=lcd_controller)
     rfid_reader = RFIDReader()
+    
+    network_status = {"online":True}
+    asyncio.create_task(networking.network_monitor(network_status,screens))
 
     await screens.starting_screen()
 

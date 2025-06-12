@@ -6,7 +6,7 @@ from datetime import datetime
 import requests
 import git
 from lcd_display import display
-from log import write_log, write_log_temp
+from bluebox_upload.delete_log import write_log, write_log_temp
 
 '''
 def ghub_check(branch):

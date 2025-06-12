@@ -13,6 +13,12 @@ class Screens:
             "Starting...",
             display_time=0.1,
         )
+        
+    async def no_connection(self):
+        self.lcd.message ("No internet connection.", "Please wait.", "Reconnecting...")
+    
+    async def connection_restored(self):
+        self.lcd.message ("Internet connected.","Resuming session...",display_time=2)
 
     async def welcome_screen(self, instrument_name: str):
         await self.lcd.message(

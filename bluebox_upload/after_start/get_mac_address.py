@@ -1,7 +1,7 @@
 import sys
 sys.path.append('/home/bluebox/CFNano_BlueBox/bluebox_upload')
 
-from network_check import get_mac_address
+from bluebox_upload.delete_network_check import get_mac_address
 from time import sleep
 from lcd_display import display
 

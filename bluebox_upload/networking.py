@@ -1,6 +1,7 @@
 import requests
 import unidecode
 import aiohttp
+import asyncio
 
 from model_classes import Instrument, Token, User, Session
 from screen_manager import Screens
@@ -12,6 +13,38 @@ from subprocess import check_output  # module for ip address
 import config
 
 
+async def check_internet_connection(timeout=3) -> bool:
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get ("https://www.google.com", timeout=timeout):
+                return True
+    except:
+        return False
+    
+async def network_monitor (network_status: dict, screens):
+    """
+    Continuously checks internet connection.
+    Updates shared state and optionally shows/hides screen warnings.
+    """
+    was_online = True # Track previuos state to avoid screen flickering
+    
+    while True:
+        is_online = await check_internet_connection ()
+        network_status ["online"] = is_online
+        
+        if not is_online and was_online:
+            #just went offline
+            await screens.no_connection()
+            was_online=False
+        elif is_online and not was_online:
+            #just came back online
+            await screens.connection_restored()
+            was_online = True
+        await asyncio.sleep(5)
+
+        
+        
+        
 async def safe_api_call(
     api_func, error_screen: Screens, logger: Logger, *args, **kwargs
 ):
