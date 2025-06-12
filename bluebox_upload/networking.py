@@ -42,7 +42,11 @@ async def network_monitor (network_status: dict, screens):
             was_online = True
         await asyncio.sleep(5)
 
-        
+
+async def wait_until_online (network_status:dict, screens)    :
+    while not network_status["online"]:
+        await screens.no_connection()
+        await asyncio.sleep(2)
         
         
 async def safe_api_call(
@@ -100,8 +104,7 @@ async def fetch_instrument_data(mac_address: str, ip: str) -> Optional[Instrumen
                 return instrument
 
     except Exception as e:
-        print(f"Error in fetch instrument: {e}")
-
+        print("Error in fetch instrument")
         return None
 
 
@@ -140,7 +143,7 @@ async def fetch_user_data(card_id) -> Optional[User]:
             return user
 
     except Exception as e:
-        print(f"Error in fetch user: {e}")
+        print(f"Error in fetch user")
         return None
 
 
@@ -180,7 +183,7 @@ async def start_recording(
                     return session
 
     except aiohttp.ClientError as e:
-        print("Error in start_recording: " + e)
+        print("Error in start_recording")
 
 
 async def stop_recording(session: Session, instrument: Instrument, token: Token):
@@ -212,7 +215,7 @@ async def stop_recording(session: Session, instrument: Instrument, token: Token)
                     print(f"Stop reservation Message: {status_message}")
 
     except aiohttp.ClientError as e:
-        print("Error in stop_recording: " + e)
+        print("Error in stop_recording")
 
 
 async def fetch_recording_info(token: Token, session: Session) -> Optional[Session]:
@@ -236,7 +239,7 @@ async def fetch_recording_info(token: Token, session: Session) -> Optional[Sessi
                     return session
 
     except aiohttp.ClientError as e:
-        print("Error in start_recording: " + e)
+        print("Error in fetch_recording_info")
 
 
 async def fetch_instruments(token: Token):
@@ -287,7 +290,7 @@ async def fetch_token(api_key: str) -> Optional[Token]:
                 return token
 
     except Exception as e:
-        print(f"Error in fetch token: {e}")
+        print("Error in fetch_token")
         return None
 
 

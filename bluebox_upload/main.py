@@ -109,8 +109,9 @@ async def main_loop():
     network_status = {"online":True}
     asyncio.create_task(networking.network_monitor(network_status,screens))
 
+    await networking.wait_until_online(network_status,screens)
     await screens.starting_screen()
-
+        
     token: Token = await networking.safe_api_call(
         verify_token, error_screen=screens, logger=None
     )
