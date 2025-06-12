@@ -31,15 +31,15 @@ async def load_token(TOKEN_FILE: Path):
 
 
 async def save_token(token: Token, TOKEN_FILE: Path):
-    # print("Saving token...")
+    print("Saving token...")
     with open(TOKEN_FILE, "w") as file:
         json.dump(token.to_dict(), file)
-        # print("Token saved.")
+        print("Token saved.")
 
 
 # async def verify_token(TOKEN_FILE: Path, api_key: str):
 async def verify_token():
-    # print("Verifying token...")
+    #print("Verifying token...")
     token = await load_token(TOKEN_FILE)
 
     if not token:
