@@ -1,7 +1,6 @@
 from lcd_display import LCDController
 import inspect
 import random
-import sys
 
 
 class Screens:
@@ -13,12 +12,14 @@ class Screens:
             "Starting...",
             display_time=0.1,
         )
-        
+
     async def no_connection(self):
-        self.lcd.message ("No internet connection.", "Please wait.", "Reconnecting...")
-    
+        await self.lcd.message("Device is OFFLINE.", "Please wait.", "Reconnecting...")
+
     async def connection_restored(self):
-        self.lcd.message ("Internet connected.","Resuming session...",display_time=2)
+        await self.lcd.message(
+            "Device is ONLINE.", "Resuming session...", display_time=2
+        )
 
     async def welcome_screen(self, instrument_name: str):
         await self.lcd.message(
@@ -113,13 +114,11 @@ class Screens:
             "See you nex time.",
             # display_time=0.1,
         )
-        
-    async def want_to_end_session (self):
+
+    async def want_to_end_session(self):
         await self.lcd.message(
-            "Hold RED button",
-            "for 3 seconds",
-            "to end reservation."
-        )    
+            "Hold RED button", "for 3 seconds", "to end reservation."
+        )
 
     async def session_end_warning(self, remaining_session_time: int):
         await self.lcd.flashing(0.3, 5)
@@ -127,24 +126,24 @@ class Screens:
             "Session will end in",
             f"{remaining_session_time} minutes.",
             "Extend -> Green",
-            "Stop -> Red"
+            "Stop -> Red",
             # display_time=5,
         )
-        
-    async def want_to_extend_session (self):
+
+    async def returning(self):
+        await self.lcd.message("Returning...")
+
+    async def want_to_extend_session(self):
         await self.lcd.message(
-            "Hold GREEN button",
-            "for 3 seconds",
-            "to extend your", 
-            "reservation."
+            "Hold GREEN button", "for 3 seconds", "to extend your", "reservation."
         )
-        
-    async def session_extended (self):
+
+    async def session_extended(self):
         await self.lcd.message(
             "Your session",
             "was extended",
             "by 15 minutes",
-        )    
+        )
 
     # Error
     async def error_message(self, error: str, source_function="Unknown"):
@@ -244,14 +243,3 @@ class Screens:
                             args.append(None)  # Default fallback
 
                     await attr(*args)
-
-    """
-        async def _screen_demo(self):
-            await self.lcd.message(
-                "",
-                "",
-                "",
-                "",
-                #display_time=0.1,
-            )
-    """

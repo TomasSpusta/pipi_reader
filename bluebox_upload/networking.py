@@ -16,42 +16,60 @@ import config
 async def check_internet_connection(timeout=3) -> bool:
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get ("https://www.google.com", timeout=timeout):
+            async with session.get("https://www.google.com", timeout=timeout):
+                print("Online")
                 return True
     except:
+        print("Offline")
         return False
-    
-async def network_monitor (network_status: dict, screens):
+
+
+async def network_monitor(
+    *, network_status: dict, screens: Screens, lcd_flags: dict, input_flags: dict
+):
     """
     Continuously checks internet connection.
     Updates shared state and optionally shows/hides screen warnings.
     """
-    was_online = True # Track previuos state to avoid screen flickering
-    
+    was_online = True  # Track previuos state to avoid screen flickering
+
     while True:
-        is_online = await check_internet_connection ()
-        network_status ["online"] = is_online
-        
+        is_online = await check_internet_connection()
+        network_status["online"] = is_online
+
         if not is_online and was_online:
-            #just went offline
+            # just went offline
+            lcd_flags["lcd_in_use"] = True
+            input_flags["block_input"] = True
             await screens.no_connection()
-            was_online=False
+            was_online = False
+
         elif is_online and not was_online:
-            #just came back online
+            # just came back online
+            lcd_flags["lcd_in_use"] = False
+            lcd_flags["refresh"] = True
             await screens.connection_restored()
             was_online = True
         await asyncio.sleep(5)
 
 
-async def wait_until_online (network_status:dict, screens)    :
+async def wait_until_online(network_status: dict, screen: Screens, lcd_flags):
     while not network_status["online"]:
-        await screens.no_connection()
+        lcd_flags["lcd_in_use"] = True
+        await screen.no_connection()
         await asyncio.sleep(2)
-        
-        
+
+
 async def safe_api_call(
-    api_func, error_screen: Screens, logger: Logger, *args, **kwargs
+    api_func,
+    *,
+    network_status: dict,
+    api_screens: Screens,
+    lcd_flags: dict,
+    logger: Optional[Logger] = None,
+    **kwargs,
 ):
+    await wait_until_online(network_status, api_screens, lcd_flags)
     """
     Safely execute API calls and handle errors by displaying them on the LCD.
     Stops the main loop if an error occurs.
@@ -62,19 +80,22 @@ async def safe_api_call(
     :param kwargs: Keyword arguments for the API function.
     """
     try:
-        return await api_func(*args, **kwargs)
+        return await api_func(**kwargs)
     except Exception as e:
         error_message = f"Error in {api_func.__name__}: {e}"
         print(error_message)
-        await error_screen.error_message(str(e), source_function=api_func.__name__)
+
         if logger:
             await logger.write_log(12, error_message)
+
+        await api_screens.error_message(str(e), source_function=api_func.__name__)
+        return None
         # raise SystemExit("Critical Error. Stopping the program.")
 
 
 async def fetch_instrument_data(mac_address: str, ip: str) -> Optional[Instrument]:
     print("Fetching instrument data")
-    url = config.EQUIPMENT_BY_MAC #"https://crm.api.ceitec.cz/get-equipment-by-mac-address"
+    url = config.EQUIPMENT_BY_MAC
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -103,14 +124,14 @@ async def fetch_instrument_data(mac_address: str, ip: str) -> Optional[Instrumen
                 print("Instrument's data fetched")
                 return instrument
 
-    except Exception as e:
+    except Exception:
         print("Error in fetch instrument")
         return None
 
 
 async def fetch_user_data(card_id) -> Optional[User]:
     print("Fetching user data")
-    url = config.CONTACT_BY_RFID #"https://crm.api.ceitec.cz/get-contact-by-rfid"
+    url = config.CONTACT_BY_RFID
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -142,8 +163,8 @@ async def fetch_user_data(card_id) -> Optional[User]:
             print("User data fetched")
             return user
 
-    except Exception as e:
-        print(f"Error in fetch user")
+    except Exception:
+        print("Error in fetch user")
         return None
 
 
@@ -155,7 +176,7 @@ async def start_recording(
     print("Initiating the recording...")
     payload = {"contactId": user.id, "equipmentId": instrument.id}
     headers = {"Authorization": "Bearer " + token.string}
-    url = config.RECORDING_START #"https://booking.ceitec.cz/api/recording/start/"
+    url = config.RECORDING_START
     try:
         async with aiohttp.ClientSession() as http_session:
             async with http_session.post(
@@ -163,15 +184,12 @@ async def start_recording(
             ) as response:
                 if response.status != 200:
                     error_content = await response.json()
-                    # print(f"Error content {error_content}")
                     error_message = error_content.get("status")
                     print(f"Message: {error_message}")
                     return None
                 else:
                     response_content = await response.json()
-                    # print(f"response content {response_content}")
-                    status_message = response_content.get("status")
-                    # print(f"Message: {status_message}")
+
                     print("Starting the recording...")
 
                     session = Session(
@@ -179,10 +197,9 @@ async def start_recording(
                         reservation_id=response_content["reservation"],
                         remaining_time=int(response_content["timetoend"]),
                     )
-                    # print (f"Session data in networking:\n{session}")
                     return session
 
-    except aiohttp.ClientError as e:
+    except aiohttp.ClientError:
         print("Error in start_recording")
 
 
@@ -194,7 +211,7 @@ async def stop_recording(session: Session, instrument: Instrument, token: Token)
         "equipmentId": instrument.id,
     }
     headers = {"Authorization": "Bearer " + token.string}
-    url = config.RECORDING_STOP #"https://booking.ceitec.cz/api/recording/stop"
+    url = config.RECORDING_STOP
 
     try:
         async with aiohttp.ClientSession() as http_session:
@@ -203,42 +220,34 @@ async def stop_recording(session: Session, instrument: Instrument, token: Token)
             ) as response:
                 if response.status != 200:
                     error_content = await response.json()
-                    # print(f"Error content {error_content}")
                     error_message = error_content.get("status")
                     print(f"Message: {error_message}")
                     return None
                 else:
                     response_content = await response.json()
-                    # print(f"response content {response_content}")
                     status_message = response_content.get("status")
-                    # print(f"Message: {response_content}")
                     print(f"Stop reservation Message: {status_message}")
 
-    except aiohttp.ClientError as e:
+    except aiohttp.ClientError:
         print("Error in stop_recording")
 
 
 async def fetch_recording_info(token: Token, session: Session) -> Optional[Session]:
-    # print("Fetching recording info...")
     headers = {"Authorization": "Bearer " + token.string}
-    url = config.RECORDING_INFO.format(reservation_id = session.reservation_id)#f"https://booking.ceitec.cz/api/service-appointment/{session.reservation_id}/raspberry"
+    url = config.RECORDING_INFO.format(reservation_id=session.reservation_id)
     try:
         async with aiohttp.ClientSession() as http_session:
             async with http_session.get(url=url, headers=headers) as response:
-                # print (f"Response status recording info:{response.status}")
                 if response.status != 200:
                     error_content = await response.json()
-                    # print(f"Error content {error_content}")
                     error_message = error_content.get("status")
                     print(f"Message: {error_message}")
-                    # return None
                 else:
                     response_content = await response.json()
-                    # print(f"response content {response_content}")
                     session.remaining_time = int(response_content["timetoend"])
                     return session
 
-    except aiohttp.ClientError as e:
+    except aiohttp.ClientError:
         print("Error in fetch_recording_info")
 
 
@@ -263,7 +272,7 @@ async def fetch_instruments(token: Token):
 
 
 async def fetch_token(api_key: str) -> Optional[Token]:
-    url = config.FETCH_TOKEN #"https://booking.ceitec.cz/api/login"
+    url = config.FETCH_TOKEN
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -289,7 +298,7 @@ async def fetch_token(api_key: str) -> Optional[Token]:
                 print("New token recieved")
                 return token
 
-    except Exception as e:
+    except Exception:
         print("Error in fetch_token")
         return None
 
@@ -309,9 +318,6 @@ async def fetch_ip() -> str:
         ip = str(check_output(["hostname", "-I"]))
 
         trimmed_ip = ip[2:40]
-        # print("My IP adress is: {}".format(ip))
-        # print(ip)
-        # print(f"Lan IP: {lan_ip}\nWifi IP: {wifi_ip}")
         return trimmed_ip
 
     except Exception as mac_e:

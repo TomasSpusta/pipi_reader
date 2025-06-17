@@ -1,7 +1,5 @@
 import asyncio
-import logging
-from pathlib import Path
-
+import os
 from logger import Logger
 from datetime import datetime
 import networking
@@ -12,72 +10,6 @@ from rfid_reader import RFIDReader
 from screen_manager import Screens
 from token_handler import verify_token
 from button_handler import buttons_handling
-
-
-async def fetch_instrument():
-    """Fetch the instrument details using the MAC address."""
-    ip = await networking.fetch_ip()
-    mac = await networking.fetch_mac()
-    return await networking.fetch_instrument_data(mac, ip)
-
-
-async def welcome_and_wait_for_card(
-    screens: Screens, rfid_reader: RFIDReader, instrument: Instrument
-):
-    """Display the welcome screen and wait for a card swipe."""
-    await screens.welcome_screen(instrument.name)
-    return await rfid_reader.read_card()
-
-
-async def verify_user(card_id: str, screens: Screens):
-    """Verify if the card ID corresponds to a valid user."""
-    await screens.checking_user()
-    user = await networking.fetch_user_data(card_id)
-    if not user:
-        await screens.user_not_in_database()
-    await screens.user_ok(user_name=user.name)
-    return user
-
-
-async def start_session(
-    user: User, instrument: Instrument, token: Token, screen: Screens
-):
-    """Start a recording session for the user."""
-    session = await networking.start_recording(user, instrument, token)
-    if not session:
-        await screen.reservation_nok()
-    else:
-        await screen.reservation_ok()
-    return session
-
-
-async def display_session_info(
-    screen: Screens, session_container: Session, session_flags, token: Token
-):
-    """Display session information continuously."""
-    warning_sent = False
-    while session_container.remaining_time > 0 and not session_container.ended_by_user:
-        if (
-            session_flags["display_session_info"]
-            and session_container.remaining_time > 0
-        ):
-            await networking.fetch_recording_info(token, session_container)
-            # print(f"Remaining session time: {session_container.remaining_time}")
-            await screen.in_session(
-                remaining_session_time=session_container.remaining_time
-            )
-            # await asyncio.sleep(5)
-
-            token = await networking.safe_api_call(
-                verify_token, error_screen=screen, logger=None
-            )
-            if session_container.remaining_time < 5 and warning_sent is False:
-                print("Warning sent")
-                await screen.session_end_warning(session_container.remaining_time)
-                warning_sent = True
-        await asyncio.sleep(0.5)
-
-
 
 '''
 # TODO: DONE -> Error messages for all functions
@@ -98,6 +30,81 @@ What columns/data I want to log in:
 # TODO: DONE -> Include card correction, when it has only 9 characters
 '''
 
+
+async def fetch_instrument():
+    """Fetch the instrument details using the MAC address."""
+    ip = await networking.fetch_ip()
+    mac = await networking.fetch_mac()
+    return await networking.fetch_instrument_data(mac, ip)
+
+
+async def welcome_and_wait_for_card(
+    *,
+    screens: Screens,
+    rfid_reader: RFIDReader,
+    instrument: Instrument,
+    lcd_flag: dict,
+):
+    """Display the welcome screen and wait for a card swipe."""
+    await screens.welcome_screen(instrument.name)
+    lcd_flag["refresh"] = False
+
+    while True:
+        card_id = await rfid_reader.read_card(timeout=20.0)
+        if card_id:
+            return card_id
+        if lcd_flag.get("refresh", False):
+            await screens.welcome_screen(instrument.name)
+            lcd_flag["refresh"] = False
+
+
+async def verify_user(*, card_id: str, screens: Screens):
+    """Verify if the card ID corresponds to a valid user."""
+    await screens.checking_user()
+    user = await networking.fetch_user_data(card_id)
+    if not user:
+        await screens.user_not_in_database()
+    await screens.user_ok(user_name=user.name)
+    return user
+
+
+async def start_session(
+    *, user: User, instrument: Instrument, token: Token, screen: Screens
+):
+    """Start a recording session for the user."""
+    session = await networking.start_recording(user, instrument, token)
+    if not session:
+        await screen.reservation_nok()
+    else:
+        await screen.reservation_ok()
+    return session
+
+
+async def display_session_info(
+    *,
+    screen: Screens,
+    session_container: Session,
+    lcd_flags: dict,
+    token: Token,
+):
+    """Display session information continuously."""
+    warning_sent = False
+    while session_container.remaining_time > 0 and not session_container.ended_by_user:
+        if not lcd_flags["lcd_in_use"] and session_container.remaining_time > 0:
+            await networking.fetch_recording_info(token, session_container)
+            # print(f"Remaining session time: {session_container.remaining_time}")
+            await screen.in_session(
+                remaining_session_time=session_container.remaining_time
+            )
+            # await asyncio.sleep(5)
+
+            if session_container.remaining_time < 5 and warning_sent is False:
+                print("Warning sent")
+                await screen.session_end_warning(session_container.remaining_time)
+                warning_sent = True
+        await asyncio.sleep(0.5)
+
+
 async def main_loop():
     """Main application loop."""
     stop_btn = Button(21)
@@ -105,21 +112,61 @@ async def main_loop():
     lcd_controller = LCDController()
     screens = Screens(lcd_controller=lcd_controller)
     rfid_reader = RFIDReader()
-    
-    network_status = {"online":True}
-    asyncio.create_task(networking.network_monitor(network_status,screens))
 
-    await networking.wait_until_online(network_status,screens)
     await screens.starting_screen()
-        
-    token: Token = await networking.safe_api_call(
-        verify_token, error_screen=screens, logger=None
+
+    lcd_flags = {
+        "lcd_in_use": False,  # False -> main is using lcd, True -> other coroutine using lcd
+        "refresh": False,
+    }
+    input_flags = {
+        "block_input": False  # False -> buttons are online, True -> buttons are offline
+    }
+    network_status = {"online": True}
+
+    asyncio.create_task(
+        networking.network_monitor(
+            network_status=network_status,
+            screens=screens,
+            lcd_flags=lcd_flags,
+            input_flags=input_flags,
+        )
     )
 
     instrument: Instrument = await networking.safe_api_call(
-        fetch_instrument, error_screen=screens, logger=None
+        fetch_instrument,
+        # api_func arguments
+        # safe_api_call arguments
+        network_status=network_status,
+        api_screens=screens,
+        lcd_flags=lcd_flags,
+        logger=None,
     )
-    # print(f"{instrument.mac_address} {instrument.name}")
+
+    while not instrument or not instrument.mac_address:
+        print("Waiting for internet")
+
+        instrument: Instrument = await networking.safe_api_call(
+            fetch_instrument,
+            # api_func arguments
+            # safe_api_call arguments
+            network_status=network_status,
+            api_screens=screens,
+            lcd_flags=lcd_flags,
+            logger=None,
+        )
+
+    token: Token = await networking.safe_api_call(
+        verify_token,
+        # api_func arguments
+        # safe_api_call arguments
+        network_status=network_status,
+        api_screens=screens,
+        lcd_flags=lcd_flags,
+        logger=None,
+    )
+
+    # await networking.wait_until_online(network_status, screens, lcd_flags)
     logger = Logger(instrument.mac_address, instrument.name)
     await logger.initialize()
     await logger.insert_new_row()
@@ -129,25 +176,39 @@ async def main_loop():
     await logger.write_log(5, instrument.name)
     await logger.write_log(9, token.expiration)
 
+    # await networking.wait_until_online(network_status, screens, lcd_flags)
+    # await screens.starting_screen()
+
     while True:
+        # await networking.wait_until_online(network_status, screens, lcd_flags)
         card_id = await networking.safe_api_call(
             welcome_and_wait_for_card,
-            error_screen=screens,
-            logger=logger,
+            # api_func arguments
             screens=screens,
             rfid_reader=rfid_reader,
             instrument=instrument,
+            lcd_flag=lcd_flags,
+            # safe_api_call arguments
+            api_screens=screens,
+            network_status=network_status,
+            lcd_flags=lcd_flags,
+            logger=logger,
         )
         await logger.insert_new_row()
         if not card_id:
             continue
 
+        # await networking.wait_until_online(network_status, screens, lcd_flags)
         user: User = await networking.safe_api_call(
             verify_user,
-            error_screen=screens,
-            logger=logger,
+            # api_func arguments
             card_id=card_id,
             screens=screens,
+            # safe_api_call arguments
+            api_screens=screens,
+            network_status=network_status,
+            lcd_flags=lcd_flags,
+            logger=logger,
         )
 
         if not user:
@@ -158,14 +219,19 @@ async def main_loop():
             await logger.write_log(8, user.full_name, datetime.now())
 
         # token = await verify_token()
+        # await networking.wait_until_online(network_status, screens, lcd_flags)
         session: Session = await networking.safe_api_call(
             start_session,
-            error_screen=screens,
-            logger=logger,
+            # api_func arguments
             user=user,
             instrument=instrument,
             token=token,
             screen=screens,
+            # safe_api_call arguments
+            network_status=network_status,
+            api_screens=screens,
+            logger=logger,
+            lcd_flags=lcd_flags,
         )
         await logger.write_log(10, datetime.now())
         if not session:
@@ -174,24 +240,26 @@ async def main_loop():
         session_container = {
             "session": session,
         }
-        session_flags = {
-            "display_session_info": True
-        }  # Flag to manage session info display state
 
         await asyncio.gather(
             display_session_info(
-                screens, session_container["session"], session_flags, token
+                screen=screens,
+                session_container=session_container["session"],
+                lcd_flags=lcd_flags,
+                token=token,
             ),
             buttons_handling(
                 stop_btn=stop_btn,
                 extend_btn=extend_btn,
-                #rfid_reader=rfid_reader,
+                # rfid_reader=rfid_reader,
                 session=session_container["session"],
                 screen=screens,
                 token=token,
                 instrument=instrument,
                 user=user,
-                session_flags=session_flags,
+                lcd_flags=lcd_flags,
+                network_status=network_status,
+                input_flags=input_flags,
             ),
         )
 
@@ -199,7 +267,7 @@ async def main_loop():
             session_container["session"].ended_by_user
             or session_container["session"].remaining_time <= 0
         ):
-            session_flags["display_session_info"] = False
+            lcd_flags["lcd_in_use"] = True
             if session_container["session"].ended_by_user:
                 await logger.write_log(11, datetime.now(), "Ended by user")
             else:

@@ -1,6 +1,4 @@
 from RPLCD.i2c import CharLCD
-import time
-from model_classes import Instrument
 import asyncio
 from typing import Optional
 
@@ -15,6 +13,7 @@ class LCDController:
         self.lcd = CharLCD(chip, address)
         self.message_queue = asyncio.PriorityQueue()
         self.current_message = None
+        self.lock = asyncio.Lock()
         # self.default_message = default_message
 
     async def _write(self, text, row):
@@ -33,17 +32,18 @@ class LCDController:
         clear: bool = True,
         display_time: int = 2,
     ):
-        await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", backlight)
-        if clear is True:
-            await asyncio.to_thread(self.lcd.clear)
-        if line1 is not None:
-            await self._write(line1, 1)
-        if line2 is not None:
-            await self._write(line2, 2)
-        if line3 is not None:
-            await self._write(line3, 3)
-        if line4 is not None:
-            await self._write(line4, 4)
+        async with self.lock:
+            await asyncio.to_thread(setattr, self.lcd, "backlight_enabled", backlight)
+            if clear is True:
+                await asyncio.to_thread(self.lcd.clear)
+            if line1 is not None:
+                await self._write(line1, 1)
+            if line2 is not None:
+                await self._write(line2, 2)
+            if line3 is not None:
+                await self._write(line3, 3)
+            if line4 is not None:
+                await self._write(line4, 4)
         await asyncio.sleep(display_time)
         #
 
