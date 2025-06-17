@@ -7,6 +7,8 @@ from model_classes import Instrument, Token, User, Session
 from screen_manager import Screens
 from typing import Optional
 from logger import Logger
+from AppContext import AppContext, AppState
+from state_utils import transition_to
 
 from getmac import get_mac_address as gma  # module for mac adress
 from subprocess import check_output  # module for ip address
@@ -25,13 +27,18 @@ async def check_internet_connection(timeout=3) -> bool:
 
 
 async def network_monitor(
-    *, network_status: dict, screens: Screens, lcd_flags: dict, input_flags: dict
+    network_status: dict,
+    screens: Screens,
+    app_context: AppContext,
+    check_interval: float = 5.0,
 ):
     """
     Continuously checks internet connection.
     Updates shared state and optionally shows/hides screen warnings.
     """
-    was_online = True  # Track previuos state to avoid screen flickering
+    was_online = network_status.get(
+        "online", True
+    )  # Track previuos state to avoid screen flickering
 
     while True:
         is_online = await check_internet_connection()
@@ -39,18 +46,21 @@ async def network_monitor(
 
         if not is_online and was_online:
             # just went offline
-            lcd_flags["lcd_in_use"] = True
-            input_flags["block_input"] = True
+            app_context.flags.lcd_in_use = True
+            app_context.flags.block_input = True
+            transition_to(app_context, AppState.OFFLINE, None)
             await screens.no_connection()
             was_online = False
 
         elif is_online and not was_online:
             # just came back online
-            lcd_flags["lcd_in_use"] = False
-            lcd_flags["refresh"] = True
+            app_context.flags.lcd_in_use = False
+            app_context.flags.block_input = False
+            app_context.flags.screen_needs_refresh = True
+            transition_to(app_context, AppState.RECOVERED, None)
             await screens.connection_restored()
             was_online = True
-        await asyncio.sleep(5)
+        await asyncio.sleep(check_interval)
 
 
 async def wait_until_online(network_status: dict, screen: Screens, lcd_flags):
@@ -251,26 +261,6 @@ async def fetch_recording_info(token: Token, session: Session) -> Optional[Sessi
         print("Error in fetch_recording_info")
 
 
-async def fetch_instruments(token: Token):
-    headers = {"Authorization": "Bearer " + token.string}
-    params = {
-        "filters[]": ["ge_corefacilityid:eq:ea950b30-5f22-eb11-80cb-005056914121"],
-    }
-    try:
-        response = requests.get(
-            "https://booking.ceitec.cz/api/equipment", headers=headers, params=params
-        )
-        """
-                params = {
-                    "filters[]": ["Robert", "2024-11-01", "2024-11-30"],  
-                    "scope": "activity_parties.partyid"
-                }
-            """
-        return response
-    except requests.exceptions.RequestException as e:
-        print(e)
-
-
 async def fetch_token(api_key: str) -> Optional[Token]:
     url = config.FETCH_TOKEN
 
@@ -322,3 +312,10 @@ async def fetch_ip() -> str:
 
     except Exception as mac_e:
         print("fetch ip error: " + str(mac_e))
+
+
+async def fetch_instrument():
+    """Fetch the instrument details using the MAC address."""
+    ip = await fetch_ip()
+    mac = await fetch_mac()
+    return await fetch_instrument_data(mac, ip)

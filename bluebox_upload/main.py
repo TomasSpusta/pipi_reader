@@ -10,32 +10,17 @@ from rfid_reader import RFIDReader
 from screen_manager import Screens
 from token_handler import verify_token
 from button_handler import buttons_handling
+from NetworkGuard import NetworkGuard
+from AppContext import AppContext, AppState, AppFlags
+from state_utils import transition_to
+from state_renderer import StateRenderer
 
-'''
-# TODO: DONE -> Error messages for all functions
-# TODO: DONE -> Loging feature to google disc
-# TODO: What to log:
 """
-What columns/data I want to log in:
-    errors - every one.
-    initialization of bluebox - when started
-    session start
-    session end
-    user
-    card swipes
-    session extended
-    
+# TODO: 
+
+
+
 """
-
-# TODO: DONE -> Include card correction, when it has only 9 characters
-'''
-
-
-async def fetch_instrument():
-    """Fetch the instrument details using the MAC address."""
-    ip = await networking.fetch_ip()
-    mac = await networking.fetch_mac()
-    return await networking.fetch_instrument_data(mac, ip)
 
 
 async def welcome_and_wait_for_card(
@@ -81,7 +66,6 @@ async def start_session(
 
 
 async def display_session_info(
-    *,
     screen: Screens,
     session_container: Session,
     lcd_flags: dict,
@@ -107,11 +91,105 @@ async def display_session_info(
 
 async def main_loop():
     """Main application loop."""
+
+    # ---Setup
     stop_btn = Button(21)
     extend_btn = Button(13)
     lcd_controller = LCDController()
     screens = Screens(lcd_controller=lcd_controller)
     rfid_reader = RFIDReader()
+
+    app_flags = AppFlags()
+    app_context = AppContext(flags=app_flags)
+    network_status = {"online": True}
+
+    renderer = StateRenderer(screens)
+    network_guard = NetworkGuard(network_status, screens, app_context)
+
+    asyncio.create_task(
+        networking.network_monitor(network_status, screens, app_context)
+    )
+
+    transition_to(app_context, AppState.INIT, renderer)
+    # await renderer.render(app_context)
+
+    # --- Token
+    token: Token = await network_guard.safe_api_call(lambda: verify_token())
+    if not token:
+        return
+    app_context.token = token
+
+    # --- Instruments ---
+    instrument: Instrument = await network_guard.safe_api_call(
+        lambda: networking.fetch_instrument()
+    )
+    if not instrument:
+        return
+    app_context.instrument = instrument
+
+    logger = Logger(instrument.mac_address, instrument.name)
+
+    await logger.initialize()
+    await logger.insert_new_row()
+
+    await logger.write_log(1, datetime.now())
+    await logger.write_log(2, instrument.ip)
+    await logger.write_log(5, instrument.name)
+    await logger.write_log(9, token.expiration)
+
+    # --- Main Loop ---
+
+    while True:
+        transition_to(app_context, AppState.WAITING_FOR_CARD, renderer)
+
+        card_id = await network_guard.safe_api_call(lambda: rfid_reader.read_card())
+        if not card_id:
+            continue
+
+        user: User = await network_guard.safe_api_call(
+            lambda: networking.fetch_user_data(card_id)
+        )
+        if not user:
+            continue
+        app_context.user = user
+
+        transition_to(app_context, AppState.STARTING_SESSION, renderer)
+
+        session: Session = await network_guard.safe_api_call(
+            lambda: networking.start_recording(user, instrument, token)
+        )
+        if not session:
+            continue
+        app_context.session = session
+
+        transition_to(app_context, AppState.IN_SESSION, renderer)
+
+        await asyncio.gather(
+            display_session_info(screens, session, app_flags, token),
+            buttons_handling(
+                stop_btn=stop_btn,
+                extend_btn=extend_btn,
+                session=session,
+                screen=screens,
+                token=token,
+                instrument=instrument,
+                user=user,
+                lcd_flags=app_flags,
+                network_status=network_status,
+            ),
+        )
+
+        if session.ended_by_user:
+            await logger.write_log(11, "Session ended by user")
+        else:
+            await screens.session_ended_by_timeout()
+            await logger.write_log(11, "Session ended by timeout")
+
+        app_context.session = None
+        app_context.user = None
+        transition_to(app_context, AppState.WAITING_FOR_CARD, renderer)
+
+    """
 
     await screens.starting_screen()
 
@@ -122,7 +200,6 @@ async def main_loop():
     input_flags = {
         "block_input": False  # False -> buttons are online, True -> buttons are offline
     }
-    network_status = {"online": True}
 
     asyncio.create_task(
         networking.network_monitor(
@@ -273,6 +350,7 @@ async def main_loop():
             else:
                 await screens.session_ended_by_timeout()
                 await logger.write_log(11, datetime.now(), "Ended by time")
+    """
 
 
 if __name__ == "__main__":

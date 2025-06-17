@@ -1,4 +1,4 @@
-from rfid_reader_class import RFIDReader
+from rfid_reader import RFIDReader
 import asyncio
 
 
