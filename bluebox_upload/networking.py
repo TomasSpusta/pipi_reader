@@ -7,7 +7,7 @@ from model_classes import Instrument, Token, User, Session
 from screen_manager import Screens
 from typing import Optional
 from logger import Logger
-from AppContext import AppContext, AppState
+from app_context import AppContext, AppState
 from state_utils import transition_to
 
 from getmac import get_mac_address as gma  # module for mac adress

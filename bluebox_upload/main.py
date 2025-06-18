@@ -1,4 +1,39 @@
 import asyncio
+from states.init_state import InitState
+from app_context import AppContext
+from screen_manager import Screens
+from lcd_display import LCDController
+from rfid_reader import RFIDReader
+from api_client import APIClient
+from gpiozero import Button
+
+
+async def main():
+    context = AppContext()
+    context.state = InitState()
+    context.screens = Screens(LCDController())
+    context.rfid_reader = RFIDReader()
+    context.api = APIClient()
+    context.stop_btn = Button(21)
+    context.extend_btn = Button(13)
+
+    while True:
+        context.state = await context.state.run(context)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+
+"""
+TODO: verify token before api calls
+TODO: continuous wifi check
+
+"""
+
+
+'''
+import asyncio
 import os
 from logger import Logger
 from datetime import datetime
@@ -355,3 +390,4 @@ async def main_loop():
 
 if __name__ == "__main__":
     asyncio.run(main_loop())
+'''

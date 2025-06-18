@@ -3,7 +3,7 @@ from model_classes import Instrument, Session, Token, User
 from screen_manager import Screens
 import asyncio
 import networking
-from AppContext import AppFlags
+from app_context import AppContext
 
 
 async def handle_button_hold(
@@ -47,17 +47,18 @@ async def handle_button_hold(
     return False
 
 
-async def buttons_handling(
-    stop_btn: Button,
-    extend_btn: Button,
-    session: Session,
-    screen: Screens,
-    token: Token,
-    instrument: Instrument,
-    user: User,
-    lcd_flags: AppFlags,
-    network_status: dict,
-):
+async def buttons_handling(context: AppContext):
+    stop_btn = context.stop_btn
+    extend_btn = context.extend_btn
+    session = context.session
+    screens = context.screens
+
+    token = context.token
+    instrument = context.instrument
+    user = context.user
+    lcd_flags = context.flags
+    network_status = context.network_status
+
     stop_prompt_shown = False
     extend_prompt_shown = False
 
@@ -65,7 +66,7 @@ async def buttons_handling(
         nonlocal stop_prompt_shown
         print("stop reservation button hold")
         await networking.stop_recording(session, instrument, token)
-        await screen.session_ended_by_user()
+        await screens.session_ended_by_user()
         session.ended_by_user = True
         lcd_flags.lcd_in_use = True
 
@@ -73,13 +74,13 @@ async def buttons_handling(
         nonlocal extend_prompt_shown
         print("extend reservation button hold")
         await networking.start_recording(user, instrument, token)
-        await screen.session_extended()
+        await screens.session_extended()
         lcd_flags.lcd_in_use = False
         extend_prompt_shown = False
 
     async def on_stop_timeout():
         lcd_flags.lcd_in_use = False
-        await screen.returning()
+        await screens.returning()
 
     while session.remaining_time > 0 and not session.ended_by_user:
         if lcd_flags.block_input:
@@ -91,7 +92,7 @@ async def buttons_handling(
             action_done = await handle_button_hold(
                 stop_btn,
                 stop_prompt_shown,
-                screen.want_to_end_session,
+                screens.want_to_end_session,
                 stop_reservation,
                 on_timeout=on_stop_timeout,
             )
@@ -105,13 +106,13 @@ async def buttons_handling(
                 action_done = await handle_button_hold(
                     extend_btn,
                     extend_prompt_shown,
-                    screen.want_to_extend_session,
+                    screens.want_to_extend_session,
                     extend_reservation,
                     on_timeout=on_stop_timeout,
                 )
                 extend_prompt_shown = not action_done
             else:
-                await screen.extend_not_yet()
+                await screens.extend_not_yet()
                 lcd_flags.lcd_in_use = False
         else:
             extend_prompt_shown = False

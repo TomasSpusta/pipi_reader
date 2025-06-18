@@ -1,7 +1,11 @@
 from dataclasses import dataclass, field
 from model_classes import Instrument, Session, Token, User
+from screen_manager import Screens
+from rfid_reader import RFIDReader
 from logger import Logger
 from enum import Enum, auto
+from api_client import APIClient
+from gpiozero import Button
 
 
 class AppState(Enum):
@@ -31,4 +35,10 @@ class AppContext:
     session: Session = None
     logger: Logger = None
     card_id: str = None
-    flags: AppFlags = field(default_factory=AppFlags())
+    flags: AppFlags = field(default_factory=AppFlags)
+    screens: Screens = None
+    rfid_reader: RFIDReader = None
+    api: APIClient = None
+    stop_btn: Button = None
+    extend_btn: Button = None
+    network_status: dict = None

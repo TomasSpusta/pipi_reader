@@ -22,12 +22,13 @@ class Screens:
         )
 
     async def welcome_screen(self, instrument_name: str):
+        print(f"showing welcome screen for {instrument_name}")
         await self.lcd.message(
             "Welcome at",
             f"{instrument_name}",
             "Please log in",
             "with your card",
-            display_time=0.1,
+            # display_time=0.1,
         )
 
     # User

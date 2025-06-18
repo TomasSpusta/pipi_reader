@@ -1,4 +1,4 @@
-from AppContext import AppContext, AppState
+from app_context import AppContext, AppState
 from typing import Optional
 from state_renderer import StateRenderer
 import asyncio
