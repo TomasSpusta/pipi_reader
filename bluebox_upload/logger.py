@@ -27,20 +27,20 @@ class Logger:
             self.sheet = await self._open_or_create_sheet()
 
         except Exception as e:
-            print(f"Error initialize logger: {e}")
+            # print(f"Error initialize logger: {e}")
             await self.write_local_log(f"Error initialize logger: {e}")
 
     async def _open_or_create_sheet(self):
         try:
-            print("Sheet found - Opening sheet...")
+            # print("Sheet found - Opening sheet...")
             sheet = await asyncio.to_thread(self.gc.open, self.sh_name)
 
         except gspread.SpreadsheetNotFound as e:
-            print(f"Error in open_or_create_sheet: {e}")
-            print("Sheet not existing - Creating sheet...")
+            # print(f"Error in open_or_create_sheet: {e}")
+            # print("Sheet not existing - Creating sheet...")
             # except Exception as e:
             sheet = await asyncio.to_thread(self.gc.create, self.sh_name)
-            print("Sharing sheet...")
+            # print("Sharing sheet...")
             await asyncio.to_thread(
                 sheet.share,
                 config.LOGGER_ACC,
@@ -48,7 +48,7 @@ class Logger:
                 role="writer",
                 notify=True,
             )
-            print("Preapring headers...")
+            # print("Preapring headers...")
             await self._prepare_headers(sheet.sheet1)
 
         except Exception as e:

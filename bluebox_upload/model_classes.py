@@ -18,11 +18,6 @@ class Instrument:
 
 
 @dataclass
-class SessionStatus:
-    button_menu = False
-
-
-@dataclass
 class Session:
     remaining_time: int = 0
     recording_id: str = ""

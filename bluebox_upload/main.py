@@ -6,6 +6,7 @@ from lcd_display import LCDController
 from rfid_reader import RFIDReader
 from api_client import APIClient
 from gpiozero import Button
+from networking import network_monitor
 
 
 async def main():
@@ -17,8 +18,11 @@ async def main():
     context.stop_btn = Button(21)
     context.extend_btn = Button(13)
 
+    asyncio.create_task(network_monitor(context.screens, context))
+
     while True:
         context.state = await context.state.run(context)
+        print(f"Lcd in use:{context.flags.lcd_in_use}, in main.")
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from app_context import AppContext, AppState
 from screen_manager import Screens
 import asyncio
-from state_utils import transition_to
+from bluebox_upload.delete_state_utils import transition_to
 from typing import Optional
 from logger import Logger
 
@@ -17,7 +17,7 @@ class NetworkGuard:
             return
 
         self.app_context.flags.lcd_in_use = True
-        self.app_context.flags.block_input = True
+        self.app_context.flags.block_buttons = True
         transition_to(self.app_context, AppState.OFFLINE)
         await self.screens.no_connection()
 
@@ -26,7 +26,7 @@ class NetworkGuard:
 
         self.app_context.flags.lcd_in_use = False
         self.app_context.flags.screen_needs_refresh = True
-        self.app_context.flags.block_input = False
+        self.app_context.flags.block_buttons = False
         await self.screens.connection_restored()
 
         if self.app_context.session and not self.app_context.session.ended_by_user:

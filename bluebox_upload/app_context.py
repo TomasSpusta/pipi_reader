@@ -1,34 +1,36 @@
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 from model_classes import Instrument, Session, Token, User
 from screen_manager import Screens
 from rfid_reader import RFIDReader
 from logger import Logger
-from enum import Enum, auto
 from api_client import APIClient
 from gpiozero import Button
 
-
-class AppState(Enum):
-    INIT = auto()
-    WAITING_FOR_CARD = auto()
-    VERIFYING_USER = auto()
-    STARTING_SESSION = auto()
-    IN_SESSION = auto()
-    SESSION_ENDED = auto()
-    OFFLINE = auto()
-    RECOVERED = auto()
+if TYPE_CHECKING:
+    from states.base_state import State
 
 
 @dataclass
 class AppFlags:
-    lcd_in_use: bool = False
+    """
+    Flags responsible for lcd and buttons behaviour
+    """
+
+    lcd_in_use: bool = False  # True: another courutine is using the lcd
     screen_needs_refresh: bool = False
-    block_input: bool = False
+    block_buttons: bool = (
+        False  # True: Buttons are disabled (e.g in case of offline status)
+    )
 
 
 @dataclass
 class AppContext:
-    state: AppState = AppState.INIT
+    """
+    Variables connected with app
+    """
+
+    state: "State" = None  # <- Forward reference string
     token: Token = None
     instrument: Instrument = None
     user: User = None
@@ -41,4 +43,4 @@ class AppContext:
     api: APIClient = None
     stop_btn: Button = None
     extend_btn: Button = None
-    network_status: dict = None
+    network_status: bool = False  # True: Device is online, False: Device is offline

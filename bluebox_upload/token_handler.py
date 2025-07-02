@@ -3,13 +3,14 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from networking import fetch_token
 import json
-from typing import Optional
+
+# from typing import Optional
 import config
 
 TOKEN_FILE = config.TOKEN_FILE
 API_KEY = config.API_KEY
 
-
+"""
 async def initiate_token(API_KEY: str, TOKEN_FILE: Path) -> Optional[Token]:
     try:
         token = await fetch_token(API_KEY)
@@ -18,6 +19,7 @@ async def initiate_token(API_KEY: str, TOKEN_FILE: Path) -> Optional[Token]:
 
     except Exception as e:
         print(e)
+"""
 
 
 async def load_token(TOKEN_FILE: Path):
@@ -31,19 +33,19 @@ async def load_token(TOKEN_FILE: Path):
 
 
 async def save_token(token: Token, TOKEN_FILE: Path):
-    print("Saving token...")
+    # print("Saving token...")
     with open(TOKEN_FILE, "w") as file:
         json.dump(token.to_dict(), file)
-        print("Token saved.")
+        print("New token saved.")
 
 
-# async def verify_token(TOKEN_FILE: Path, api_key: str):
 async def verify_token():
-    #print("Verifying token...")
+    # print("Verifying token...")
     token = await load_token(TOKEN_FILE)
 
     if not token:
         # print("No token found, fetching new one...")
+
         token = await fetch_token(API_KEY)
         await save_token(token, TOKEN_FILE)
         return token
@@ -58,18 +60,13 @@ async def verify_token():
             await save_token(token, TOKEN_FILE)
             return token
         else:
-            print("Token valid.")
+            # print("Token valid.")
             return token
 
 
 async def check_expiration(token: Token) -> bool:
     try:
         time_now_with_buffer = datetime.now() + timedelta(minutes=5)
-
-        # time_now_formated = datetime.strptime(time_now, "%Y-%m-%dT%H:%M:%S")
-        # token_expiration_formated = datetime.strptime(
-        #     token.expiration, "%Y-%m-%dT%H:%M:%S"
-        # )
         token_expiration_formated = datetime.fromisoformat(token.expiration)
 
         if token_expiration_formated < time_now_with_buffer:

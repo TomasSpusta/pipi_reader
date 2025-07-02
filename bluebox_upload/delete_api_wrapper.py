@@ -1,8 +1,5 @@
 from typing import Callable, Optional, Any
 from logger import Logger
-from screen_manager import Screens
-from state_machine.network_guard import NetworkGuard  # if you have one
-import asyncio
 
 
 async def safe_api_call(

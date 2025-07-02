@@ -3,12 +3,11 @@ from model_classes import User, Instrument, Session, Token
 import config
 import unidecode
 import aiohttp
-import asyncio
 
 
 class APIClient:
     async def fetch_instrument_data(self, mac: str, ip: str) -> Optional[Instrument]:
-        print("Fetching instrument data")
+        print("Instrument data: Fetching...")
         url = config.EQUIPMENT_BY_MAC
 
         try:
@@ -35,7 +34,7 @@ class APIClient:
                         mac_address=mac,
                         ip=ip,
                     )
-                    print("Instrument's data fetched")
+                    print("Instrument data: Fetched.")
                     return instrument
 
         except Exception:
@@ -47,6 +46,7 @@ class APIClient:
         url = config.FETCH_TOKEN
 
         try:
+            print("Token API call")
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, json={"apiKey": api_key}) as response:
                     if response.status != 200:
@@ -67,7 +67,7 @@ class APIClient:
                         string=response_json["accessToken"],
                         expiration=response_json["expiresAt"],
                     )
-                    print("New token recieved")
+                    # print("New token recieved")
                     return token
 
         except Exception:
@@ -75,7 +75,7 @@ class APIClient:
             return None
 
     async def fetch_user_data(self, card_id) -> Optional[User]:
-        print("Fetching user data")
+        print("User data: Fetching...")
         url = config.CONTACT_BY_RFID
 
         try:
@@ -105,7 +105,7 @@ class APIClient:
                         card_id=card_id,
                         full_name=full_name,
                     )
-                print("User data fetched")
+                print("User data: Fetched.")
                 return user
 
         except Exception:
@@ -118,7 +118,7 @@ class APIClient:
         instrument: Instrument,
         token: Token,  # session: Session
     ) -> Optional[Session]:
-        print("Initiating the recording...")
+        print("Recording START/EXTEND: API Call...")
         payload = {"contactId": user.id, "equipmentId": instrument.id}
         headers = {"Authorization": "Bearer " + token.string}
         url = config.RECORDING_START
@@ -135,13 +135,12 @@ class APIClient:
                     else:
                         response_content = await response.json()
 
-                        print("Starting the recording...")
-
                         session = Session(
                             recording_id=response_content["recording"],
                             reservation_id=response_content["reservation"],
                             remaining_time=int(response_content["timetoend"]),
                         )
+                        print("Recording START/EXTEND: Started/Extended.")
                         return session
 
         except aiohttp.ClientError:
@@ -150,6 +149,7 @@ class APIClient:
     async def fetch_recording_info(
         self, token: Token, session: Session
     ) -> Optional[Session]:
+        # print("Recording Info: API Call...")
         headers = {"Authorization": "Bearer " + token.string}
         url = config.RECORDING_INFO.format(reservation_id=session.reservation_id)
         try:
@@ -158,10 +158,13 @@ class APIClient:
                     if response.status != 200:
                         error_content = await response.json()
                         error_message = error_content.get("status")
-                        print(f"Message: {error_message}")
+                        print(
+                            f"Recording info status {error_content}, message: {error_message}"
+                        )
                     else:
                         response_content = await response.json()
                         session.remaining_time = int(response_content["timetoend"])
+
                         return session
 
         except aiohttp.ClientError:
@@ -170,7 +173,7 @@ class APIClient:
     async def stop_recording(
         self, session: Session, instrument: Instrument, token: Token
     ):
-        print("Stopping the recording...")
+        print("Recording STOP: API Call...")
 
         payload = {
             "serviceAppointmentId": session.reservation_id,
@@ -190,9 +193,10 @@ class APIClient:
                         print(f"Message: {error_message}")
                         return None
                     else:
-                        response_content = await response.json()
-                        status_message = response_content.get("status")
-                        print(f"Stop reservation Message: {status_message}")
+                        # response_content = await response.json()
+                        # status_message = response_content.get("status")
+                        # print(f"Stop reservation Message: {status_message}")
+                        print("Recording STOP: Recording Stopped.")
 
         except aiohttp.ClientError:
             print("Error in stop_recording")

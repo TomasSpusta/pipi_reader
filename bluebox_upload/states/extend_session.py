@@ -6,6 +6,10 @@ from button_handler import handle_button_hold
 
 
 class ExtendingSessionState(State):
+    """
+    State dealing with extension of session/reservation.
+    """
+
     async def run(self, context: AppContext) -> State:
         if context.session.remaining_time > 15:
             await context.screens.extend_not_yet()
@@ -14,7 +18,6 @@ class ExtendingSessionState(State):
         await context.screens.want_to_extend_session()
 
         async def extend_action():
-            # if extend button held for 10 seconds -> api.start.recoding()
             await context.api.start_recording(
                 user=context.user, instrument=context.instrument, token=context.token
             )
@@ -30,7 +33,5 @@ class ExtendingSessionState(State):
             prompt_shown=False,
             prompt_func=context.screens.want_to_extend_session,
             action_func=extend_action,
-            hold_time=10.0,
-            timeout=12.0,
             on_timeout=timeout_action,
         )

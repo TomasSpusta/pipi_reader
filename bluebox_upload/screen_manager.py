@@ -22,7 +22,6 @@ class Screens:
         )
 
     async def welcome_screen(self, instrument_name: str):
-        print(f"showing welcome screen for {instrument_name}")
         await self.lcd.message(
             "Welcome at",
             f"{instrument_name}",
@@ -106,14 +105,14 @@ class Screens:
         await self.lcd.message(
             "Your session ended.",
             "See you next time.",
-            # display_time=0.1,
+            display_time=2,
         )
 
     async def session_ended_by_user(self):
         await self.lcd.message(
-            "User ended session.",
-            "See you nex time.",
-            # display_time=0.1,
+            "Your session ended.",
+            "See you next time.",
+            display_time=2,
         )
 
     async def want_to_end_session(self):
@@ -128,7 +127,7 @@ class Screens:
             f"{remaining_session_time} minutes.",
             "Extend -> Green",
             "Stop -> Red",
-            # display_time=5,
+            display_time=5,
         )
 
     async def returning(self):
