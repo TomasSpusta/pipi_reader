@@ -29,7 +29,10 @@ class NetworkGuard:
         self.app_context.flags.block_buttons = False
         await self.screens.connection_restored()
 
-        if self.app_context.session and not self.app_context.session.ended_by_user:
+        if (
+            self.app_context.reservation
+            and not self.app_context.reservation.ended_by_user
+        ):
             transition_to(self.app_context, AppState.IN_SESSION)
         elif self.app_context.user:
             transition_to(self.app_context, AppState.STARTING_SESSION)

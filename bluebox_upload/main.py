@@ -1,5 +1,7 @@
 import asyncio
 from states.init_state import InitState
+
+from states.test_state import TestState
 from app_context import AppContext
 from screen_manager import Screens
 from lcd_display import LCDController
@@ -11,18 +13,20 @@ from networking import network_monitor
 
 async def main():
     context = AppContext()
-    context.state = InitState()
+    # context.state = InitState()
+    context.state = TestState()
     context.screens = Screens(LCDController())
     context.rfid_reader = RFIDReader()
     context.api = APIClient()
-    context.stop_btn = Button(21)
-    context.extend_btn = Button(13)
+    context.stop_btn = Button(21, hold_time=3.0)
+    context.extend_btn = Button(13, hold_time=3.0)
 
     asyncio.create_task(network_monitor(context.screens, context))
 
     while True:
         context.state = await context.state.run(context)
         print(f"Lcd in use:{context.flags.lcd_in_use}, in main.")
+        # print(f"Current state: {context.state.__module__}")
 
 
 if __name__ == "__main__":

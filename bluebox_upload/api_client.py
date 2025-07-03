@@ -1,5 +1,5 @@
 from typing import Optional
-from model_classes import User, Instrument, Session, Token
+from model_classes import User, Instrument, Reservation, Token
 import config
 import unidecode
 import aiohttp
@@ -112,12 +112,12 @@ class APIClient:
             print("Error in fetch user")
             return None
 
-    async def start_recording(
+    async def start_extend_reservation(
         self,
         user: User,
         instrument: Instrument,
         token: Token,  # session: Session
-    ) -> Optional[Session]:
+    ) -> Optional[Reservation]:
         print("Recording START/EXTEND: API Call...")
         payload = {"contactId": user.id, "equipmentId": instrument.id}
         headers = {"Authorization": "Bearer " + token.string}
@@ -135,7 +135,7 @@ class APIClient:
                     else:
                         response_content = await response.json()
 
-                        session = Session(
+                        session = Reservation(
                             recording_id=response_content["recording"],
                             reservation_id=response_content["reservation"],
                             remaining_time=int(response_content["timetoend"]),
@@ -147,11 +147,11 @@ class APIClient:
             print("Error in start_recording")
 
     async def fetch_recording_info(
-        self, token: Token, session: Session
-    ) -> Optional[Session]:
+        self, token: Token, reservation: Reservation
+    ) -> Optional[Reservation]:
         # print("Recording Info: API Call...")
         headers = {"Authorization": "Bearer " + token.string}
-        url = config.RECORDING_INFO.format(reservation_id=session.reservation_id)
+        url = config.RECORDING_INFO.format(reservation_id=reservation.reservation_id)
         try:
             async with aiohttp.ClientSession() as http_session:
                 async with http_session.get(url=url, headers=headers) as response:
@@ -163,20 +163,20 @@ class APIClient:
                         )
                     else:
                         response_content = await response.json()
-                        session.remaining_time = int(response_content["timetoend"])
+                        reservation.remaining_time = int(response_content["timetoend"])
 
-                        return session
+                        return reservation
 
         except aiohttp.ClientError:
             print("Error in fetch_recording_info")
 
-    async def stop_recording(
-        self, session: Session, instrument: Instrument, token: Token
+    async def stop_reservation(
+        self, reservation: Reservation, instrument: Instrument, token: Token
     ):
         print("Recording STOP: API Call...")
 
         payload = {
-            "serviceAppointmentId": session.reservation_id,
+            "serviceAppointmentId": reservation.reservation_id,
             "equipmentId": instrument.id,
         }
         headers = {"Authorization": "Bearer " + token.string}

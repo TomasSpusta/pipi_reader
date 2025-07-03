@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
-from model_classes import Instrument, Session, Token, User
+from model_classes import Instrument, Reservation, Token, User
 from screen_manager import Screens
 from rfid_reader import RFIDReader
 from logger import Logger
@@ -34,7 +34,7 @@ class AppContext:
     token: Token = None
     instrument: Instrument = None
     user: User = None
-    session: Session = None
+    reservation: Reservation = None
     logger: Logger = None
     card_id: str = None
     flags: AppFlags = field(default_factory=AppFlags)
@@ -43,4 +43,4 @@ class AppContext:
     api: APIClient = None
     stop_btn: Button = None
     extend_btn: Button = None
-    network_status: bool = False  # True: Device is online, False: Device is offline
+    network_status: bool = True  # True: Device is online, False: Device is offline

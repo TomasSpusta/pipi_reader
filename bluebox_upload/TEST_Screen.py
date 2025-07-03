@@ -24,7 +24,7 @@ async def button_press_handler():
 
 async def screen_test():
     await screens.welcome_screen(instrument_name=instrument_name)
-    await screens.session_end_warning(remaining_time)
+    await screens.reservation_end_warning(remaining_time)
     await screens.welcome_screen(instrument_name=instrument_name)
 
 

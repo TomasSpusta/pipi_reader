@@ -8,10 +8,10 @@ class WaitingForCardState(State):
 
         card_id = await context.rfid_reader.read_card()
 
-        from states.verifying_user import VerifyingUserState
+        from states.verify_user import VerifyUserState
 
         if card_id:
             context.card_id = card_id
-            return VerifyingUserState()
+            return VerifyUserState()
 
         return self

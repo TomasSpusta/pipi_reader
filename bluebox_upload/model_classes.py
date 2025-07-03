@@ -18,7 +18,7 @@ class Instrument:
 
 
 @dataclass
-class Session:
+class Reservation:
     remaining_time: int = 0
     recording_id: str = ""
     reservation_id: str = ""

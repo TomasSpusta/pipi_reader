@@ -22,8 +22,8 @@ class StateRenderer:
             await self.screens.checking_reservation()
 
         elif state == AppState.IN_SESSION:
-            if context.session:
-                await self.screens.in_session(context.session.remaining_time)
+            if context.reservation:
+                await self.screens.in_reservation(context.reservation.remaining_time)
 
         elif state == AppState.SESSION_ENDED:
             await self.screens.session_ended_by_timeout()

@@ -2,6 +2,108 @@ from gpiozero import Button
 import asyncio
 from networking import safe_api_call
 from app_context import AppContext, AppFlags
+from typing import Callable, Awaitable
+
+
+async def watch_button_hold(
+    btn: Button,
+    name: str,
+    hold_duration: float,
+    on_hold: Callable[[], Awaitable],
+    guard: Callable[[], bool] = lambda: False,
+):
+    """
+    Watches a button and triggers `on_hold()` if it's held for `hold_duration` seconds.
+
+    Args:
+        btn: gpiozero.Button instance
+        hold_duration: seconds to qualify as hold
+        on_hold: async function to call when hold is detected
+        guard: optional function that blocks hold detection when True
+    """
+    print(f"👁️ Watching {name} button on GPIO {btn.pin} for {hold_duration}s holds")
+
+    while True:
+        await asyncio.sleep(0.1)
+
+        if guard():
+            continue  # skip if guard (like LCD in use) is active
+
+        if not btn.is_pressed:
+            continue
+
+        print(f" {name} pressed, monitoring for hold...")
+
+        start = asyncio.get_running_loop().time()
+
+        while btn.is_pressed:
+            await asyncio.sleep(0.1)
+            if asyncio.get_running_loop().time() - start >= hold_duration:
+                print(
+                    f"✅ Button {name} held for {hold_duration} seconds! Triggering action."
+                )
+                await on_hold()
+                break
+
+        print("↩️ Button released or action completed")
+
+
+async def multi_button_watcher(context: AppContext, state_queue: asyncio.Queue):
+    """
+    Watches multiple buttons and pushes new state instances into the state queue.
+    """
+    stop_btn = context.stop_btn
+    extend_btn = context.extend_btn
+    lcd_flags = context.flags
+
+    guard = lambda: lcd_flags.block_buttons or lcd_flags.lcd_in_use
+
+    async def trigger_stop_state():
+        from states.user_stop_reservation_state import UserStopReservationState
+
+        await state_queue.put(UserStopReservationState())
+
+    async def trigger_extend_state():
+        from states.extend_reservation import ExtendReservationState
+
+        await state_queue.put(ExtendReservationState())
+
+    await asyncio.gather(
+        watch_button_hold("Stop", stop_btn, 5.0, trigger_stop_state, guard),
+        watch_button_hold("Extend", extend_btn, 5.0, trigger_extend_state, guard),
+    )
+
+
+async def button_watcher(context: AppContext, state_queue: asyncio.Queue):
+    """
+    Background task that listens for button presses and sends new states to the state queue.
+    """
+    stop_btn = context.stop_btn
+    extend_btn = context.extend_btn
+    lcd_flags = context.flags
+    print("👁️ Button watcher is now monitoring")
+
+    while True:
+        await asyncio.sleep(0.1)
+
+        if lcd_flags.block_buttons or lcd_flags.lcd_in_use:
+            continue
+
+        if stop_btn.is_held:
+            print("✅ HELD stop detected")
+            print("🔘 Stop button detected → queuing StopState")
+            from states.user_stop_reservation_state import UserStopReservationState
+
+            await state_queue.put(UserStopReservationState())
+            break
+
+        if extend_btn.is_held:
+            print("✅ HELD stop detected")
+            print("🔘 Extend button detected → queuing ExtendState")
+            from states.extend_reservation import ExtendReservationState
+
+            await state_queue.put(ExtendReservationState())
+            break
 
 
 async def handle_button_hold(

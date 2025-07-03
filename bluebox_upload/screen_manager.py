@@ -91,12 +91,12 @@ class Screens:
 
     # Session
 
-    async def in_session(self, remaining_session_time: int):
+    async def in_reservation(self, remaining_session_time: int):
         await self.lcd.message(
             "Remaining time:",
             f"{remaining_session_time} minutes",
-            "Extend -> Green",
-            "Stop -> Red",
+            "Extend -> Hold Green",
+            "Stop -> Hold Red",
             display_time=5,
             backlight=False,
         )
@@ -108,7 +108,7 @@ class Screens:
             display_time=2,
         )
 
-    async def session_ended_by_user(self):
+    async def user_stop_reservation(self):
         await self.lcd.message(
             "Your session ended.",
             "See you next time.",
@@ -120,7 +120,7 @@ class Screens:
             "Hold RED button", "for 3 seconds", "to end reservation."
         )
 
-    async def session_end_warning(self, remaining_session_time: int):
+    async def reservation_end_warning(self, remaining_session_time: int):
         await self.lcd.flashing(0.3, 5)
         await self.lcd.message(
             "Session will end in",
@@ -133,12 +133,12 @@ class Screens:
     async def returning(self):
         await self.lcd.message("Returning...")
 
-    async def want_to_extend_session(self):
+    async def want_to_extend_reservation(self):
         await self.lcd.message(
             "Hold GREEN button", "for 3 seconds", "to extend your", "reservation."
         )
 
-    async def session_extended(self):
+    async def reservation_extended(self):
         await self.lcd.message(
             "Your session",
             "was extended",
