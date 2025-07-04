@@ -101,6 +101,17 @@ class Screens:
             backlight=False,
         )
 
+    async def loading_screen(self, label: str, duration: int = 5, char: str = "#"):
+        for i in range(duration):
+            bar = "[" + char * (i + 1) + " " * (duration - i - 1) + "]"
+            await self.lcd.message(label, bar, "", "", display_time=1)
+
+    async def show_stopped(self):
+        await self.lcd.message("Stopped!")
+
+    async def show_reloaded(self):
+        await self.lcd.message("Reloaded")
+
     async def session_ended_by_timeout(self):
         await self.lcd.message(
             "Your session ended.",
@@ -243,3 +254,12 @@ class Screens:
                             args.append(None)  # Default fallback
 
                     await attr(*args)
+
+    async def counting_screen(self, counter: int):
+        await self.lcd.message(f"{counter}")
+
+    async def counter_done(self):
+        await self.lcd.message("Done!")
+
+    async def loading_screen_step(self, label: str, bar: str):
+        await self.lcd.message(label, bar, "", "", display_time=0.1)

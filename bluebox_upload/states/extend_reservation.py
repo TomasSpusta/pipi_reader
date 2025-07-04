@@ -2,7 +2,6 @@
 from states.base_state import State
 from app_context import AppContext
 
-from button_handler import wait_for_button_hold
 from networking import safe_api_call
 
 
@@ -13,6 +12,25 @@ class ExtendReservationState(State):
 
     async def run(self, context: AppContext) -> State:
         from states.in_reservation import InReservationState
+
+        async with context.lock:
+            if context.reservation.remaining_time > 15:
+                await context.screens.extend_not_yet()
+                return InReservationState()
+            await safe_api_call(
+                context.api.start_extend_reservation,
+                context=context,
+                api_screens=context.screens,
+                # api variables:
+                user=context.user,
+                instrument=context.instrument,
+                token=context.token,
+            )
+        await context.screens.reservation_extended()
+        # await asyncio.sleep(1)
+        return InReservationState()
+
+        """
 
         lcd_flags = context.flags
         lcd_flags.lcd_in_use = True
@@ -42,3 +60,4 @@ class ExtendReservationState(State):
         else:
             lcd_flags.lcd_in_use = False
             return InReservationState()
+"""

@@ -5,6 +5,36 @@ from app_context import AppContext, AppFlags
 from typing import Callable, Awaitable
 
 
+async def button_watcher(context: AppContext, state_queue: asyncio.Queue):
+    loop = asyncio.get_running_loop()
+
+    def queue_put(state_name):
+        print(f"Queued state change: {state_name}")
+        asyncio.run_coroutine_threadsafe(state_queue.put(state_name), loop)
+
+    """
+    async def red_held():
+        await state_queue.put("stop")
+
+    async def green_held():
+        await state_queue.put("reset")
+    """
+    # Using lambda inside asyncio.create_task to not block main thread
+    context.stop_btn.when_held = lambda: queue_put(
+        "stop"
+    )  # asyncio.create_task(queue_put("stop"))
+    context.extend_btn.when_held = lambda: queue_put(
+        "reset"
+    )  # asyncio.create_task(queue_put("reset"))
+
+    try:
+        while True:
+            await asyncio.sleep(0.1)
+    except asyncio.CancelledError:
+        pass
+
+
+'''
 async def watch_button_hold(
     btn: Button,
     name: str,
@@ -292,3 +322,4 @@ async def buttons_handling(context: AppContext):
             extend_prompt_shown = False
 
         await asyncio.sleep(0.1)
+'''

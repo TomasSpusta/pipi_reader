@@ -6,8 +6,7 @@ class TimeOutState(State):
     async def run(self, context: AppContext) -> State:
         from states.waiting_for_card import WaitingForCardState
 
-        context.flags.lcd_in_use = True
-        await context.screens.session_ended_by_timeout()
-        context.flags.lcd_in_use = False
+        async with context.lock:
+            await context.screens.session_ended_by_timeout()
 
         return WaitingForCardState()

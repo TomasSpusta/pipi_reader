@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 from model_classes import Instrument, Reservation, Token, User
@@ -44,3 +45,6 @@ class AppContext:
     stop_btn: Button = None
     extend_btn: Button = None
     network_status: bool = True  # True: Device is online, False: Device is offline
+    lock = None
+    counter = 100
+    button_lock = asyncio.Lock()
