@@ -12,16 +12,28 @@ from subprocess import check_output  # module for ip address
 import config
 
 
-async def check_internet_connection(timeout=3) -> bool:
-    try:
-        # print("Trying to ping google.com")
-        async with aiohttp.ClientSession() as session:
-            async with session.get("https://www.google.com", timeout=timeout):
-                # print("Online")
-                return True
-    except:
-        print("Offline")
-        return False
+CHECK_URLS = [
+    "https://www.google.com",
+    "https://www.ceitec.cz/",
+    "https://cloudflare.com",
+    "https://1.1.1.1",  # Cloudflare DNS direct IP (no DNS resolution needed)
+]
+
+
+async def check_internet_connection(timeout: int = 5, retries: int = 2) -> bool:
+    for _ in range(retries):
+        for url in CHECK_URLS:
+            try:
+                # print(f"Trying to ping {url}")
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, timeout=timeout):
+                        # print("Online")
+                        return True
+            except Exception:
+                continue
+        await asyncio.sleep(1)
+    print("Offline")
+    return False
 
 
 async def network_monitor(
@@ -34,11 +46,31 @@ async def network_monitor(
     Updates shared state and optionally shows/hides screen warnings.
     """
     was_online = context.network_status
+    consecutive_failures: int = 0
+    failure_threshold: int = 3
 
     while True:
         is_online = await check_internet_connection()
-        context.network_status = is_online
 
+        # context.network_status = is_online
+
+        if is_online:
+            consecutive_failures = 0
+            if not was_online:
+                async with context.lock:
+                    context.network_status = True
+                    await screens.connection_restored()
+                was_online = True
+        else:
+            consecutive_failures += 1
+            if consecutive_failures >= failure_threshold and was_online:
+                async with context.lock:
+                    context.network_status = False
+                    await screens.no_connection()
+                was_online = False
+
+        await asyncio.sleep(check_interval)
+        """
         if not is_online and was_online:
             # just went offline
             context.flags.lcd_in_use = True
@@ -55,6 +87,7 @@ async def network_monitor(
             context.flags.lcd_in_use = False
             was_online = True
         await asyncio.sleep(check_interval)
+        """
 
 
 async def wait_until_online(context: AppContext, screen: Screens):

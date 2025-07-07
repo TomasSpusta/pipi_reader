@@ -136,8 +136,8 @@ class Screens:
         await self.lcd.message(
             "Session will end in",
             f"{remaining_session_time} minutes.",
-            "Extend -> Green",
-            "Stop -> Red",
+            "Extend -> Hold green",
+            "Stop -> Hold red",
             display_time=5,
         )
 
@@ -150,11 +150,7 @@ class Screens:
         )
 
     async def reservation_extended(self):
-        await self.lcd.message(
-            "Your session",
-            "was extended",
-            "by 15 minutes",
-        )
+        await self.lcd.message("Your session", "was extended", "by 15 minutes.")
 
     # Error
     async def error_message(self, error: str, source_function="Unknown"):

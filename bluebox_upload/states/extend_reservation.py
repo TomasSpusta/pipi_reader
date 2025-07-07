@@ -27,6 +27,7 @@ class ExtendReservationState(State):
                 token=context.token,
             )
         await context.screens.reservation_extended()
+        context.reservation.warning_sent = False
         # await asyncio.sleep(1)
         return InReservationState()
 

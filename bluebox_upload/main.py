@@ -25,8 +25,8 @@ async def main():
 
     while True:
         context.state = await context.state.run(context)
-        print(f"Lcd in use:{context.flags.lcd_in_use}, in main.")
-        print(f"Current state: {context.state.__module__}")
+        # print(f"Lcd in use:{context.flags.lcd_in_use}, in main.")
+        # print(f"Current state: {context.state.__module__}")
 
 
 if __name__ == "__main__":

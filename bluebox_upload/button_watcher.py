@@ -9,10 +9,16 @@ async def button_watcher(context: AppContext, state_queue: asyncio.Queue):
     loop = asyncio.get_running_loop()
 
     def on_pressed(button: Button, label, state_name):
-        if not context.button_lock.locked():
+        if not context.button_lock.locked() and context.network_status:
             asyncio.run_coroutine_threadsafe(
                 monitor_button(button, label, state_name), loop
             )
+        else:
+            print(f"[{label}] Ignored — offline or locked")
+            # Optional: show offline warning immediately
+            # asyncio.run_coroutine_threadsafe(
+            #    context.screens.no_connection(), loop
+            # )
 
     async def monitor_button(button: Button, label, state_name):
         if context.button_lock.locked():
@@ -48,10 +54,6 @@ async def button_watcher(context: AppContext, state_queue: asyncio.Queue):
     context.extend_btn.when_pressed = lambda: on_pressed(
         context.extend_btn, "Extending", "extend"
     )
-
-    # context.extend_btn.when_pressed = lambda: on_pressed(
-    #    context.extend_btn, "Reloading", "reset"
-    # )
 
     try:
         while True:

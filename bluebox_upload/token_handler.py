@@ -40,7 +40,7 @@ async def save_token(token: Token, TOKEN_FILE: Path):
 
 
 async def verify_token():
-    # print("Verifying token...")
+    print("Verifying token...")
     token = await load_token(TOKEN_FILE)
 
     if not token:
