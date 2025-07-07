@@ -2,7 +2,7 @@ import asyncio
 from app_context import AppContext
 from gpiozero import Button
 
-HOLD_DURATION = 3.5  # seconds
+HOLD_DURATION = 1.8  # seconds
 
 
 async def button_watcher(context: AppContext, state_queue: asyncio.Queue):
@@ -34,7 +34,7 @@ async def button_watcher(context: AppContext, state_queue: asyncio.Queue):
                 return
 
             print(f"[{label}] Started monitoring...")
-            step = 0.2
+            step = 0.1
             total_steps = int(HOLD_DURATION / step)
 
             for i in range(total_steps):
@@ -49,10 +49,10 @@ async def button_watcher(context: AppContext, state_queue: asyncio.Queue):
             await state_queue.put(state_name)
 
     context.stop_btn.when_pressed = lambda: on_pressed(
-        context.stop_btn, "Stopping", "stop"
+        context.stop_btn, "Stopping...", "stop"
     )
     context.extend_btn.when_pressed = lambda: on_pressed(
-        context.extend_btn, "Extending", "extend"
+        context.extend_btn, "Extending...", "extend"
     )
 
     try:

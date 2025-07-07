@@ -26,6 +26,7 @@ class VerifyReservationState(State):
         if reservation:
             context.reservation = reservation
             await context.screens.reservation_ok()
+            await context.logger.write_log(10, context.reservation.reservation_id)
             return InReservationState()
         else:
             await context.screens.reservation_nok()

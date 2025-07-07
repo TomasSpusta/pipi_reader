@@ -172,7 +172,7 @@ async def safe_api_call(
     :param kwargs: Keyword arguments for the API function.
     """
     try:
-        await verify_token()
+        await verify_token(context=context)
         # print("Trying API call...")
         return await api_func(**kwargs)
     except Exception as e:

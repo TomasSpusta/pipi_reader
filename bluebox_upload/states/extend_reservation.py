@@ -1,6 +1,7 @@
 # Extend session
 from states.base_state import State
 from app_context import AppContext
+from datetime import datetime
 
 from networking import safe_api_call
 
@@ -14,7 +15,7 @@ class ExtendReservationState(State):
         from states.in_reservation import InReservationState
 
         async with context.lock:
-            if context.reservation.remaining_time > 15:
+            if context.reservation.remaining_time >= 14:
                 await context.screens.extend_not_yet()
                 return InReservationState()
             await safe_api_call(
@@ -27,6 +28,7 @@ class ExtendReservationState(State):
                 token=context.token,
             )
         await context.screens.reservation_extended()
+        await context.logger.write_log(12, datetime.now(), "Extended by user")
         context.reservation.warning_sent = False
         # await asyncio.sleep(1)
         return InReservationState()

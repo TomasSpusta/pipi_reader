@@ -5,6 +5,8 @@ from networking import fetch_ip, fetch_mac
 from model_classes import Instrument, Token
 from networking import safe_api_call, check_internet_connection
 from token_handler import verify_token
+from logger import Logger
+from datetime import datetime
 
 
 class InitState(State):
@@ -19,7 +21,7 @@ class InitState(State):
         context.network_status = await check_internet_connection()
 
         token: Token = await safe_api_call(
-            lambda: verify_token(),
+            lambda: verify_token(context),
             context=context,
             api_screens=context.screens,
             logger=context.logger,
@@ -44,6 +46,17 @@ class InitState(State):
 
         if instrument:
             context.instrument = instrument
+            context.logger = Logger(
+                context.instrument.mac_address, context.instrument.name
+            )
+            await context.logger.initialize()
+            await context.logger.check_headers()
+            await context.logger.insert_new_row()
+
+            await context.logger.make_log.log_entry(datetime.now())
+            await context.logger.make_log.ip(context.instrument.ip)
+            await context.logger.make_log.instrument(context.instrument.name)
+
         else:
             return self
         return WaitingForCardState()

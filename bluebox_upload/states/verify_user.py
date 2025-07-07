@@ -2,6 +2,7 @@ from states.base_state import State
 from app_context import AppContext
 from model_classes import User
 from networking import safe_api_call
+from datetime import datetime
 
 
 class VerifyUserState(State):
@@ -18,10 +19,15 @@ class VerifyUserState(State):
             # api parameters
             card_id=context.card_id,
         )
+        await context.logger.insert_new_row()
+        await context.logger.make_log.log_entry(datetime.now())
+        await context.logger.make_log.token(context.token.expiration)
 
         if user:
             context.user = user
+            await context.logger.make_log.user_info(context.user.full_name)
             return VerifyReservationState()
         else:
             await context.screens.user_not_in_database()
+            await context.logger.make_log.user_info(context.card_id)
             return WaitingForCardState()

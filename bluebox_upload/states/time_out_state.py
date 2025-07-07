@@ -1,5 +1,6 @@
 from states.base_state import State
 from app_context import AppContext
+from datetime import datetime
 
 
 class TimeOutState(State):
@@ -8,5 +9,6 @@ class TimeOutState(State):
 
         async with context.lock:
             await context.screens.session_ended_by_timeout()
+            await context.logger.write_log(11, datetime.now(), "Ended by timeout")
 
         return WaitingForCardState()

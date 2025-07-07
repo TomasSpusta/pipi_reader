@@ -141,6 +141,7 @@ class APIClient:
                             remaining_time=int(response_content["timetoend"]),
                         )
                         print("Recording START/EXTEND: Started/Extended.")
+                        print(f"Message: {response_content}")
                         return session
 
         except aiohttp.ClientError:
