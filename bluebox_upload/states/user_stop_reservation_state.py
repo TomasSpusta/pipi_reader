@@ -1,6 +1,6 @@
 from states.base_state import State
 from app_context import AppContext
-from states.waiting_for_card import WaitingForCardState
+from states.waiting_for_card_state import WaitingForCardState
 from networking import safe_api_call
 from datetime import datetime
 
@@ -18,5 +18,5 @@ class UserStopReservationState(State):
                 token=context.token,
             )
         await context.screens.user_stop_reservation()
-        await context.logger.write_log(11, datetime.now(), "Ended by user")
+        await context.logger.make_log.recording_end(datetime.now(), "Ended by user")
         return WaitingForCardState()

@@ -5,10 +5,12 @@ from datetime import datetime
 
 class TimeOutState(State):
     async def run(self, context: AppContext) -> State:
-        from states.waiting_for_card import WaitingForCardState
+        from states.waiting_for_card_state import WaitingForCardState
 
         async with context.lock:
             await context.screens.session_ended_by_timeout()
-            await context.logger.write_log(11, datetime.now(), "Ended by timeout")
+            await context.logger.make_log.recording_end(
+                datetime.now(), "Ended by timeout"
+            )
 
         return WaitingForCardState()

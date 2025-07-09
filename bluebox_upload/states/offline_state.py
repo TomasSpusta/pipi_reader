@@ -6,7 +6,7 @@ from app_context import AppContext
 
 class OfflineState(State):
     async def run(self, context: AppContext) -> State:
-        from states.waiting_for_card import WaitingForCardState
+        from states.waiting_for_card_state import WaitingForCardState
 
         await context.screens.no_connection()
         while True:

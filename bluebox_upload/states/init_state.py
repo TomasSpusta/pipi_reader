@@ -1,6 +1,6 @@
 from states.base_state import State
 from app_context import AppContext
-from states.waiting_for_card import WaitingForCardState
+from states.waiting_for_card_state import WaitingForCardState
 from networking import fetch_ip, fetch_mac
 from model_classes import Instrument, Token
 from networking import safe_api_call, check_internet_connection

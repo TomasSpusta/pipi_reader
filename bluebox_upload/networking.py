@@ -180,7 +180,8 @@ async def safe_api_call(
         print(error_message)
 
         if logger:
-            await logger.write_log(12, error_message)
+            pass
+            # await logger.write_log(12, error_message)
 
         await api_screens.error_message(str(e), source_function=api_func.__name__)
         return None

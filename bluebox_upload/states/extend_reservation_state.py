@@ -12,7 +12,7 @@ class ExtendReservationState(State):
     """
 
     async def run(self, context: AppContext) -> State:
-        from states.in_reservation import InReservationState
+        from states.in_reservation_state import InReservationState
 
         async with context.lock:
             if context.reservation.remaining_time >= 14:
@@ -28,7 +28,9 @@ class ExtendReservationState(State):
                 token=context.token,
             )
         await context.screens.reservation_extended()
-        await context.logger.write_log(12, datetime.now(), "Extended by user")
+        await context.logger.make_log.recording_extended(
+            datetime.now(), "Extended by user"
+        )
         context.reservation.warning_sent = False
         # await asyncio.sleep(1)
         return InReservationState()

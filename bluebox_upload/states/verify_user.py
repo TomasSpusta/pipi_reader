@@ -7,8 +7,10 @@ from datetime import datetime
 
 class VerifyUserState(State):
     async def run(self, context: AppContext) -> State:
-        from states.verify_reservation import VerifyReservationState
-        from states.waiting_for_card import WaitingForCardState
+        from states.verify_reservation_state import (
+            VerifyReservationState,
+        )
+        from states.waiting_for_card_state import WaitingForCardState
 
         await context.screens.checking_user()
 

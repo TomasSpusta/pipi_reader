@@ -8,7 +8,7 @@ from button_watcher import button_watcher
 import contextlib
 from networking import safe_api_call
 from states.time_out_state import TimeOutState
-from states.extend_reservation import ExtendReservationState
+from states.extend_reservation_state import ExtendReservationState
 from states.user_stop_reservation_state import UserStopReservationState
 
 

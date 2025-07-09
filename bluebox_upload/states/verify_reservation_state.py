@@ -1,15 +1,15 @@
 # 5. states/starting_session.py
 from states.base_state import State
 from app_context import AppContext
-
+from datetime import datetime
 from model_classes import Reservation
 from networking import safe_api_call
 
 
 class VerifyReservationState(State):
     async def run(self, context: AppContext) -> State:
-        from states.waiting_for_card import WaitingForCardState
-        from states.in_reservation import InReservationState
+        from states.waiting_for_card_state import WaitingForCardState
+        from states.in_reservation_state import InReservationState
 
         await context.screens.checking_reservation()
 
@@ -26,7 +26,10 @@ class VerifyReservationState(State):
         if reservation:
             context.reservation = reservation
             await context.screens.reservation_ok()
-            await context.logger.write_log(10, context.reservation.reservation_id)
+            # await context.logger.write_log(10, context.reservation.reservation_id)
+            await context.logger.make_log.recording_start(
+                datetime.now(), context.reservation.reservation_id
+            )
             return InReservationState()
         else:
             await context.screens.reservation_nok()
