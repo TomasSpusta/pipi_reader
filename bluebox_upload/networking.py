@@ -16,7 +16,7 @@ CHECK_URLS = [
     "https://www.google.com",
     "https://www.ceitec.cz/",
     "https://cloudflare.com",
-    "https://1.1.1.1",  # Cloudflare DNS direct IP (no DNS resolution needed)
+    "https://1.1.1.1",
 ]
 
 
@@ -70,24 +70,6 @@ async def network_monitor(
                 was_online = False
 
         await asyncio.sleep(check_interval)
-        """
-        if not is_online and was_online:
-            # just went offline
-            context.flags.lcd_in_use = True
-            context.flags.block_buttons = True
-            await screens.no_connection()
-            was_online = False
-
-        elif is_online and not was_online:
-            # just came back online
-            context.flags.lcd_in_use = True
-            context.flags.block_buttons = False
-            # context.flags.screen_needs_refresh = True
-            await screens.connection_restored()
-            context.flags.lcd_in_use = False
-            was_online = True
-        await asyncio.sleep(check_interval)
-        """
 
 
 async def wait_until_online(context: AppContext, screen: Screens):

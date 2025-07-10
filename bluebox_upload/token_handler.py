@@ -34,7 +34,7 @@ async def save_token(token: Token, TOKEN_FILE: Path):
 
 
 async def verify_token(context: AppContext) -> Token:
-    print("[TokenHandler] Verifying token...")
+    # print("[TokenHandler] Verifying token...")
     token = await load_token(TOKEN_FILE)
 
     needs_refresh = token is None or not await check_expiration(token)
@@ -43,10 +43,8 @@ async def verify_token(context: AppContext) -> Token:
         print("[TokenHandler] Token missing or expired — fetching new one.")
         token = await fetch_token(API_KEY)
         await save_token(token, TOKEN_FILE)
-    else:
-        print(
-            f"[TokenHandler] Token valid. Expires in: {datetime.fromisoformat(token.expiration) - datetime.now()}"
-        )
+
+        # print(            f"[TokenHandler] Token valid. Expires in: {datetime.fromisoformat(token.expiration) - datetime.now()}"        )
     context.token = token
     return token
 

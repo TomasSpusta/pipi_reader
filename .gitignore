@@ -3,4 +3,4 @@ pipi_log.log
 mock_gpio.py
 pipi_upload/__pycache__/*
 config.py
-service_account.json
+blue_boxupload/service_account.json

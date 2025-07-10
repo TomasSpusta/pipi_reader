@@ -79,16 +79,6 @@ class Logger:
         self.current_log_row = 2  # <- this has to be tested, so logs are writen in row 2 and do not erase previous logs
         self.make_log = _LoggerInterface(self)
 
-    """
-    @staticmethod
-    def get_headers():
-        return [
-            name.replace("_", " ").upper()
-            for name in vars(LogColumn)
-            if not name.startswith("_")
-        ]
-    """
-
     async def initialize(self):
         try:
             self.gc = await asyncio.to_thread(
