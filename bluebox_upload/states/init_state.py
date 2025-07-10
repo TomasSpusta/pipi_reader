@@ -49,6 +49,11 @@ class InitState(State):
             context.logger = Logger(
                 context.instrument.mac_address, context.instrument.name
             )
+            await context.screens.initial_logs(
+                time=datetime.now,
+                ip=context.instrument.ip,
+                instrument=context.instrument.name,
+            )
             await context.logger.initialize()
             await context.logger.check_headers()
             await context.logger.insert_new_row()

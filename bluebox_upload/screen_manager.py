@@ -1,6 +1,7 @@
 from lcd_display import LCDController
 import inspect
 import random
+from model_classes import Instrument
 
 
 class Screens:
@@ -11,6 +12,15 @@ class Screens:
         await self.lcd.message(
             "Starting...",
             display_time=0.1,
+        )
+
+    async def initial_logs(self, time: str, ip: str, instrument: Instrument):
+        await self.lcd.message(
+            "Initial logs:",
+            f"{time}",
+            f"{ip}",
+            f"{instrument}",
+            display_time=2,
         )
 
     async def no_connection(self):
